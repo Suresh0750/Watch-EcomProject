@@ -1,0 +1,180 @@
+<%-include("../layouts/adminHeader.ejs")%>
+
+<main class="main-wrap">
+    <header class="main-header navbar">
+        <div class="col-search">
+            <form class="searchform">
+                <div class="input-group">
+                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                    <button class="btn btn-light bg" type="button"> <i
+                            class="material-icons md-search"></i></button>
+                </div>
+                <datalist id="search_terms">
+                    <option value="Products">
+                    <option value="New orders">
+                    <option value="Apple iphone">
+                    <option value="Ahmed Hassan">
+                </datalist>
+            </form>
+        </div>
+        <div>
+            <a href="/admin" class="btn btn-primary">Logout</a>
+          </div>
+    </header>
+
+    <main class="main-wrap" style="width: 50%; margin-left: 12em;">
+        
+        <section class="content-main">
+
+            
+
+
+            <!DOCTYPE html>
+            <html lang="en">
+
+            <head>
+                <meta charset="UTF-8">
+                <title>Edit Product</title>
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+            </head>
+
+            <body>
+                <div class="container mt-5">
+                    <h2>Edit Product</h2>
+
+                    <!-- action="/admin/editProductData<%=productData._id%>" -->
+                    <form id="editProduct" action="/admin/editProductData<%=productData._id%>" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="productId" value="<%=productData._id%>">
+                        <div class="form-group">    
+                            <label for="productName">Product Name</label>
+                            <input type="text" class="form-control" id="productName"
+                                value="<%= productData.productName %>" name="productName" accept="image/*" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <img src="../images/categoriedImages/<%=productData.productImage1%>"  alt="" id="img1"
+                                style="width: 100px; height: 100px">
+                            <div class="input-group mb-3">
+                                <input name="productImage1" id="productImage1" type="file" value="<%=productData.productImage1%>" class="form-control" accept="image/*"
+                                    placeholder="Product Image1" onchange="displayImage2(event)" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <img src="../images/categoriedImages/<%=productData.productImage2%>" alt="" id="img2"
+                                style="width: 100px; height: 100px">
+                            <div class="input-group mb-3">
+                                <input name="productImage2" id="productImage2" value="<%=productData.productImage2%>" type="file" accept="image/*"  class="form-control"
+                                    placeholder="Product Image2" onchange="displayImage2(event)" required>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <img src="../images/categoriedImages/<%=productData.productImage3%>" alt="" id="img3"
+                                style="width: 100px; height: 100px" id="preview1">
+                            <div class="input-group mb-3">
+                                <input name="productImage3" type="file" class="form-control" accept="image/*"  value="<%=productData.productImage3%>" onchange="displayImage3(event)">
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input name="productPrice" type="text" class="form-control"
+                                value="<%=productData.productPrice%>">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <input name="productStock" type="text" class="form-control"
+                                value="<%=productData.productStock%>">
+                        </div>
+
+
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Category">Category</label>
+
+                                <select class="form-control p_input" name="category" placeholder="category" required>
+                                    <option value="Select" disabled selected>
+                                           Select
+                                    </option>
+                                    <%category.forEach((category)=>{%>
+                                        <option value="<%=category.categoryName%>">
+                                            <%=category.categoryName%>
+                                        </option>
+                                    <%})%>
+
+                                </select>
+
+                                <!-- <div class="form-group">
+
+                                                <input type="file" class="form-control-file" id="productImage"
+                                                    name="productImage">
+                                            </div> -->
+
+                                <input type="submit" class="btn btn-primary" style="margin-top: 20px;"  value="Save Changes">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </body>
+
+            </html>
+
+
+
+
+            <script>
+
+                function displayImage1(e){
+                    let img = document.getElementById("img1");
+                    img.src = URL.createObjectURL(e.target.files[0]);
+                }
+                function displayImage1(e){
+                    let img = document.getElementById("img2");
+                    img.src = URL.createObjectURL(e.target.files[0]);
+                }
+                function displayImage3(e){
+                    let img = document.getElementById("img3");
+                    img.src = URL.createObjectURL(e.target.files[0]);
+                }
+
+            </script>
+
+
+            <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+            integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+          ></script>
+        <script>
+            $("#editProduct").validate({
+                rules:{
+                    productName:{
+                        required:true
+                    },
+                    productImage1:{
+                        required:true
+                    },
+                    productImage2:{
+                        required:true
+                    },
+                    productImage3:{
+                        required:true
+                    },
+                    productPrice:{
+                        required:true
+                    },
+                    productStock:{
+                        required:true
+                    }
+                }
+                
+            })
+        </script>
+        </section> <!-- content-main end// -->
+        
+    </main>
+   

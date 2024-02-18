@@ -1,0 +1,312 @@
+
+
+<%-include("../layouts/userHeader.ejs")%>
+    
+    <!--Body Content-->
+    <div id="page-content">
+    	<!--Home slider-->
+    	<div class="slideshow slideshow-wrapper pb-section sliderFull">
+        	<div class="home-slideshow">
+            	<div class="slide">
+                	<div class="blur-up lazyload bg-size">
+                        <!-- <img class="blur-up lazyload bg-img" data-src="assets/images/slideshow-banners/belle-banner1.jpg" src="assets/images/slideshow-banners/belle-banner1.jpg" alt="Shop Our New Collection" title="Shop Our New Collection" /> -->
+                        <!-- <img class="blur-up lazyload bg-img" data-src="assets/images1/slidesshow-banners/wrist-mechanical-watch-man_241278-1178.avif" src="assets/images1/slidesshow-banners/wrist-mechanical-watch-man_241278-1178.avif" alt="Shop Our New Collection" title="Shop Our New Collection" /> -->
+            
+
+                        <div class="collection-header">
+                            <div class="collection-hero">
+                                <div class="collection-hero__image"><img class="blur-up lazyload" data-src="assets/images1/categoriePage/categories_watch.jpeg" src="assets/images1/categoriePage/categories_watch.jpeg" alt="categoriePage image" title="watch" /></div>
+                                <div class="collection-hero__title-wrapper"><h1 class="collection-hero__title page-width">Shop Right Sidebar</h1></div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-header">
+                        <div class="collection-hero">
+                            <div class="collection-hero__image"><img class="blur-up lazyload" data-src="assets/images1/categoriePage/categories_watch.jpeg" src="assets/images1/categoriePage/categories_watch.jpeg" alt="categoriePage image" title="watch" /></div>
+                            <div class="collection-hero__title-wrapper"><h1 class="collection-hero__title page-width">Shop Right Sidebar</h1></div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Home slider-->
+
+        <!-----catagories------>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="section-header text-center">
+                        <h2 class="h2">categories</h2>
+                        <p>Type of  categories</p>
+                    </div>
+                    <div class="tabs-listing">
+                    
+                        <div class="tab_container">
+                            <div id="tab1" class="tab_content grid-products">
+                                <div class="productSlider">
+
+                                    <%allCatagory.forEach((data)=>{%>
+                                    
+                                        <div class="col-12 item">
+                                            <!-- start product image -->
+                                            <div class="product-image">
+                                                <!-- start product image -->
+                                                <a href="short-description.html">
+                                                    <!-- image -->
+
+
+                                                    <div id="img" style="width: 280px;
+                                                    height: 280px;">
+                                                        <img class="primary blur-up lazyload" data-src="../images/categoriedImages/<%=data.image%>" src="../images/categoriedImages/<%=data.image%>" alt="image" title="product">
+                                                        <!-- End image -->
+                                                        <!-- Hover image -->
+                                                        <img class="hover blur-up lazyload" data-src="../images/categoriedImages/<%=data.image%>" src="../images/categoriedImages/<%=data.image%>"alt="image" title="product">
+                                                        <!-- End hover image -->
+                                                    </div>
+                                                    <!-- <img class="primary blur-up lazyload" data-src="assets/images/product-images/product-image1.jpg" src="assets/images/product-images/product-image1.jpg" alt="image" title="product"> -->
+                                                    <!-- product label -->
+                                                    <!-- End product label -->
+                                                </a>
+                                                <!-- end product image -->
+                                                
+                                                <!-- countdown start -->
+                                                <div class="saleTime desktop" data-countdown="2022/03/01"></div>
+                                                <!-- countdown end -->
+        
+                                                <!-- Start product button -->
+                                                <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
+                                                    <button class="btn btn-addto-cart" type="button" tabindex="0">Add To Cart</button>
+                                                </form>
+                                                <div class="button-set">
+                                                    <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
+                                                        <i class="icon anm anm-search-plus-r"></i>
+                                                    </a>
+                                                    <div class="wishlist-btn">
+                                                        <a class="wishlist add-to-wishlist" href="wishlist.html">
+                                                            <i class="icon anm anm-heart-l"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="compare-btn">
+                                                        <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
+                                                            <i class="icon anm anm-random-r"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <!-- end product button -->
+                                            </div>
+                                            <!-- end product image -->
+                                            <!--start product details -->
+                                            <div class="product-details text-center">
+                                                <!-- product name -->
+                                                <div class="product-name">
+                                                    <h2 class="categories"><%=data.categoryName%></h2>
+                                                </div>
+                                                <!-- End product name -->                                     
+                                            
+                                            </div>
+                                            <!-- End product details -->
+                                        </div>
+                                    <%})%>
+                                </div>
+                            </div>
+        
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <!-----catagories------>
+       
+        <!--Collection Box slider-->
+        <div class="collection-box section">
+        	<div class="container-fluid">
+				<div class="collection-grid">
+                        <div class="collection-grid-item">
+                            <a href="collection-page.html" class="collection-grid-item__link">
+                                <!-- <img data-src="assets/images/collection/fashion.jpg" src="assets/images/collection/fashion.jpg" alt="Fashion" class="blur-up lazyload"/> -->
+                                <img data-src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif"  src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" alt="Fashion" class="blur-up lazyload"/>
+                                <div class="collection-grid-item__title-wrapper">
+                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">watch</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="collection-grid-item">
+                            <a href="collection-page.html" class="collection-grid-item__link">
+                                <img class="blur-up lazyload" data-src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" alt="Cosmetic"/>
+                                <div class="collection-grid-item__title-wrapper">
+                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">watch</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="collection-grid-item blur-up lazyloaded">
+                            <a href="collection-page.html" class="collection-grid-item__link">
+                                <img data-src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" alt="Bag" class="blur-up lazyload"/>
+                                <div class="collection-grid-item__title-wrapper">
+                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">watch</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="collection-grid-item">
+                            <a href="collection-page.html" class="collection-grid-item__link">
+                                <img data-src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" alt="Accessories" class="blur-up lazyload"/>
+                                <div class="collection-grid-item__title-wrapper">
+                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">watch</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="collection-grid-item">
+                            <a href="collection-page.html" class="collection-grid-item__link">
+                                <img data-src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" alt="Shoes" class="blur-up lazyload"/>
+                                <div class="collection-grid-item__title-wrapper">
+                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">watch</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="collection-grid-item">
+                            <a href="collection-page.html" class="collection-grid-item__link">
+                                <img data-src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" src="assets/images1/slidesshow-banners/women/TWEL14303_1.avif" alt="Jewellry" class="blur-up lazyload"/>
+                                <div class="collection-grid-item__title-wrapper">
+                                    <h3 class="collection-grid-item__title btn btn--secondary no-border">Jewellry</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <!--End Collection Box slider-->
+        
+        <!--Logo Slider-->
+        <div class="section logo-section">
+        	<div class="container">
+            	<div class="row">
+                	<div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                		<div class="logo-bar">
+                    <div class="logo-bar__item">
+                        <img src="assets/images1/slidesshow-banners/logoIndexPage/official-retailer-plaque-en.png" alt="" title=""  style="height: 5em;
+                        width: 10em;
+                        margin-top: 2em;
+                    "/>
+                    </div>
+                    <div class="logo-bar__item">
+                        <img src="assets/images1/slidesshow-banners/logoIndexPage/Titan-logo.webp" alt="" title="" style="margin-top: -31px; margin-left: -24px;"/>
+                    </div>
+                    <div class="logo-bar__item">
+                        <img src="assets/images1/slidesshow-banners/logoIndexPage/hublot-logo-upd.svg" alt="" title="" style=" margin-top: 37px;
+                        border: 1px solid black;
+                        padding: 4px;
+                        margin-left: -13px;"/>
+                    </div>
+                    <div class="logo-bar__item">
+                        <img src="assets/images1/slidesshow-banners/logoIndexPage/casio.png" alt="" title="" style="margin-top: -42px;"/>
+                    </div>
+                    <div class="logo-bar__item">
+                        <img src="assets/images1/slidesshow-banners/logoIndexPage/puma.png"
+                        alt="" title="" style="height: 9em; width:12em"/>
+                    </div>
+                    <div class="logo-bar__item">
+                        <img src="assets/images1/slidesshow-banners/logoIndexPage/Adidas-brand.webp" alt="" title="" style=" margin-top: -2em"/>
+                    </div>
+                </div>
+                	</div>
+                </div>
+            </div>
+        </div>
+        <!--End Logo Slider-->
+
+        
+        <!--Latest Blog-->
+        <div class="latest-blog section pt-0">
+        	<div class="container">
+            	<div class="row">
+                	<div class="col-12 col-sm-12 col-md-12 col-lg-12">
+        				<div class="section-header text-center">
+      						<h2 class="h2">Latest From our Blog</h2>
+					    </div>
+            		</div>
+                </div>
+            	<div class="row">
+                	<div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    	<div class="wrap-blog">
+                        	<a href="blog-left-sidebar.html" class="article__grid-image">
+              					<img src="assets/images1/slidesshow-banners/latest form IndexPage/kenneth cole.jpeg" alt="It's all about how you wear" title="It's all about how you wear" class="blur-up lazyloaded"/>
+				            </a>
+                            <div class="article__grid-meta article__grid-meta--has-image">
+                                <div class="wrap-blog-inner">
+                                    <h2 class="h3 article__title">
+                                      <a href="blog-left-sidebar.html">It's all about how you wear</a>
+                                    </h2>
+                                    <span class="article__date">May 02, 2017</span>
+                                    <div class="rte article__grid-excerpt">
+                                        I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account...
+                                    </div>
+                                    <ul class="list--inline article__meta-buttons">
+                                    	<li><a href="blog-article.html">Read more</a></li>
+                                    </ul>
+                                </div>
+							</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    	<div class="wrap-blog">
+                        	<a href="blog-left-sidebar.html" class="article__grid-image">
+              					<img src="assets/images1/slidesshow-banners/latest form IndexPage/ceramic.jpeg" alt="27 Days of Spring Fashion Recap" title="27 Days of Spring Fashion Recap" class="blur-up lazyloaded"/>
+				            </a>
+                            <div class="article__grid-meta article__grid-meta--has-image">
+                                <div class="wrap-blog-inner">
+                                    <h2 class="h3 article__title">
+                                      <a href="blog-right-sidebar.html">27 Days of Spring Fashion Recap</a>
+                                    </h2>
+                                    <span class="article__date">May 02, 2017</span>
+                                    <div class="rte article__grid-excerpt">
+                                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab...
+                                    </div>
+                                    <ul class="list--inline article__meta-buttons">
+                                    	<li><a href="blog-article.html">Read more</a></li>
+                                    </ul>
+                                </div>
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Latest Blog-->
+        
+        <!--Store Feature-->
+        <div class="store-feature section">
+        	<div class="container">
+            	<div class="row">
+                	<div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    	<ul class="display-table store-info">
+                        	<li class="display-table-cell">
+                            	<i class="icon anm anm-truck-l"></i>
+                            	<h5>Free Shipping &amp; Return</h5>
+                            	<span class="sub-text">Free shipping on all US orders</span>
+                            </li>
+                          	<li class="display-table-cell">
+                            	<i class="icon anm anm-dollar-sign-r"></i>
+                                <h5>Money Guarantee</h5>
+                                <span class="sub-text">30 days money back guarantee</span>
+                          	</li>
+                          	<li class="display-table-cell">
+                            	<i class="icon anm anm-comments-l"></i>
+                                <h5>Online Support</h5>
+                                <span class="sub-text">We support online 24/7 on day</span>
+                            </li>
+                          	<li class="display-table-cell">
+                            	<i class="icon anm anm-credit-card-front-r"></i>
+                                <h5>Secure Payments</h5>
+                                <span class="sub-text">All payment are Secured and trusted.</span>
+                        	</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Store Feature-->
+    </div>
+    <!--End Body Content-->
+    
+ <%-include("../layouts/userFooter.ejs")%>

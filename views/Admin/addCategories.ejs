@@ -1,0 +1,141 @@
+<%-include("../layouts/adminHeader.ejs")%>
+
+<main class="main-wrap">
+    <header class="main-header navbar">
+        <div class="col-search">
+            <form class="searchform">
+                <div class="input-group">
+                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                    <button class="btn btn-light bg" type="button"> <i
+                            class="material-icons md-search"></i></button>
+                </div>
+                <datalist id="search_terms">
+                    <option value="Products">
+                    <option value="New orders">
+                    <option value="Apple iphone">
+                    <option value="Ahmed Hassan">
+                </datalist>
+            </form>
+        </div>
+        <div>
+            <a href="/admin" class="btn btn-primary">Logout</a>
+          </div>
+    </header>
+<section class="content-main" style="width: 50%; margin-left: 12em;">
+
+    <div class="card mb-4">
+
+
+    </div> <!-- card end// -->
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Add Category</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+
+    <body>
+        <div class="container mt-5">
+            <h2>Add Category</h2>
+            <form action="/admin/addCategory" method="POST" id="form" class="mt-4" enctype="multipart/form-data">
+                <div class="form-group"> 
+                    <label for="categoriesName">Category Name</label>
+                    <input type="text" class="form-control" id="categoriesName" name="categoryName" required>
+                </div>
+            
+                <div class="form-group">
+                    <label for="categoriesDescription">Category Description</label>
+                    <textarea class="form-control" id="categoriesDescription" rows="3" name="description"></textarea>
+                </div>
+            
+                <div>
+                    <label for="categoriesImage">Category Image</label>
+                    <input type="file" class="form-control" id="categoriesImage" name="categoriesImage" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Category</button>
+            </form>
+            
+        </div>
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+
+    </html>
+
+
+
+
+
+
+
+
+
+
+</section> <!-- content-main end// -->
+
+
+
+
+
+
+
+
+
+
+<!-- {{!-- onchange image display --}} -->
+<!-- <script>
+    function displayImage1() {
+        const reader = new FileReader()
+        reader.onload = () => {
+            preview1.src = reader.result
+        }
+        const file = document.querySelector("#productImage1").files[0];
+        if (file) {
+            preview1.style.display = 'block'
+            reader.readAsDataURL(file)
+        }
+    }
+    function displayImage2() {
+        const reader = new FileReader()
+        reader.onload = () => {
+            preview2.src = reader.result
+        }
+        const file = document.querySelector("#productImage2").files[0];
+        if (file) {
+            preview2.style.display = 'block'
+            reader.readAsDataURL(file)
+        }
+    }
+    function displayImage3() {
+        const reader = new FileReader()
+        reader.onload = () => {
+            preview3.src = reader.result
+        }
+        const file = document.querySelector("#productImage3").files[0];
+        if (file) {
+            preview3.style.display = 'block'
+            reader.readAsDataURL(file)
+        }
+    }
+</script> -->
+
+

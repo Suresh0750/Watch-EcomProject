@@ -1,0 +1,428 @@
+<%-include("../layouts/userHeader.ejs")%>
+    
+    <!--Body Content-->
+    <div id="page-content", style="margin-top: 6em ">
+    	<!--Page Title-->
+    	<div class="page section-header text-center">
+			<div class="page-title">
+        		<div class="wrapper"><h1 class="page-width">Your cart</h1></div>
+      		</div>
+		</div>
+        <!--End Page Title-->
+        
+        <div class="container">
+        	<div class="row">
+                <div class="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
+                	<!-- <form action="#" method="post" class="cart style2"> -->
+                		<table>
+                            <thead class="cart__row cart__header">
+                                <tr>
+                                    <th colspan="2" class="text-center">Product</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center"></th>
+                                    <th class="text-right">Total</th>
+                                    <th class="action">&nbsp;</th>
+                                </tr>
+                            </thead>
+                    		<tbody>
+                                <% userCartData.forEach((cart)=>{%>
+                                <tr class="cart__row border-bottom line1 cart-flex border-top">
+                                    <td class="cart__image-wrapper cart-flex-item">
+                                        <a href="#"><img class="cart__image" src="../images/categoriedImages/<%=cart.productId.productImage1%>" alt="Elastic Waist Dress - Navy / Small"></a>
+                                    </td>
+                                    <td class="cart__meta small--text-left cart-flex-item">
+                                        <div class="list-view-item__title">
+                                            <a href="#"><%=cart.productId.productName%></a>
+                                        </div>
+                                    </td>
+                                    <input type="hidden" id="productId" value="<%=cart.productId._id%>">
+                                    <td class="cart__price-wrapper cart-flex-item">
+                                        <span id="price<%=cart._id%>"><%=cart.productId.productPrice%></span>
+                                    </td>
+                                    <td class="cart__update-wrapper cart-flex-item text-right">
+                                        <div class="cart__qty text-center">
+                                            <div class="qtyField">
+                                                <button onclick="decreMent('<%=cart._id%>')">
+                                                    <i class="icon icon-minus"></i>
+                                                </button>
+                                                <span id="<%=cart._id%>" ><%=cart.productQuantity%></span>
+                                                <button onclick="incrMent('<%=cart._id%>')">
+                                                    <i class="icon icon-plus"></i>
+                                                </button>
+                                                <!-- <input class="cart__qty-input qty" type="text" name="updates[]" id="qty" value="1" pattern="[0-9]*"> -->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-right small--hide cart-price">
+                                        <div><span class="money" id="total<%=cart._id%>"><%=cart.totalCastPerproduct%></span></div>
+                                    </td>
+                                    <td class="text-center small--hide" style="cursor: pointer;" onclick="deletData('<%=cart._id%>')"><i class="icon icon anm anm-times-l"></i></td>
+                                </tr>
+                                <%})%>
+                               
+                            </tbody>
+                    		<tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-left"><a href="http://annimexweb.com/" class="btn--link cart-continue"><i class="icon icon-arrow-circle-left"></i> Continue shopping</a></td>
+                                    <td colspan="3" class="text-right"><button type="submit" name="update" class="btn--link cart-update"><i class="fa fa-refresh"></i> Update</button></td>
+                                </tr>
+                            </tfoot>
+                    </table>
+                    
+                 
+                    
+                    <!-- </form>                    -->
+               	</div>
+                <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
+                	<div class="cart-note">
+                    	<div class="solid-border">
+							<h5><label for="CartSpecialInstructions" class="cart-note__label small--text-center">Add a note to your order</label></h5>
+							<!-- <textarea name="note" id="CartSpecialInstructions" class="cart-note__input"></textarea> -->
+
+                            <div style="display: flex; flex-direction: column; flex-wrap: wrap;">
+
+                                <div style="display: flex;flex-direction: row; justify-content: space-between;">
+    
+                                    <p class="text">Total Price</p>
+                                    <span>
+                                        ₹
+                                        <p  style="display: inline;"  id="priceTotal"><%=cartTotal%></p> 
+                                    </span>
+                                </div>
+                                <div style="display: flex;flex-direction: row; justify-content: space-between;">
+                                    <p class="text">Shipping</p>
+                                    <span style="color: rgb(45, 182, 45);font-size: large;
+                                    font-weight: bold;">
+                                        
+                                         Free shipping
+                                    </span>
+                                </div>
+                                <div style="display: flex;flex-direction: row; justify-content: space-between; ">
+                                    <p class="text">Grand Total</p>
+                                    <span id="grandTotal" >
+                                        ₹<%=cartTotal%>
+                                        
+                                    </span>
+                                </div>
+                            </div>
+
+
+						</div>
+                    </div>
+                 
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <!--End Body Content-->
+    
+    <!--Footer-->
+    <footer id="footer">
+        <div class="newsletter-section">
+            <div class="container">
+                <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-7 w-100 d-flex justify-content-start align-items-center">
+                            <div class="display-table">
+                                <div class="display-table-cell footer-newsletter">
+                                    <div class="section-header text-center">
+                                        <label class="h2"><span>sign up for </span>newsletter</label>
+                                    </div>
+                                    <form action="#" method="post">
+                                        <div class="input-group">
+                                            <input type="email" class="input-group__field newsletter__input" name="EMAIL" value="" placeholder="Email address" required="">
+                                            <span class="input-group__btn">
+                                                <button type="submit" class="btn newsletter__submit" name="commit" id="Subscribe"><span class="newsletter__submit-text--large">Subscribe</span></button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-5 d-flex justify-content-end align-items-center">
+                            <div class="footer-social">
+                                <ul class="list--inline site-footer__social-icons social-icons">
+                                    <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Facebook"><i class="icon icon-facebook"></i></a></li>
+                                    <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Twitter"><i class="icon icon-twitter"></i> <span class="icon__fallback-text">Twitter</span></a></li>
+                                    <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Pinterest"><i class="icon icon-pinterest"></i> <span class="icon__fallback-text">Pinterest</span></a></li>
+                                    <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Instagram"><i class="icon icon-instagram"></i> <span class="icon__fallback-text">Instagram</span></a></li>
+                                    <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Tumblr"><i class="icon icon-tumblr-alt"></i> <span class="icon__fallback-text">Tumblr</span></a></li>
+                                    <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on YouTube"><i class="icon icon-youtube"></i> <span class="icon__fallback-text">YouTube</span></a></li>
+                                    <li><a class="social-icons__link" href="#" target="_blank" title="Belle Multipurpose Bootstrap 4 Template on Vimeo"><i class="icon icon-vimeo-alt"></i> <span class="icon__fallback-text">Vimeo</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+            </div>    
+        </div>
+        <div class="site-footer">
+        	<div class="container">
+     			<!--Footer Links-->
+            	<div class="footer-top">
+                	<div class="row">
+                    	<div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        	<h4 class="h4">Quick Shop</h4>
+                            <ul>
+                            	<li><a href="#">Women</a></li>
+                                <li><a href="#">Men</a></li>
+                                <li><a href="#">Kids</a></li>
+                                <li><a href="#">Sportswear</a></li>
+                                <li><a href="#">Sale</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        	<h4 class="h4">Informations</h4>
+                            <ul>
+                            	<li><a href="#">About us</a></li>
+                                <li><a href="#">Careers</a></li>
+                                <li><a href="#">Privacy policy</a></li>
+                                <li><a href="#">Terms &amp; condition</a></li>
+                                <li><a href="#">My Account</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        	<h4 class="h4">Customer Services</h4>
+                            <ul>
+                            	<li><a href="#">Request Personal Data</a></li>
+                                <li><a href="#">FAQ's</a></li>
+                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Orders and Returns</a></li>
+                                <li><a href="#">Support Center</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
+                        	<h4 class="h4">Contact Us</h4>
+                            <ul class="addressFooter">
+                            	<li><i class="icon anm anm-map-marker-al"></i><p>55 Gallaxy Enque,<br>2568 steet, 23568 NY</p></li>
+                                <li class="phone"><i class="icon anm anm-phone-s"></i><p>(440) 000 000 0000</p></li>
+                                <li class="email"><i class="icon anm anm-envelope-l"></i><p>sales@yousite.com</p></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--End Footer Links-->
+                <hr>
+                <div class="footer-bottom">
+                	<div class="row">
+                    	<!--Footer Copyright-->
+	                	<div class="col-12 col-sm-12 col-md-6 col-lg-6 order-1 order-md-0 order-lg-0 order-sm-1 copyright text-sm-center text-md-left text-lg-left"><span></span> <a href="templateshub.net">Templates Hub</a></div>
+                        <!--End Footer Copyright-->
+                        <!--Footer Payment Icon-->
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 order-0 order-md-1 order-lg-1 order-sm-0 payment-icons text-right text-md-center">
+                        	<ul class="payment-icons list--inline">
+                        		<li><i class="icon fa fa-cc-visa" aria-hidden="true"></i></li>
+                                <li><i class="icon fa fa-cc-mastercard" aria-hidden="true"></i></li>
+                                <li><i class="icon fa fa-cc-discover" aria-hidden="true"></i></li>
+                                <li><i class="icon fa fa-cc-paypal" aria-hidden="true"></i></li>
+                                <li><i class="icon fa fa-cc-amex" aria-hidden="true"></i></li>
+                                <li><i class="icon fa fa-credit-card" aria-hidden="true"></i></li>
+                            </ul>
+                        </div>
+                        <!--End Footer Payment Icon-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--End Footer-->
+    <!--Scoll Top-->
+    <span id="site-scroll"><i class="icon anm anm-angle-up-r"></i></span>
+    <!--End Scoll Top-->
+    <style>
+        .text{
+            font-size: large;
+            font-weight: bold;
+        }
+    </style>
+    
+     <!-- Including Jquery -->
+     <script src="assets/js/vendor/jquery-3.3.1.min.js"></script>
+     <script src="assets/js/vendor/jquery.cookie.js"></script>
+     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+     <script src="assets/js/vendor/wow.min.js"></script>
+     <!-- Including Javascript -->
+     <script src="assets/js/bootstrap.min.js"></script>
+     <script src="assets/js/plugins.js"></script>
+     <script src="assets/js/popper.min.js"></script>
+     <script src="assets/js/lazysizes.js"></script>
+     <script src="assets/js/main.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</div>
+<script>
+async function  deletData(id){
+
+
+      const data = await fetch(`/deletCart${id}`,{
+                    method:"DELETE",
+                    headers:{
+                        "Content-Type":"application/json"
+                    }
+                    })
+
+            const dataRes = await data.json()
+
+            if(dataRes.success)
+            {
+                window.location.href ="/viewCart"
+            }
+        
+    }
+</script>
+<script>
+
+async  function incrMent(id){
+
+
+        // productId
+
+        let productId = document.getElementById("productId").value
+
+        console.log(productId)
+        
+
+
+        // price 
+
+        let price = document.getElementById(`price${id}`).textContent
+
+     
+        // increase button
+        let cartIncrease = document.getElementById(`${id}`).textContent
+
+        let spanValue = document.getElementById(`${id}`)
+        
+        // total value
+        // let totalCastValue = document.getElementById(`total${id}`).textContent
+        let totalCast = document.getElementById(`total${id}`)
+      
+        // total Price
+        let priceTotal = document.getElementById("priceTotal")
+
+
+        //grandTotal
+        let grandTotal = document.getElementById("grandTotal")
+
+      
+        
+
+        if(cartIncrease <5)
+        {
+
+            let cartId ={
+                _id : id,
+                productId : productId
+            }
+            console.log(cartId)
+            let data = await fetch("/cart/inCrease",{
+
+                method:"PUT",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(cartId)
+            })
+
+
+            const dataRes = await data.json()
+
+            console.log(dataRes)
+
+            spanValue.textContent = dataRes.cartProduct.productQuantity
+            totalCast.textContent = dataRes.cartProduct.totalCastPerproduct
+            grandTotal.textContent = dataRes.grandTotal
+            priceTotal.textContent = dataRes.grandTotal
+            window.location.reload()
+        }else{
+            
+
+            Swal.fire({
+        title: "sorry",
+        text: "limit exit!",
+        icon: "error",
+        showCancelButton: true,
+
+            })
+         }
+
+
+    }
+
+async function decreMent(id){
+
+
+
+        // productId
+
+        let productId = document.getElementById("productId").value
+
+        console.log(productId)
+
+        // price 
+
+        let price = document.getElementById(`price${id}`).textContent
+
+        console.log(price)
+        // decreaseButton
+        let cartDecrease = document.getElementById(`${id}`).textContent
+        
+        let spanValue = document.getElementById(`${id}`)
+
+
+        // total value
+        let totalCastValue = document.getElementById(`total${id}`).textContent
+        let totalCast = document.getElementById(`total${id}`)
+
+
+
+        //grandTotal
+        let grandTotal = document.getElementById("grandTotal")
+
+        //TotalPrice
+
+        let priceTotal = document.getElementById("priceTotal")
+
+        if(cartDecrease >1)
+        {
+
+            let cartId ={
+                _id : id,
+                productId : productId
+            }
+            console.log(cartId)
+            let data = await fetch("/cart/deCrease",{
+
+                method:"PUT",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(cartId)
+            })
+
+
+            const dataRes = await data.json()
+
+            console.log(dataRes)
+
+            spanValue.textContent = await dataRes.cartProduct.productQuantity
+            totalCast.textContent = await dataRes.cartProduct.totalCastPerproduct
+            grandTotal.textContent = await dataRes.grandTotal
+            priceTotal.textContent = await dataRes.grandTotal
+            window.location.reload()
+        }else{
+            Swal.fire({
+        title: "sorry",
+        text: "minimux limit should be 1",
+        icon: "error",
+        showCancelButton: true,
+
+        })
+
+
+        }
+    }
+</script>
+</body>
+
+<!-- belle/cart.html   11 Nov 2019 12:47:01 GMT -->
+</html>

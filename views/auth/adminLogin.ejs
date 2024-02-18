@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-account-login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:33 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>Admin Login</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/images1/slidesshow-banners/smart-watch.png" />
+    <!-- Template CSS -->
+    <link href="assets1/css/main.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+    <main>
+        <header class="main-header style-2 navbar">
+            <div class="col-brand">
+                <a href="index.html" class="brand-wrap">
+                    <h2 style="color:black">Watchs</h2>
+                    <!-- <img src="assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard"> -->
+                </a>
+            </div>
+            <div class="col-nav">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="assets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="page-account-login.html"><i class="material-icons md-perm_identity"></i>Profile</a>
+                            <a class="dropdown-item" href="page-account-login.html"><i class="material-icons md-perm_identity"></i>Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main mt-80 mb-80">
+            <div class="card mx-auto card-login">
+                <%if(isnotCorrect){%>
+                    <h2 style="color:red">Email or Password invalide</h2>
+
+                <%}%>
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Sign in</h4>
+                    <form id="adminLog">
+                        <div class="mb-3">
+                            <input class="form-control" placeholder="Enter email" type="email" name="adminEmail">
+                        </div> <!-- form-group// -->
+                        <div class="mb-3">
+                            <input class="form-control" placeholder="Password" type="password" name="adminPass">
+                        </div> <!-- form-group// -->
+                        <div class="mb-3">
+                            <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
+                            <label class="form-check">
+                                <input type="checkbox" class="form-check-input" checked="">
+                                <span class="form-check-label">Remember</span>
+                            </label>
+                        </div> <!-- form-group form-check .// -->
+                        <div class="mb-4">
+                            <input type="submit" class="btn btn-primary w-100" value ="Login">
+                            <!-- <button class="btn btn-primary w-100"> Login </button> -->
+                        </div> <!-- form-group// -->
+                    </form>
+                    <p class="text-center small text-muted mb-15">or sign up with</p>
+                    
+                    <p class="text-center mb-4">Don't have account? <a href="#">Sign up</a></p>
+                </div>
+            </div>
+        </section>
+        <footer class="main-footer text-center">
+            <p class="font-xs">
+                <!-- <script>
+                document.write(new Date().getFullYear())
+                </script>  -->
+                ©, Evara - HTML Ecommerce Template .
+            </p>
+            <p class="font-xs mb-30">All rights reserved</p>
+        </footer>
+<style>
+    .error{
+        color:red;
+    }
+</style>
+
+ <!-- jquery -->
+ <script src="assets/js/vendor/jquery-3.3.1.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+ <script
+ src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+ integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+ crossorigin="anonymous"
+ referrerpolicy="no-referrer"
+></script>
+<script>
+
+    $('#adminLog').validate({
+        rules:{
+            adminEmail:{
+                required:true,
+                email:true
+            },
+            adminPass:{
+                required:true,
+                minlength:6,
+                maxlength:10
+            }
+        },
+        submitHandler:async (adminLog,e)=>{
+
+            e.preventDefault()
+
+            const adminData ={
+                adminEmail:adminLog.adminEmail.value,
+                adminPass:adminLog.adminPass.value,
+            }
+           const data = await fetch("/adminData",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(adminData)
+
+            })
+            const dataRes = await data.json();
+            if(dataRes)
+            {
+                window.location.href ="/admin"
+            }else{
+                window.location.href = "/admin"
+            }
+        }
+    })
+
+
+</script>
+</body>
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-account-login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:33 GMT -->
+</html>

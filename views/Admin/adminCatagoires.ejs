@@ -1,0 +1,253 @@
+<%-include("../layouts/adminHeader.ejs")%>
+
+<main class="main-wrap">
+    <header class="main-header navbar">
+        <div class="col-search">
+            <form class="searchform">
+                <div class="input-group">
+                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                    <button class="btn btn-light bg" type="button"> <i
+                            class="material-icons md-search"></i></button>
+                </div>
+                <datalist id="search_terms">
+                    <option value="Products">
+                    <option value="New orders">
+                    <option value="Apple iphone">
+                    <option value="Ahmed Hassan">
+                </datalist>
+            </form>
+        </div>
+        <div>
+            <a href="/admin" class="btn btn-primary">Logout</a>
+          </div>
+    </header>
+
+<section class="content lists col-md-10">
+  <div class="col-12">
+    <br>
+    <br>
+    <div class="content-header" style="padding-left: 30px;">
+        <h2 class="content-title">CATEGORY MANAGEMENT </h2>
+        <div>
+            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up" >Save to draft</button>
+            <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+        </div>
+    </div>
+</div>
+<div class="border rounded p-2">
+  <div class="search d-md-flex justify-content-between border-bottom p-2">
+    <form action="/search-category" class="d-flex" method="post">
+      <input
+        type="text"
+        class="form-control rounded-start-pill w-100"
+        placeholder="search"
+        name="search"
+      />
+      <button type="submit" class="btn btn-dark rounded-end-pill">
+        <i class="bi bi-search text-white"></i>
+      </button>
+    </form>
+    <div class="d-flex w-50 gap-2">
+      <form action="/filter-category" method="post" id="filter" class="w-50">
+        <select
+          class="form-select rounded w-100"
+          aria-label="Default select example"
+          onchange="handleSubmit(this.value)"
+        >
+          <option selected>Status</option>
+          <option value="available">Available</option>
+          <option value="notAvailable">Not Available</option>
+        </select>
+        <input
+          type="text"
+          name="filter"
+          type="hidden"
+          class="hidden"
+          id="selectedValue"
+          value=""
+        />
+      </form>
+      <a href="/admin/add-category" class="btn btn-dark w-50">Add Category</a>
+    </div>
+  </div>
+  <div class="table-responsive content p-3">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Image</th>
+          <th scope="col">Category</th>
+          <th scope="col">list/unlist</th>
+          <th scope="col">edit</th>
+          <th scope="col">delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+       
+        <% catagoriDetail.forEach((user, index)=>{%>
+
+        <tr>
+          <th scope="row"><%=index+1%></th>
+          <td>
+            <img
+              height="70"
+              data-src="../images/categoriedImages/<%=user.image%>"
+              src="../images/categoriedImages/<%=user.image%>"
+              alt="ds"
+            />
+          </td>
+          <td><%=user.categoryName%></td>
+          
+          <%if(user.isAvailable){%>
+            <td>
+              <button
+              onclick="unlist('<%=user._id%>')"
+                class="btn btn-success"
+                id="list"
+                >unlist</button>
+            </td>
+          <%}else{%>
+            <td>
+              <button
+              onclick="list('<%=user._id%>')"
+                class="btn btn-success"
+                id="list"
+                style="background-color:red"
+                >list</button>
+            </td>
+          <%}%>
+         
+        
+          <td>
+            <a
+              href="/admin/editPage<%=user._id%>"
+              class="btn btn-dark"
+              >edit</a
+            >
+          </td>
+         
+          <td>
+            <button type="text" value="delete"  onclick="deletIng('<%=user._id%>')"  class="btn btn-dark">
+                    delete 
+            </button>
+          </td>
+        </tr>
+        <%})%>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center py-3">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+         
+          <li class="page-item">
+            <a class="page-link" href="/category-list/?page=5"
+              ></a
+            >
+          </li>
+         
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+<footer class="main-footer font-xs">
+    <div class="row pb-30 pt-15">
+        <div class="col-sm-6">
+            <script>
+            document.write(new Date().getFullYear())
+            </script> ©, Evara - HTML Ecommerce Template .
+        </div>
+        <div class="col-sm-6">
+            <div class="text-sm-end">
+                All rights reserved
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+  // function handleSubmit(val) {
+  //   let selectedValue = document.getElementById("selectedValue");
+  //   selectedValue.value = val;
+
+  //   let form = document.getElementById("filter");
+  //   form.submit();
+  // }
+
+
+ async function deletIng (id){
+
+
+  console.log("hellob")
+    alert("Do want delete")
+
+
+   const data = await fetch(`/admin/deletIng${id}`,{
+                              method: 'DELETE',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            }
+                          })
+
+
+     const dataRes = await data.json()
+
+     if(dataRes.success)
+     {
+      alert("delete Success")
+       window.location.href = "/admin/catagories"
+     }else{
+      alert(" server error try again ")
+     }
+
+  }
+
+  // list.textContent = "unlist"
+  //     list.style.backgroundColor = "red"
+  //     list.style.color = "white"
+
+
+  async function list(id){
+
+    const list = document.getElementById("list")
+   
+      const data = await fetch(`/admin/listCategories${id}`,{
+                        method:"PATCH",
+                        headers:{
+                            "Content-Type":"application/json"
+                        }
+
+                  })
+
+                  const dataRes =await data.json()
+
+                  if(dataRes.success)
+                  {
+                   
+                    window.location.href = "/admin/catagories"
+                  }
+    }
+
+
+ async function unlist(id){
+
+      const data = await fetch(`/admin/unListCategories${id}`,{
+
+                        method:"PATCH",
+                        headers:{
+                          "Conternt-Type":"application/json"
+                        }
+                      
+                      })
+
+            const dataRes = await data.json()
+
+            if(dataRes.success){
+              alert('unlist success')
+              window.location.href = "/admin/catagories"
+            }
+
+    }
+</script>
+</section>
+

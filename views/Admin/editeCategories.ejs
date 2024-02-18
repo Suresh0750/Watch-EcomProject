@@ -1,0 +1,115 @@
+<%-include("../layouts/adminHeader.ejs")%>
+<section class="content lists col-md-10">
+  <div
+    class="box border rounded p-2 d-flex flex-column align-items-center justify-content-center"
+  >
+    <div class="w-50 shadow p-5">
+      <h2 class="text-center my-3">Edit Category</h2>
+
+      <form id="form" action="/admin/updateCatogory<%=edit._id%>" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="category" class="form-label text-secondary"
+            >Category Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="categoryName"
+            aria-describedby="emailHelp"
+            name="categoryName"
+            value="<%=edit.categoryName%>"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label text-secondary"
+            >Category Description</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="description"
+            aria-describedby="emailHelp"
+            name="description"
+            value="<%=edit.description%>"
+            
+          />
+        </div>
+        <div class="mb-3 d-flex gap-3">
+          <div>
+            <label for="image" class="form-label">Category Image</label>
+            <img src="../images/categoriedImages/<%=edit.image%>" data-src="../images/categoriedImages/<%=edit.image%>" alt="" id="imag1"
+            style="width: 100px; height: 100px">
+        <div class="input-group mb-3">
+            <input name="image" id="image" type="file" class="form-control"
+                placeholder="Product Image1" onchange="displayImage1(event)" required>
+        </div>
+          </div>
+        </div>
+        <input
+          type="hidden"
+          class="hidden"
+          id="_id"
+          name="id"
+          value=""
+        />
+        <div class="">
+          <img
+            id="image"
+            src=""
+            alt=""
+            class="rounded img-fluid mb-3"
+          />
+        </div>
+        <div
+          id="img-container"
+          class="my-3 row align-items-center"
+          style="height: 350px; display: none"
+        >
+          <img src="" class="img-fluid" id="croppedImg" alt="" />
+        </div>
+        <div class="text-center">
+          <button
+            type="button"
+            id="cropButton"
+            style="display: none"
+            class="btn btn-dark w-50"
+          >
+            Submit
+          </button>
+          <button
+            type="submit"
+            id="submitButton"
+           
+            class="btn btn-dark w-50"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    $("#form").validate({
+      rules: {
+        categoryName: {
+          required: true,
+          pattern: /^[a-zA-Z ]+$/,
+        },
+        description: {
+          required: true,
+          pattern: /^[a-zA-Z ]+$/,
+        },
+      },
+    });
+  </script>
+<script>
+  function displayImage1(e){
+    const imge = document.getElementById("imag1")
+    imge.src = URL.createObjectURL(e.target.files[0]);
+  }
+  
+
+</script>
+</section>
+
+
