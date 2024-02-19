@@ -1,5 +1,23 @@
 <%-include("../layouts/userHeader.ejs")%>
-    
+    <style>
+        .constainerGrid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(183.75px,1fr));
+        }
+        .item{
+            display: flex;
+            flex-direction: column;
+            width: 183px;
+        }
+        .iner-item{
+            display:flex;
+            justify-content: center;
+        }
+        .price{
+            display: flex;
+            justify-content: center;
+        }
+    </style>
     <!--Body Content-->
     <div class="collection-header">
         
@@ -53,72 +71,30 @@
                         <!--End Toolbar-->
                         <div class="grid-products grid--view-items product-load-more">
                             <div class="row">
-                                <div class="col-6 col-sm-6 col-md-4 col-lg-3 item">
-                                   
-                                   <% productDatail.forEach((product)=>{%>
+                              
+                             <div class="constainerGrid" style="width: 855px;">
+                                <% productDatail.forEach((product)=>{%>
+                                <div class="item">
+                                    <!-- <img src="../../images/categoriedImages/categoriesImage-1707012478322-237380112.jpeg" style="width: 183.75px; height: 183.75px;"> -->
+                                    <img data-src="../images/categoriedImages/<%=product.productImage1%>"  src="../images/categoriedImages/<%=product.productImage1%>" alt="image" title="product" style="width: 183.75px; height: 183.75px;">
+                                    <button class="btn btn-addto-cart" type="button" onclick="addCart('<%=product._id%>')" style="margin-top: 3px">Add To Cart</button>
 
-
-                                    <!--start product details -->
-                                    <div class="product-image">
-                                        <!-- start product image -->
-                                        <a href="/singleProduct<%=product._id%>">
-                                            <!-- image -->
-                                            <img class="primary blur-up lazyload" data-src="../images/categoriedImages/<%=product.productImage1%>" src="../images/categoriedImages/<%=product.productImage1%>" alt="image" title="product">
-                                            <!-- End image -->
-                                            <!-- Hover image -->
-                                            <img class="hover blur-up lazyload" data-src="../images/categoriedImages/<%=product.productImage1%>" src="../images/categoriedImages/<%=product.productImage1%>" alt="image" title="product">
-                                            <!-- End hover image -->
-                                           
-                                        </a>
-                                        <!-- end product image -->
-    
-                                        <!-- Start product button -->
-                                            <button class="btn btn-addto-cart" type="button" onclick="addCart('<%=product._id%>')">Add To Cart</button>
-                                        <div class="button-set">
-                                            <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview">
-                                            	<i class="icon anm anm-search-plus-r"></i>
-                                        	</a>
-                                            <div class="wishlist-btn">
-                                                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
-                                                    <i class="icon anm anm-heart-l"></i>
-                                                </a>
-                                            </div>
-                                            <div class="compare-btn">
-                                                <a class="compare add-to-compare" href="compare.html" title="Add to Compare">
-                                                    <i class="icon anm anm-random-r"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <!-- end product button -->
+                                    <div class="iner-item" >
+                                        <p><%=product.productName%></p>
                                     </div>
-                                    <!-- End product details -->
-                                     <!--start product details -->
-                                     <div class="product-details text-center">
-                                        <!-- product name -->
-                                        <div class="product-name">
-                                            <a href="#"><%=product.productName%></a>
-                                        </div>
-                                        <!-- End product name -->
-                                        <!-- product price -->
-                                        <div class="product-price">
-                                            <span class="price">$<%= product.productPrice%></span>
-                                        </div>
+                                    <div class="price">
+                                        <p>$<%= product.productPrice%></p>
                                     </div>
-                                    <!-- End product details -->
-                                    <%})%>
                                 </div>
-                                
+                                <%})%>
+                             </div>
                                 
                                
                                
                             </div>
                         </div>
                     </div>
-                    <div class="infinitpaginOuter">
-                        <div class="infinitpagin">	
-                            <a href="javascript:void(0)" class="btn loadMore">Load More</a>
-                        </div>
-                    </div>
+                
                 </div>
                 <!--End Main Content-->
                 <!--Sidebar-->
@@ -242,50 +218,9 @@
                         	<img src="assets/images1/categoriePage/Watch_Offer.jpeg" alt="" />
                         </div>
                         <!--Banner-->
-                        <!--Information-->
-                        <div class="sidebar_widget">
-                            <div class="widget-title"><h2>Information</h2></div>
-                            <div class="widget-content"><p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p></div>
-                        </div>
-                        <!--end Information-->
+              
                         <!--Product Tags-->
-                        <div class="sidebar_widget">
-                          <div class="widget-title">
-                            <h2>Product Tags</h2>
-                          </div>
-                          <div class="widget-content">
-                            <ul class="product-tags">
-                              <li><a href="#" title="Show products matching tag $100 - $400">$100 - $400</a></li>
-                              <li><a href="#" title="Show products matching tag $400 - $600">$400 - $600</a></li>
-                              <li><a href="#" title="Show products matching tag $600 - $800">$600 - $800</a></li>
-                              <li><a href="#" title="Show products matching tag Above $800">Above $800</a></li>
-                              <li><a href="#" title="Show products matching tag Allen Vela">Allen Vela</a></li>
-                              <li><a href="#" title="Show products matching tag Black">Black</a></li>
-                              <li><a href="#" title="Show products matching tag Blue">Blue</a></li>
-                              <li><a href="#" title="Show products matching tag Cantitate">Cantitate</a></li>
-                              <li><a href="#" title="Show products matching tag Famiza">Famiza</a></li>
-                              <li><a href="#" title="Show products matching tag Gray">Gray</a></li>
-                              <li><a href="#" title="Show products matching tag Green">Green</a></li>
-                              <li><a href="#" title="Show products matching tag Hot">Hot</a></li>
-                              <li><a href="#" title="Show products matching tag jean shop">jean shop</a></li>
-                              <li><a href="#" title="Show products matching tag jesse kamm">jesse kamm</a></li>
-                              <li><a href="#" title="Show products matching tag L">L</a></li>
-                              <li><a href="#" title="Show products matching tag Lardini">Lardini</a></li>
-                              <li><a href="#" title="Show products matching tag lareida">lareida</a></li>
-                              <li><a href="#" title="Show products matching tag Lirisla">Lirisla</a></li>
-                              <li><a href="#" title="Show products matching tag M">M</a></li>
-                              <li><a href="#" title="Show products matching tag mini-dress">mini-dress</a></li>
-                              <li><a href="#" title="Show products matching tag Monark">Monark</a></li>
-                              <li><a href="#" title="Show products matching tag Navy">Navy</a></li>
-                              <li><a href="#" title="Show products matching tag new">new</a></li>
-                              <li><a href="#" title="Show products matching tag new arrivals">new arrivals</a></li>
-                              <li><a href="#" title="Show products matching tag Orange">Orange</a></li>
-                              <li><a href="#" title="Show products matching tag oxford">oxford</a></li>
-                              <li><a href="#" title="Show products matching tag Oxymat">Oxymat</a></li>
-                            </ul>
-                            <span class="btn btn--small btnview">View all</span> </div>
-                        </div>
-                        <!--end Product Tags-->
+                 
                     </div>
                 </div>
                 <!--End Sidebar-->

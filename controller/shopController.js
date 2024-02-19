@@ -219,6 +219,20 @@ const categoriesProduct = async (req,res)=>{
     }
 }
 
+// grid for practice
+const gridcategorisProduct = async (req,res)=>{
+
+    try{
+        console.log(`req reched gridcategorisProduct `)
+        const productDatail = await product.find({isListed : true})
+        req.session.userIsthere;
+        res.render("shop/gridAndCategories",{productDatail,isAlive:req.session.userIsthere})
+    }catch(err){
+        console.log(`Error from categoriesProduct Page`)
+    }
+}
+
+
 const logOut = async(req,res)=>{
 
     try{
@@ -243,5 +257,6 @@ module.exports = {
     singleProduct,
     landingPage,
     categoriesProduct,
-    logOut
+    logOut,
+    gridcategorisProduct // grid for practice
 }
