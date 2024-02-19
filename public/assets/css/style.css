@@ -386,7 +386,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder { opacity:1; -ms-fil
 ========================================================================*/
 .section { padding-top:35px; padding-bottom:35px; }
 .section-header { margin-bottom:35px; }
-.pb-section { padding-bottom:35px; }
+.pb-section { padding-bottom:0px; }
 .pt-section { padding-top:35px; }
 .no-pb-section { padding-bottom:0; }
 
@@ -600,7 +600,7 @@ a.quick-view { margin-bottom:5px !important; }
 ========================================================================*/
 .template-collection .collection-header { margin-bottom:45px; }
 .collection-hero { position:relative; overflow:hidden; }
-.collection-hero__image { height:250px; opacity:1; }
+.collection-hero__image { height:34.5em; opacity:1; }
 .collection-hero__image img { width:100%; }
 .collection-hero__title-wrapper::before { content: ''; position:absolute; top:0; right:0; bottom:0;left:0; background-color:#000;opacity:0.4; }
 .collection-hero__title { font-size:1.84615em; position:absolute; color:#fff; width:100%; text-align:center; left:0; right:0; top:50%; text-transform:uppercase; -ms-transform:translateY(-50%); -webkit-transform:translateY(-50%); transform:translateY(-50%); }

@@ -32,7 +32,10 @@ const adminRouter = require("./router/adminRouter")
 const userRouter = require("./router/userRouter")
 
 
-app.use(express.static(path.join(__dirname,"public")))
+
+
+// app.use(express.static(path.join(__dirname,"public")))
+app.use(express.static(__dirname + '/public'))
 app.set("view engine","ejs")
 app.set('views', path.join(__dirname, 'views'));
 // require the user data json format
