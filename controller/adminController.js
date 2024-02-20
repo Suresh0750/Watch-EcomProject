@@ -49,11 +49,20 @@ const isBlock = async(req,res)=>{
 //userList Page show
 const pageList = async(req,res)=>{
     try{
-        if(req.session.isAdmin)
-        {
-            const userDetails = await userdata.find({})
-            res.render("Admin/userList",{userDetails})
-        }
+        console.log(req.body)
+            let count;
+            let skip;
+            let limit =5;
+            let userDetails;
+            let page = Number(req.query.page) || 1
+
+            skip =  (page-1)*limit
+             userDetails = await userdata.find({}).skip(skip).limit(limit)
+             count = await userdata.find({}).estimatedDocumentCount()
+             console.log(userDetails)
+            console.log(count)
+            res.render("Admin/userList",{userDetails,count,limit})
+        
     }catch(err){
         console.log(`Error from pageList Router`)
     }

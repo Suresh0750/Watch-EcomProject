@@ -18,7 +18,7 @@
             </form>
         </div>
         <div>
-            <a href="/admin" class="btn btn-primary">Logout</a>
+            <a href="/admin/adminlogut" class="btn btn-primary">Logout</a>
           </div>
     </header>
 
@@ -139,18 +139,18 @@
     <div class="d-flex justify-content-center py-3">
       <nav aria-label="Page navigation example">
         <ul class="pagination">
-         
-          <li class="page-item">
-            <a class="page-link" href="/category-list/?page=5"
-              ></a
-            >
-          </li>
+            <% for( let i = 0; i < count/limit; i++ ) { %>
+                <li class="page-item">
+                  <a class="page-link" href="/admin/catagories?page=<%=i+1 %>"><%= i+1 %></a>
+                </li>
+            <% } %>
          
         </ul>
-      </nav>
+      
     </div>
   </div>
 </div>
+
 <footer class="main-footer font-xs">
     <div class="row pb-30 pt-15">
         <div class="col-sm-6">

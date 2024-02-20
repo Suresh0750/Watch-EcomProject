@@ -18,7 +18,7 @@
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
                 <button>
-                    <a href="/admin/Logout">
+                    <a href="/admin/adminlogut">
                         Logout
                     </a>
                 </button>
@@ -94,11 +94,34 @@
                                 <% })%>
                             </tbody>
                         </table> <!-- table-responsive.// -->
+
+                        <div class="d-flex justify-content-center py-3">
+                            <nav aria-label="Page navigation example">
+                              <ul class="pagination">
+                               
+                                  <% for( let i = 0; i < count/limit; i++ ) { %>
+                                      <li class="page-item">
+                                        <a class="page-link" href="/admin/userList?page=<%=i+1 %>"><%= i+1 %></a>
+                                      </li>
+                                  <% } %>
+                               
+                              </ul>
+                            
+                        </div>
                     </div>
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
             
         </section> <!-- content-main end// -->
+        <style>
+            .pagination{
+                display: flex;
+                justify-content: center;
+            }
+        </style>
+
+
+           
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
@@ -124,7 +147,17 @@
     
     <script>
         
-        
+       async function page(id){
+
+        console.log(id)
+            const data = await fetch(`admin/userList`,{
+                method:"GET",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({id})
+            })
+        }
         
         
         async function btn(id){

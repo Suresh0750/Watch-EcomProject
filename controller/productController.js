@@ -165,9 +165,18 @@ const addProduct = async (req, res) => {
 const productPage = async (req, res) => {
 
     try {
-        const dataProduct = await productController.find({})
+
+        let count;
+        let skip;
+        let limit=3
+        let dataProduct;
+        let page= Number(req.query.page) || 1
+
+        skip  = (page-1)*limit
+        count = await productController.find({}).estimatedDocumentCount()
+        dataProduct = await productController.find({}).skip(skip).limit(limit)
         console.log(`dataProduct\n ${dataProduct}`)
-        res.render("Admin/adminProductPage", { productData: dataProduct })
+        res.render("Admin/adminProductPage", { productData: dataProduct,count,limit })
     } catch (err) {
         console.log(`Error from productPage router`)
     }

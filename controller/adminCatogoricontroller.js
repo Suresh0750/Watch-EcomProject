@@ -124,12 +124,20 @@ const addCotegoriesPage = async (req,res)=>{
 const categoriesPage = async (req,res)=>{
 
     try{
-     
+
+        let count;
+        let skip;
+        let limit= 5;
+
+        let catagoriDetail;
+        page = Number(req.query.page) || 1
+        skip = (page-1)*limit
+        count = await categories.find({}).estimatedDocumentCount()
         // const category = await categories.findone({})
         // console.log(categories)
-    const catagoriDetail = await categories.find({})
+         catagoriDetail = await categories.find({}).skip(skip).limit(limit)
     console.log(catagoriDetail)
-        res.render("Admin/adminCatagoires",{catagoriDetail})
+        res.render("Admin/adminCatagoires",{catagoriDetail,count,limit})
 
     }catch(err){
         console.log(`Error from categories page`)

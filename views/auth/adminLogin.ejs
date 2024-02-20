@@ -69,7 +69,7 @@
         <section class="content-main mt-80 mb-80">
             <div class="card mx-auto card-login">
                 <%if(isnotCorrect){%>
-                    <h2 style="color:red">Email or Password invalide</h2>
+                    <h2 style="color:red">Email or Password Invalid</h2>
 
                 <%}%>
                 <div class="card-body">
@@ -81,21 +81,12 @@
                         <div class="mb-3">
                             <input class="form-control" placeholder="Password" type="password" name="adminPass">
                         </div> <!-- form-group// -->
-                        <div class="mb-3">
-                            <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
-                            <label class="form-check">
-                                <input type="checkbox" class="form-check-input" checked="">
-                                <span class="form-check-label">Remember</span>
-                            </label>
-                        </div> <!-- form-group form-check .// -->
                         <div class="mb-4">
                             <input type="submit" class="btn btn-primary w-100" value ="Login">
                             <!-- <button class="btn btn-primary w-100"> Login </button> -->
                         </div> <!-- form-group// -->
                     </form>
-                    <p class="text-center small text-muted mb-15">or sign up with</p>
-                    
-                    <p class="text-center mb-4">Don't have account? <a href="#">Sign up</a></p>
+
                 </div>
             </div>
         </section>
@@ -123,6 +114,11 @@
  crossorigin="anonymous"
  referrerpolicy="no-referrer"
 ></script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
 <script>
 
     $('#adminLog').validate({
@@ -130,13 +126,12 @@
             adminEmail:{
                 required:true,
                 email:true
-
             },
             adminPass:{
                 required:true,
                 minlength:6,
-                maxlength:10
-
+                maxlength:10,
+                pattern:/^[a-zA-Z0-9]/
             }
         },
         submitHandler:async (adminLog,e)=>{
