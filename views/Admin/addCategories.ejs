@@ -41,7 +41,7 @@
     <body>
         <div class="container mt-5">
             <h2>Add Category</h2>
-            <form action="/admin/addCategory" method="POST" id="form" class="mt-4" enctype="multipart/form-data">
+            <form action="/admin/addCategory" id="addForm" method="POST" id="form" class="mt-4" enctype="multipart/form-data">
                 <div class="form-group"> 
                     <label for="categoriesName">Category Name</label>
                     <input type="text" class="form-control" id="categoriesName" name="categoryName" required>
@@ -77,6 +77,37 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <style>
+            .error{
+                color:red
+            }
+        </style>
+
+        <!-- jquery validate -->
+        <script src="assets/plugins/jquery/jquery-3.5.1.min.js"></script>
+        <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/plugins/simplebar/simplebar.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+        <script>
+
+            $("#addForm").validate({
+                    rules:{
+                        categoryName:{
+                            required:true,
+                            pattern:/^[a-zA-Z]+$/
+                        },
+                    description:{
+                        required:true,
+                        pattern:/^[a-zA-Z0-9]/
+
+                    }
+                }
+                
+        })
+        </script>
     </body>
 
     </html>

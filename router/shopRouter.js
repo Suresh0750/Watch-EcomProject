@@ -7,7 +7,6 @@ const shopControler = require("../controller/shopController.js")
 const {isUser,isBlock} = require("../middlewares/userMiddleware.js")
 
 shopRouter.get("/",shopControler.landingPage)
-shopRouter.get("/grid",isUser,isBlock,shopControler.gridcategorisProduct)
 shopRouter.get("/categories",isUser,isBlock,shopControler.categoriesProduct)
 shopRouter.get("/singleProduct:id",isUser,isBlock,shopControler.singleProduct)
 shopRouter.post("/logOut",isUser,isBlock,shopControler.logOut)

@@ -67,36 +67,36 @@
 
                                 <div id="img-container" class="input-group mb-3">
                                     <img id="preview1" src="" style="width: 500px; height: 500px; display: none"
-                                        alt="Img" name="productImage1" />
+                                        alt="Img" name="productImage1" accept='image/*' />
                                     <img id="croppedImg1" src="" style="width: 500px; height: 500px; display: none"
-                                        alt="Img"  name="productImage2" />
+                                        alt="Img"  name="productImage2" accept='image/*' />
                                     <div class="input-group mb-3">
                                         <input id="input-img1" name="productImage1" type="file" class="form-control"
-                                            placeholder="Product Image1" onchange="displayImage1(event)" required />
+                                            placeholder="Product Image1" onchange="displayImage1(event)" accept='image/*' required />
                                     </div>
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <img id="preview2" src="" style="width: 500px; height: 500px; display: none"
-                                        alt="Img" />
+                                        alt="Img" accept='image/*' />
                                     <img id="croppedImg2" src="" style="width: 500px; height: 500px; display: none"
-                                        alt="Img" />
+                                        alt="Img" accept='image/*' />
                                     <div class="input-group mb-3">
                                         <input id="input-img2" name="productImage2" type="file"
                                             class="form-control" placeholder="Product Image2"
-                                            onchange="displayImage2(event)" required />
+                                            onchange="displayImage2(event)" accept='image/*' required />
                                     </div>
                                 </div>
 
                                 <div class="input-group mb-3">
                                     <img id="preview3" src="" style="width: 500px; height: 500px; display: none"
-                                    alt="Img" />
+                                    alt="Img" accept='image/*' />
                                 <img id="croppedImg3" src="" style="width: 500px; height: 500px; display: none"
-                                    alt="Img" />
+                                    alt="Img" accept='image/*' />
                                     <div class="input-group mb-3">
                                         <input id="input-img3" name="productImage3" type="file"
                                             class="form-control" placeholder="Product Image3"
-                                            onchange="displayImage3(event)" required />
+                                            onchange="displayImage3(event)" accept='image/*' required />
                                     </div>
                                 </div>
 
@@ -152,8 +152,46 @@
         <!-- action="" method="POST" -->
 
 
-        
+        <script src="assets/plugins/jquery/jquery-3.5.1.min.js"></script>
+        <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/plugins/simplebar/simplebar.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+        <style>
+            .error{
+                color:red;
 
+            }
+        </style>
+
+        <script>
+
+            $("#addProForm").validate({
+                rules:{
+                    productName:{
+                        required:true,
+                        minlength:3,
+                        pattern:/^[a-zA-Z]+$/
+                    },
+                    parentCategory:{
+                        required:true
+                    },
+                    productPrice:{
+                        required:true,
+                        min:1,
+                        pattern:/^\d+(-\d+)*$/
+                    },
+                    productStock:{
+                        required:true,
+                        min:1,
+                        pattern:/^\d+(-\d+)*$/
+                    }
+
+                }
+            })
+
+        </script>
     <!-- <script>
         function displayImage1(event) {
             let image = document.getElementById("preview1");

@@ -203,7 +203,7 @@ const landingPage = async (req,res)=>{
         req.session.userIsthere;
         res.render("shop/index",{isAlive:req.session.userIsthere,allCatagory})
     }catch(err){
-        console.log(`Error from landingPage`)
+        console.log(`Error from landingPage ${err}`)
     }
 
  
@@ -219,18 +219,6 @@ const categoriesProduct = async (req,res)=>{
     }
 }
 
-// grid for practice
-const gridcategorisProduct = async (req,res)=>{
-
-    try{
-        console.log(`req reched gridcategorisProduct `)
-        const productDatail = await product.find({isListed : true})
-        req.session.userIsthere;
-        res.render("shop/gridAndCategories",{productDatail,isAlive:req.session.userIsthere})
-    }catch(err){
-        console.log(`Error from categoriesProduct Page`)
-    }
-}
 
 
 const logOut = async(req,res)=>{
@@ -257,6 +245,6 @@ module.exports = {
     singleProduct,
     landingPage,
     categoriesProduct,
-    logOut,
-    gridcategorisProduct // grid for practice
+    logOut
+
 }

@@ -290,7 +290,7 @@ const otpvalue = async (req,res)=>{
     } 
   
   }catch(err){
-    console.log(`Errom from ${otpvalue}`)
+    console.log(`Errom from ${err}`)
   }
 
 }

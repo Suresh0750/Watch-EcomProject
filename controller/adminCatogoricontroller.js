@@ -128,6 +128,7 @@ const categoriesPage = async (req,res)=>{
         // const category = await categories.findone({})
         // console.log(categories)
     const catagoriDetail = await categories.find({})
+    console.log(catagoriDetail)
         res.render("Admin/adminCatagoires",{catagoriDetail})
 
     }catch(err){

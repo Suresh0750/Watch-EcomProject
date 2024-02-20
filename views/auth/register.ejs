@@ -105,7 +105,7 @@
                                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
                                     <label for="Customermobile">Mobile</label>
-                                    <input type="tel" name="userMobile" placeholder="Mobile Number" id="Customermobile" class=""  autocorrect="off" autocapitalize="off" autofocus="" >
+                                    <input type="tel" name="userMobile" placeholder="Mobile Number" id="Customermobile" class="" minlength="10" maxlength="10"  autocorrect="off" autocapitalize="off" autofocus="" >
                                 </div>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -118,6 +118,13 @@
                                     <div class="form-group">
                                         <label for="CustomerPassword">Password</label>
                                         <input type="password" value="" name="userPassword" placeholder="Enter Password" id="CustomerPassword" class="" >    
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <label for="CustomerConfirPass">Password</label>
+                                        <input type="password" value="" name="userCPassword" placeholder="Enter Password" id="CustomerConfirPass" class="" >    
 
                                     </div>
                                 </div>
@@ -228,26 +235,32 @@
      <script src="assets/js/popper.min.js"></script>
      <script src="assets/js/lazysizes.js"></script>
      <script src="assets/js/main.js"></script>
-     <script>
+ 
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+<script>
             //form validation 
                 $(document).ready(function(){
                 $("#CustomerLoginForm").validate({
                     rules:{
                         firstName:{
                             required:true,
-                            minlength:2
+                            minlength:2,
+                            pattern:/^[a-zA-Z]+$/
                         },
                         lastName:{
                             required:true,
-                            minlength:1
+                            minlength:1,
+                            pattern:/^[a-zA-Z]+$/
                         },
                         userMobile:{
                             required:true,
                             minlength:10,
                             maxlength:10,
-                            number:true
+                            number:true,
+                            pattern:/^\d+(-\d+)*$/
                         },
                         userEmail:{
                             required:true,
@@ -256,7 +269,12 @@
                         userPassword:{
                             required: true,
                             minlength: 6,
-                            maxlength:10
+                            maxlength:10,
+                            pattern:/^[a-zA-Z0-9]/
+                        },
+                        userCPassword:{
+                            required:true,
+                            equalTo:"#CustomerPassword"
                         }
 
                     },
