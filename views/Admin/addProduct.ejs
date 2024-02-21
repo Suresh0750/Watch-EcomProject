@@ -65,7 +65,26 @@
                                     </label>
                                 </div>
 
-                                <div id="img-container" class="input-group mb-3">
+                                <div class="mb-3">
+                                    <div id="imageDiv" class="d-flex flex-wrap gap-5"></div>
+                                    <div>
+                                      <label for="image" class="form-label">Image</label>
+                                      <input
+                                        type="file"
+                                        class="form-control"
+                                        id="image"
+                                        name="images"
+                                        accept="image/*"
+                                        multiple
+                                        onchange="loadFile(event)"
+                                        required
+                                      />
+                                    </div>
+                                    <!-- Close button -->
+                                    <button type="button" style="width: fit-content; display: none;" id="cls-btn" class="btn btn-danger mt-2" onclick="clearImageInput()">Clear images</button>
+                                  </div>
+                
+                                <!-- <div id="img-container" class="input-group mb-3">
                                     <img id="preview1" src="" style="width: 500px; height: 500px; display: none"
                                         alt="Img" name="productImage1" accept='image/*' />
                                     <img id="croppedImg1" src="" style="width: 500px; height: 500px; display: none"
@@ -74,8 +93,8 @@
                                         <input id="input-img1" name="productImage1" type="file" class="form-control"
                                             placeholder="Product Image1" onchange="displayImage1(event)" accept='image/*' required />
                                     </div>
-                                </div>
-
+                                </div> -->
+<!-- 
                                 <div class="input-group mb-3">
                                     <img id="preview2" src="" style="width: 500px; height: 500px; display: none"
                                         alt="Img" accept='image/*' />
@@ -86,19 +105,19 @@
                                             class="form-control" placeholder="Product Image2"
                                             onchange="displayImage2(event)" accept='image/*' required />
                                     </div>
-                                </div>
+                                </div> -->
 
-                                <div class="input-group mb-3">
+                                <!-- <div class="input-group mb-3">
                                     <img id="preview3" src="" style="width: 500px; height: 500px; display: none"
                                     alt="Img" accept='image/*' />
-                                <img id="croppedImg3" src="" style="width: 500px; height: 500px; display: none"
+                                    <img id="croppedImg3" src="" style="width: 500px; height: 500px; display: none"
                                     alt="Img" accept='image/*' />
                                     <div class="input-group mb-3">
                                         <input id="input-img3" name="productImage3" type="file"
                                             class="form-control" placeholder="Product Image3"
                                             onchange="displayImage3(event)" accept='image/*' required />
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="input-group mb-3">
                                     <input name="productPrice" type="tel" class="form-control"
@@ -172,7 +191,6 @@
                     productName:{
                         required:true,
                         minlength:3,
-                        pattern:/^[a-zA-Z]+$/
                     },
                     parentCategory:{
                         required:true
@@ -192,6 +210,118 @@
             })
 
         </script>
+
+        <!-- cropped -->
+        
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css'>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js'></script>
+
+
+<script>
+    let crop = [];
+    function loadFile(event) {
+      let imageDiv = document.getElementById("imageDiv");
+      imageDiv.innerHTML = "";
+
+      const maxImages = 4;
+      const files = event.target.files;
+      if (files.length > maxImages) {
+        alert(`Please select only up to ${maxImages} images.`);
+        document.getElementById("image").value = ""; // Clear the file input
+        return;
+      }
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          // Create an image element and set its source to the selected file
+          const div = document.createElement("div");
+          div.style.height = "300px";
+          div.style.width = "300px";
+          const img = new Image();
+          img.src = e.target.result;
+          img.style.margin = "30px";
+
+          // Append the image to the container
+          div.appendChild(img);
+          imageDiv.appendChild(div);
+
+          // Initialize Cropper.js on the image
+          const cropper = new Cropper(img, {
+            aspectRatio: 3.5 / 4, // Set the aspect ratio as needed
+            viewMode: 1, // Set the view mode as needed
+          });
+
+          // Store the cropper instance in the croppers array
+          crop.push(cropper);
+        };
+
+        reader.readAsDataURL(file);
+      }
+      // document.getElementById("img-container").style.height = "200px"
+
+      document.getElementById("cropButton").addEventListener(
+        "click",
+        function () {
+          // Get the cropped canvas data
+          const canvas = cropper.getCroppedCanvas();
+
+          // Set the source of the cropped image
+          croppedImg.src = canvas.toDataURL("image/png");
+
+          canvas.toBlob(function (blob) {
+            const file = new File([blob], "croppedImg.png", {
+              type: "image/png",
+            });
+
+            const formData = new FormData();
+            formData.append("image", file);
+
+            fetch("/addproduct", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                // Check if the upload was successful
+                if (data.success) {
+                  // Optionally, you can handle success here
+                  window.location.href = "/products"; // Change this URL
+                } else {
+                  // Handle the case where upload was not successful
+                  console.error("Upload failed:", data.error);
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          });
+
+          cropper.destroy();
+          // image.style.display = "none";
+        },
+        "image/png"
+      );
+      document.getElementById("cls-btn").style.display="block"
+    }
+  </script>
+
+<script>
+    function clearImageInput() {
+      // Reset the value of the input file element
+      document.getElementById('image').value = '';
+      // Optionally, clear any displayed images
+      document.getElementById('imageDiv').innerHTML = '';
+      document.getElementById("cls-btn").style.display="none"
+     
+
+    }
+  </script>
+
     <!-- <script>
         function displayImage1(event) {
             let image = document.getElementById("preview1");

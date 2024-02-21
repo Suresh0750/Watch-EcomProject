@@ -561,7 +561,7 @@ $("#editeAddress").validate({
             },
             userMobile:{
                 required: true,
-
+                pattern:/^\d+(-\d+)*$/
             },
             houseNo:{
                 required:true,
@@ -604,10 +604,10 @@ $("#editeAddress").validate({
       if(dataRes.success){
         await Swal.fire({
                 title: "edit success!",
-                text: 'Address delete',
+                text: 'Address edit',
                 icon: "success",
                 showConfirmButton: false,
-               
+               timer:1500
                 });
 
               
