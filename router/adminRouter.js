@@ -35,9 +35,9 @@ adminRouter.get("/addProduct",isAdmin,adminProduct.addProduct)  // rendeerAddPro
 adminRouter.post("/addProductData",isAdmin,uploadImage.any(),adminProduct.addProductData)
 adminRouter.post("/editProductData:id",isAdmin,uploadImage.any(),adminProduct.editProduct)
 adminRouter.get("/productEdit:id",isAdmin,adminProduct.productEdit)
-adminRouter.get("/deletProduct:id",isAdmin,adminProduct.deletIngProduct)
-adminRouter.post("/list/:id",isAdmin,adminProduct.listProduct)
-adminRouter.post("/unlist/:id",isAdmin,adminProduct.unListProduct)
+adminRouter.delete("/deletProduct:id",isAdmin,adminProduct.deletIngProduct)
+adminRouter.patch("/list/:id",isAdmin,adminProduct.listProduct)
+adminRouter.patch("/unlist/:id",isAdmin,adminProduct.unListProduct)
 
 
 

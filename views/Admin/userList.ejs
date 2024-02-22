@@ -144,10 +144,17 @@
     <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
     Main Script
     <script src="assets/js/main.js" type="text/javascript"></script>  -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
     
     <script>
         
        async function page(id){
+
+        
 
         console.log(id)
             const data = await fetch(`admin/userList`,{
@@ -162,6 +169,17 @@
         
         async function btn(id){
             console.log(id)
+            swal({
+            title: "Are you sure?",
+            text: "you want  block or unblock",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(async(willDelete) => {
+            // If the user confirms deletion
+            if (willDelete) {
+                console.log(id)
             const data =await fetch (`/admin/isBlock${id}`,{
 
                         method:"PATCH",
@@ -177,6 +195,15 @@
                 window.location.reload()
             }
 
+         
+            console.log("Deleting user with ID:", userId);
+            } else {
+            // If the user cancels deletion
+            swal("ok");
+            }
+        });
+        
+            
 
         }
 

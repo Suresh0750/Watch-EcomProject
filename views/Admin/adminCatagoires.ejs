@@ -165,6 +165,7 @@
         </div>
     </div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
   // function handleSubmit(val) {
   //   let selectedValue = document.getElementById("selectedValue");
@@ -179,10 +180,19 @@
 
 
   console.log("hellob")
-    alert("Do want delete")
-
-
-   const data = await fetch(`/admin/deletIng${id}`,{
+    
+        swal({
+            title: "Are you sure?",
+            text: "you want  delete categoties",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(async(willDelete) => {
+            // If the user confirms deletion
+            if (willDelete) {
+                console.log(id)
+                const data = await fetch(`/admin/deletIng${id}`,{
                               method: 'DELETE',
                             headers: {
                               'Content-Type': 'application/json'
@@ -190,15 +200,23 @@
                           })
 
 
-     const dataRes = await data.json()
+                const dataRes = await data.json()
 
-     if(dataRes.success)
-     {
-      alert("delete Success")
-       window.location.href = "/admin/catagories"
-     }else{
-      alert(" server error try again ")
-     }
+                if(dataRes.success)
+                {
+                  swal("delete Success")
+                  window.location.href = "/admin/catagories"
+                }else{
+                  swal(" server error try again ")
+                }
+
+            } else {
+            // If the user cancels deletion
+            swal("ok");
+            }
+        });
+
+
 
   }
 
@@ -209,9 +227,23 @@
 
   async function list(id){
 
+
+    
+
     const list = document.getElementById("list")
    
-      const data = await fetch(`/admin/listCategories${id}`,{
+
+    swal({
+            title: "Are you sure?",
+            text: "you want to  list",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(async(willDelete) => {
+            // If the user confirms deletion
+            if (willDelete) {
+              const data = await fetch(`/admin/listCategories${id}`,{
                         method:"PATCH",
                         headers:{
                             "Content-Type":"application/json"
@@ -223,29 +255,56 @@
 
                   if(dataRes.success)
                   {
-                   
+                    swal("success")
                     window.location.href = "/admin/catagories"
                   }
+         
+            console.log("Deleting user with ID:", userId);
+            } else {
+            // If the user cancels deletion
+            swal("ok");
+            }
+        });
+    
     }
 
 
  async function unlist(id){
 
-      const data = await fetch(`/admin/unListCategories${id}`,{
+      swal({
+            title: "Are you sure?",
+            text: "you want to  unlist",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(async(willDelete) => {
+            // If the user confirms deletion
+            if (willDelete) {
+              const data = await fetch(`/admin/unListCategories${id}`,{
 
-                        method:"PATCH",
-                        headers:{
-                          "Conternt-Type":"application/json"
-                        }
-                      
-                      })
+                method:"PATCH",
+                headers:{
+                  "Conternt-Type":"application/json"
+                }
 
-            const dataRes = await data.json()
+                })
 
-            if(dataRes.success){
-              alert('unlist success')
-              window.location.href = "/admin/catagories"
+                const dataRes = await data.json()
+
+                if(dataRes.success){
+                  swal('unlist success')
+                window.location.href = "/admin/catagories"
+                }
+         
+            console.log("Deleting user with ID:", userId);
+            } else {
+            // If the user cancels deletion
+            swal("ok");
             }
+        });
+
+     
 
     }
 </script>

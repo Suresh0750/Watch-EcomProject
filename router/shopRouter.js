@@ -12,6 +12,10 @@ shopRouter.get("/singleProduct:id",isUser,isBlock,shopControler.singleProduct)
 shopRouter.post("/logOut",isUser,isBlock,shopControler.logOut)
 shopRouter.post("/addCart:id",isUser,isBlock,shopControler.addCart)
 
+// filter product 
+
+shopRouter.get("/categories/filter",isUser,isBlock,shopControler.categoriesFilter)
+
 
 //veiw cart
 shopRouter.get("/viewCart",isUser,isBlock,shopControler.userCartPage)

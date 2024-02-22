@@ -12,10 +12,17 @@ const categories = require("../models/categoriesModel")
 
 const deletIngProduct = async (req,res)=>{
 
-    const id = req.params.id
-    await productController.findByIdAndDelete({_id:id})
+  try{
 
+    const id = req.params.id
+    console.log(req.params.id)
+    await productController.findByIdAndDelete({_id:id})
+    res.status(200).send({success:true})
     res.redirect("/admin/productPage")
+  }catch(err){
+    console.log(`Error form deletIngProduct \n ${err} `)
+  }
+
 }
 
 
@@ -42,8 +49,9 @@ const listProduct = async (req, res) => {
         { _id: req.params.id },
         { $set: { isListed: true } }
       );
-      res.redirect("/admin/productPage");
+      res.status(200).send({success:true})
     } catch (error) {
+      res.status(500).send({success:false})
       console.error(error);
     }
   };
@@ -53,8 +61,9 @@ const listProduct = async (req, res) => {
         { _id: req.params.id },
         { $set: { isListed: false } }
       );
-      res.redirect("/admin/productPage");
+      res.status(200).send({success:true})
     } catch (error) {
+      res.status(500).send({success:false})
       console.error(error);
     }
   };

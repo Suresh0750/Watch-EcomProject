@@ -208,14 +208,60 @@ const landingPage = async (req,res)=>{
 
  
 }
+
+
+
+// filter allproduct
+
+const categoriesFilter = async (req,res)=>{
+
+    try{
+        console.log(req.query.categoriesName)
+        req.session.categoriesFilter = await product.find({isListed:true,parentCategory:req.query.categoriesName})
+        req.session.count =  (req.session.categoriesFilter).length 
+
+       
+        req.session.save()
+     
+
+        res.redirect("/categories")
+
+    }catch(err){
+
+        console.log(`Error from categories filter page ${err}`)
+    }
+}
 const categoriesProduct = async (req,res)=>{
 
     try{
-        const productDatail = await product.find({isListed : true})
+        let limit= 12
+        let page = Number(req.query.page) || 1
+        let count;
+        let skip;
+        let productDetail;
+        skip = (page-1)*limit
+        req.session.categoriesFilter
+        req.session.count
+        console.log(`count:\n ${req.session.count}`)
+        req.session.save()
+        // count = await product.find({isListed : true}).estimatedDocumentCount()
+
+        // count = !req.session.count ? count: req.session.count==0 ? limit : req.session.count;
+        // count = req.session.count ==0 ? limit : count;
+        console.log(count)
+         productDetail = await product.find({isListed : true}).skip(skip).limit(limit)
+
+         productDetail =   req.session.categoriesFilter ?   req.session.categoriesFilter: productDetail;
+
+         count = productDetail.length
+         console.log(productDetail)
+         const categorie = await categories.find({})
+         
         req.session.userIsthere;
-        res.render("shop/categories",{productDatail,isAlive:req.session.userIsthere})
+        res.render("shop/categories",{productDetail,isAlive:req.session.userIsthere,count,limit,categorie})
+        req.session.categoriesFilter = null
     }catch(err){
-        console.log(`Error from categoriesProduct Page`)
+        console.log(`Error from categoriesProduct Page\n ${err}`)
     }
 }
 
@@ -240,6 +286,7 @@ module.exports = {
     decQty, // decreament cart userQuenty
 
     //--------------
+    categoriesFilter,
     userCartPage,
     addCart, // addCart from single product
     singleProduct,

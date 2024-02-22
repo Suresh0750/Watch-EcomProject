@@ -73,7 +73,7 @@
                             <div class="row">
                               
                              <div class="constainerGrid" style="width: 855px;">
-                                <% productDatail.forEach((product)=>{%>
+                                <% productDetail.forEach((product)=>{%>
                                 <div class="item">
                                     <!-- <img src="../../images/categoriedImages/categoriesImage-1707012478322-237380112.jpeg" style="width: 183.75px; height: 183.75px;"> -->
                                     <img data-src="../images/categoriedImages/<%=product.productImage1%>"  src="../images/categoriedImages/<%=product.productImage1%>" alt="image" title="product" style="width: 183.75px; height: 183.75px;">
@@ -89,7 +89,20 @@
                                 <%})%>
                              </div>
                                 
-                               
+                            <!-- pagination -->
+                            <div class="d-flex justify-content-center py-3">
+                                <nav aria-label="Page navigation example">
+                                  <ul class="pagination">
+                                    <% for( let i = 0; i < count/limit; i++ ) { %>
+                                        <li class="page-item" >
+                                          <a class="page-link" href="/categories?page=<%=i+1 %>"><%= i+1 %></a>
+                                        </li>
+                                    <% } %>
+                                   
+                                  </ul>
+                                
+                              </div>
+                          
                                
                             </div>
                         </div>
@@ -106,11 +119,11 @@
                             <div class="widget-title"><h2>Categories</h2></div>
                             <div class="widget-content">
                                 <ul class="sidebar_categories">
-                                    <li class="lvl-1"><a href="#;" class="site-nav">Analogue</a></li>
-                                    <li class="lvl-1"><a href="#;" class="site-nav">Digital</a></li>
-                                    <li class="lvl-1"><a href="#;" class="site-nav">Hybrid</a></li>
-                                    <li class="lvl-1"><a href="#;" class="site-nav">solor</a></li>
-                                    <li class="lvl-1"><a href="#;" class="site-nav">Quartz</a></li>
+
+                                    <% categorie.forEach((data)=>{%>
+                                        <li class="lvl-1"><a href="/categories/filter?categoriesName=<%=data.categoryName%>" class="site-nav"><%=data.categoryName%></a></li>
+                                    <%})%>
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -123,12 +136,12 @@
                             <form action="#" method="post" class="price-filter">
                                 <div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
                                 	<div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="min"></span>
                                     <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <p class="no-margin"><input id="amount" type="text"></p>
+                                        <p class="no-margin"><input id="amount" type="text" min="300" max="1000"></p>
                                     </div>
                                     <div class="col-6 text-right margin-25px-top">
                                         <button class="btn btn-secondary btn--small">filter</button>
@@ -472,6 +485,7 @@
 </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
     async function addCart(id){
             
