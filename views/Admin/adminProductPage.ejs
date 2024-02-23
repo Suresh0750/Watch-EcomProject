@@ -181,25 +181,38 @@
 <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
 // <!-- Main Script -->
 <script src="assets/js/main.js" type="text/javascript"></script>
+<script src="sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+<script src="sweetalert2.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
 
  async function deleteProduct (id){
 
 console.log("hellob")
-  
-      swal({
-          title: "Are you sure?",
-          text: "you want  delete categoties",
-          icon: "warning",
-          buttons: true,
-          dangerMode: true,
-      })
-      .then(async(willDelete) => {
-          // If the user confirms deletion
-          if (willDelete) {
-              console.log(id)
-              const data = await fetch(`/admin/deletProduct${id}`,{
+
+
+
+const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+        }).then(async (result) => {
+        if (result.isConfirmed) {
+   
+            const data = await fetch(`/admin/deletProduct${id}`,{
                             method: 'DELETE',
                           headers: {
                             'Content-Type': 'application/json'
@@ -211,19 +224,29 @@ console.log("hellob")
 
               if(dataRes.success)
               {
-                swal("delete Success")
+                swalWithBootstrapButtons.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success",
+                    timer:1000,
+                    });
 
                 window.location.href = "/admin/productPage"
               }else{
                 swal(" server error try again ")
               }
 
-          } else {
-          // If the user cancels deletion
-          swal("ok");
-          }
-      });
-
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+        text: "Your imaginary file is safe :)",
+        icon: "error"
+        });
+  }
+});
 
 
 }
@@ -240,17 +263,25 @@ async function list(id){
 const list = document.getElementById("list")
 
 
-swal({
+const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
         title: "Are you sure?",
-        text: "you want to  list",
+        text: "You won't be able to revert this!",
         icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then(async(willDelete) => {
-        // If the user confirms deletion
-        if (willDelete) {
-          const data = await fetch(`/admin/list/${id}`,{
+        showCancelButton: true,
+        confirmButtonText: "Yes, list it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+        }).then(async (result) => {
+        if (result.isConfirmed) {
+   
+            const data = await fetch(`/admin/list/${id}`,{
                     method:"PATCH",
                     headers:{
                         "Content-Type":"application/json"
@@ -262,36 +293,53 @@ swal({
 
               if(dataRes.success)
               {
-                swal("success")
+                swalWithBootstrapButtons.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success",
+                    timer:1000
+                    });
                 window.location.href = "/admin/productPage"
               }else{
                 swal("server error");
                   window.location.reload()
               }
-     
-        console.log("Deleting user with ID:", userId);
-        } else {
-        // If the user cancels deletion
-        swal("ok");
-        }
-    });
+
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+        text: "Your imaginary file is safe :)",
+        icon: "error"
+        });
+  }
+});
 
 }
 
 async function unlist(id){
 
-
-  swal({
-          title: "Are you sure?",
-          text: "you want to  unlist",
-          icon: "warning",
-          buttons: true,
-          dangerMode: true,
-      })
-      .then(async(willDelete) => {
-          // If the user confirms deletion
-          if (willDelete) {
-            const data = await fetch(`/admin/unlist/${id}`,{
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, unlist it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+        }).then(async (result) => {
+        if (result.isConfirmed) {
+   
+                const data = await fetch(`/admin/unlist/${id}`,{
                       method:"PATCH",
                       headers:{
                           "Content-Type":"application/json"
@@ -303,18 +351,31 @@ async function unlist(id){
 
                 if(dataRes.success)
                 {
-                  swal("success")
+                    swalWithBootstrapButtons.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success",
+                    timer:1000
+                    });
                   window.location.href = "/admin/productPage"
                 }else{
                     window.location.reload()
                 }
-       
-          console.log("Deleting user with ID:", userId);
-          } else {
-          // If the user cancels deletion
-          swal("ok");
-          }
-      });
+
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+        text: "Your imaginary file is safe :)",
+        icon: "error"
+        });
+  }
+});
+
+
+  
   
   }
 
