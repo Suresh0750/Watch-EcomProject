@@ -270,7 +270,7 @@
                             required: true,
                             minlength: 6,
                             maxlength:10,
-                            pattern:/^[a-zA-Z0-9]/
+                            pattern: /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/
                         },
                         userCPassword:{
                             required:true,
@@ -298,8 +298,9 @@
                     },
                     userPassword:{
                         required:"Enter value this field required",
-                        minlength:"password should be above 6",
-                        maxlength:"password should be blow 10"
+                        minlength:"password should be above 6 and should include alphabets, numbers and special characters",
+                        maxlength:"password should be blow 10 and should include alphabets, numbers and special characters",
+                        pattern:"should include alphabets, numbers and special characters"
                     }
 
                     },

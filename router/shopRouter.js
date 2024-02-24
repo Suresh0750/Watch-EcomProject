@@ -15,11 +15,26 @@ shopRouter.post("/addCart:id",isUser,isBlock,shopControler.addCart)
 // filter product 
 
 shopRouter.get("/categories/filter",isUser,isBlock,shopControler.categoriesFilter)
+shopRouter.post("/priceWiseFilter:id",isUser,isBlock,shopControler.priceFilter)
+shopRouter.post("/sortPrice:id",isUser,isBlock,shopControler.sortPrice)
+
+
 
 
 //veiw cart
 shopRouter.get("/viewCart",isUser,isBlock,shopControler.userCartPage)
 shopRouter.delete("/deletCart:id",shopControler.deletCart)
+
+
+// checkout Page
+
+shopRouter.get("/Checkout",isUser,isBlock,shopControler.checkout)
+
+
+
+// shop receive page
+
+shopRouter.get("/orderReceived",isUser,isBlock,shopControler.orderReceived)
 
 // userIncrease product
 

@@ -16,6 +16,8 @@
         .price{
             display: flex;
             justify-content: center;
+
+            
         }
     </style>
     <!--Body Content-->
@@ -51,15 +53,11 @@
                                     <div class="col-4 col-md-4 col-lg-4 text-right">
                                     	<div class="filters-toolbar__item">
                                       		<label for="SortBy" class="hidden">Sort</label>
-                                      		<select name="SortBy" id="SortBy" class="filters-toolbar__input filters-toolbar__input--sort">
+                                      		<select name="SortBy" id="SortBy" onchange="sortDdbtn()" class="filters-toolbar__input filters-toolbar__input--sort">
                                                 <option value="title-ascending" selected="selected">Sort</option>
-                                                <option>Best Selling</option>
-                                                <option>Alphabetically, A-Z</option>
-                                                <option>Alphabetically, Z-A</option>
-                                                <option>Price, low to high</option>
-                                                <option>Price, high to low</option>
-                                                <option>Date, new to old</option>
-                                                <option>Date, old to new</option>
+
+                                                <option id="pricLowtoHeigh" value="lowToHigh">Price, low to high</option>
+                                                <option id="priceHighToLow" value="highToLow">Price, high to low</option>
                                       		</select>
                                       		<input class="collection-header__default-sort" type="hidden" value="manual">
                                         </div>
@@ -77,7 +75,13 @@
                                 <div class="item">
                                     <!-- <img src="../../images/categoriedImages/categoriesImage-1707012478322-237380112.jpeg" style="width: 183.75px; height: 183.75px;"> -->
                                     <img data-src="../images/categoriedImages/<%=product.productImage1%>"  src="../images/categoriedImages/<%=product.productImage1%>" alt="image" title="product" style="width: 183.75px; height: 183.75px;">
-                                    <button class="btn btn-addto-cart" type="button" onclick="addCart('<%=product._id%>')" style="margin-top: 3px">Add To Cart</button>
+
+                                    <button class="btn btn-addto-cart" type="button"  style="margin-top: 3px">
+                                        <a href="/singleProduct<%=product._id%>">
+
+                                            Add To Cart
+                                        </a>
+                                    </button>
 
                                     <div class="iner-item" >
                                         <p><%=product.productName%></p>
@@ -128,55 +132,42 @@
                             </div>
                         </div>
                         <!--Categories-->
-                        <!--Price Filter-->
-                        <div class="sidebar_widget filterBox filter-widget">
-                            <div class="widget-title">
-                            	<h2>Price</h2>
-                            </div>
-                            <form action="#" method="post" class="price-filter">
-                                <div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
-                                	<div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="min"></span>
-                                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <p class="no-margin"><input id="amount" type="text" min="300" max="1000"></p>
-                                    </div>
-                                    <div class="col-6 text-right margin-25px-top">
-                                        <button class="btn btn-secondary btn--small">filter</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <!--End Price Filter-->
                
-                     
+                        <!-- <div class="col-6 text-right margin-25px-top">
+                            <button class="btn btn-secondary btn--small">filter</button>
+                        </div> -->
                         <!--Brand-->
                         <div class="sidebar_widget filterBox filter-widget">
                             <div class="widget-title"><h2>Brands</h2></div>
                             <ul>
+                            
+                            <form id="priceProduct">
                                 <li>
-                                  <input type="checkbox" value="allen-vela" id="check1">
-                                  <label for="check1"><span><span></span></span>Rolex</label>
+                                  <input type="radio" value="300-400" id="price1" name="price">
+                                  <label for="price1"><span><span></span></span>$300-$400</label>
                                 </li>
                                 <li>
-                                  <input type="checkbox" value="oxymat" id="check3">
-                                  <label for="check3"><span><span></span></span>Titan</label>
+                                  <input type="radio" value="400-600" id="price2" name="price">
+                                  <label for="price2"><span><span></span></span>$400-$600</label>
                                 </li>
                                 <li>
-                                  <input type="checkbox" value="vanelas" id="check4">
-                                  <label for="check4"><span><span></span></span>Hublot</label>
+                                  <input type="radio" value="600-800" id="price3" name="price">
+                                  <label for="price3"><span><span></span></span>$600-$800</label>
                                 </li>
                                 <li>
-                                  <input type="checkbox" value="pagini" id="check5">
-                                  <label for="check5"><span><span></span></span>Cassio</label>
+                                  <input type="radio" value="800-1000" id="price4" name="price">
+                                  <label for="price4"><span><span></span></span>$800-$1000</label>
                                 </li>
                                 <li>
-                                  <input type="checkbox" value="monark" id="check6">
-                                  <label for="check6"><span><span></span></span>Puma</label>
+                                  <input type="radio" value="1000-1400" id="price5" name="price">
+                                  <label for="price5"><span><span></span></span>$1000-$1400</label>
                                 </li>
+                            </form>
                             </ul>
+
+                        <div class="col-6 text-right margin-25px-top">
+                            <button class="btn btn-secondary btn--small" id="filter">filter</button>
+                        </div>
                         </div>
                         <!--End Brand-->
                         <!--Popular Products-->
@@ -487,12 +478,49 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
-    async function addCart(id){
+
+
+async function sortDdbtn(){
+
+    console.log("wertyuio"+SortBy.value)
+
+    if(SortBy.value=="title-ascending")
+    {
+        console.log(SortBy.value)
+        return 
+    }
+
+    const value = SortBy.value
+    const data = await fetch(`/sortPrice${value}`,{
+            method:"post",
+            headers:{
+                "Content-Type":"application/json"
+            }
+        })
+
+        const resData = await data.json()
+
+        if(resData.success){
+
+            window.location.href = "/categories"
+        }
+        
+
+
+}
+//    const pricLowtoHeigh = document.getElementById("pricLowtoHeigh")
+
+//    pricLowtoHeigh.addEventListener("click", async function(){
+
+//         
+//    })
+
+async function addCart(id){
             
             console.log(id)
     
-            const data = await fetch(`/addCart${id}`,{
-                                    method:"POST",
+            const data = await fetch(`/singleProduct${id}`,{
+                                    method:"GET",
                                     headers:{
                                         "Content-Type":"application/json"
                                     }
@@ -510,6 +538,67 @@
                     });
                 }
             }
+    // async function addCart(id){
+            
+    //         console.log(id)
+    
+    //         const data = await fetch(`/addCart${id}`,{
+    //                                 method:"POST",
+    //                                 headers:{
+    //                                     "Content-Type":"application/json"
+    //                                 }
+    //                     })
+    
+    //             const dataRes = await data.json()
+    
+    //             if(dataRes.success)
+    //             {
+    //                     Swal.fire({
+    //                     icon: 'success',
+    //                     title: 'Item Added to Cart',
+    //                     showConfirmButton: false,
+    //                     timer: 1500
+    //                 });
+    //             }
+    //         }
+</script>
+
+<script>
+    const filterBtn = document.getElementById("filter")
+
+    const priceProduct = document.getElementById("priceProduct")
+
+    filterBtn.addEventListener("click",async ()=>{
+
+        let price;
+
+       await new FormData(priceProduct).forEach((value,key)=>{
+
+                price = value
+        })
+
+
+        if(price){
+
+            const data = await fetch(`/priceWiseFilter${price}`,{
+                method:"post",
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            })
+
+            const res = await data.json()
+            if(res.success){
+
+                window.location.href = "/categories"
+            }
+        }else{
+
+        }
+
+    })
+   
+
 </script>
 <!-- belle/shop-right-sidebar.html   11 Nov 2019 12:39:02 GMT -->
 </html>

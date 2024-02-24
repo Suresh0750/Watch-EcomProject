@@ -5,7 +5,7 @@
     	<!--Page Title-->
     	<div class="page section-header text-center">
 			<div class="page-title">
-        		<div class="wrapper"><h1 class="page-width">Your cart</h1></div>
+        		<div class="wrapper"><h1 class="page-width">Checkout</h1></div>
       		</div>
 		</div>
         <!--End Page Title-->
@@ -14,64 +14,94 @@
         	<div class="row">
                 <div class="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
                 	<!-- <form action="#" method="post" class="cart style2"> -->
-                		<table>
-                            <thead class="cart__row cart__header">
-                                <tr>
-                                    <th colspan="2" class="text-center">Product</th>
-                                    <th class="text-center">Price</th>
-                                    <th class="text-center"></th>
-                                    <th class="text-right">Total</th>
-                                    <th class="action">&nbsp;</th>
-                                </tr>
-                            </thead>
-                    		<tbody>
-                                <% userCartData.forEach((cart)=>{%>
-                                <tr class="cart__row border-bottom line1 cart-flex border-top">
-                                    <td class="cart__image-wrapper cart-flex-item">
-                                        <a href="#"><img class="cart__image" src="../images/categoriedImages/<%=cart.productId.productImage1%>" alt="Elastic Waist Dress - Navy / Small"></a>
-                                    </td>
-                                    <td class="cart__meta small--text-left cart-flex-item">
-                                        <div class="list-view-item__title">
-                                            <a href="#"><%=cart.productId.productName%></a>
-                                        </div>
-                                    </td>
-                                    <input type="hidden" id="productId" value="<%=cart.productId._id%>">
-                                    <td class="cart__price-wrapper cart-flex-item">
-                                        <span id="price<%=cart._id%>"><%=cart.productId.productPrice%></span>
-                                    </td>
-                                    <td class="cart__update-wrapper cart-flex-item text-right">
-                                        <div class="cart__qty text-center">
-                                            <div class="qtyField">
-                                                <button onclick="decreMent('<%=cart._id%>')">
-                                                    <i class="icon icon-minus"></i>
-                                                </button>
-                                                <span id="<%=cart._id%>" ><%=cart.productQuantity%></span>
-                                                <button onclick="incrMent('<%=cart._id%>')">
-                                                    <i class="icon icon-plus"></i>
-                                                </button>
-                                                <!-- <input class="cart__qty-input qty" type="text" name="updates[]" id="qty" value="1" pattern="[0-9]*"> -->
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-right small--hide cart-price">
-                                        <div><span class="money" id="total<%=cart._id%>"><%=cart.totalCastPerproduct%></span></div>
-                                    </td>
-                                    <td class="text-center small--hide" style="cursor: pointer;" onclick="deletData('<%=cart._id%>')"><i class="icon icon anm anm-times-l"></i></td>
-                                </tr>
-                                <%})%>
-                               
-                            </tbody>
-                    		<tfoot>
-                                <tr>
+                	<p style="font-size: large;
+                    font-family: sans-serif;
+                    font-weight: 800">Billing and Shipping information</p>
+                    <p style="font-size: large;
+                    font-family: sans-serif;
+                    font-weight: 800">Select Address</p>
 
-                                </tr>
-                            </tfoot>
-                    </table>
-                    
-                 
-                    
+                    <%userAddressDetails.forEach((data)=>{%>
+
+                  
+                 <div style="width: 1em;height: 1em;   width: 27em;
+                 height: 18em; border: 1px solid whitesmoke;
+  box-sizing: border-box;">
+                        <div style="    font-size: large;
+                        font-family: sans-serif;
+                        padding: 1em;">
+                            Name:<%=data.name%>
+                        </div>
+                        <div style="font-size: large;
+                        font-family: sans-serif;
+                        padding: 0em 1em;">
+                            <Address>
+                                Address :<%=data.houseNo%>
+                            </Address>
+                        </div>
+                        <div style=" font-size: large;
+                        font-family: sans-serif;
+                        padding: 1em;">
+                            Mobile No:<%=data.phone%>
+                        </div>
+                        <div style="margin-left: 1em">
+                            <button>
+                                <a href="/user/editAddress<%=data._id%>">
+                                <i class="fa fa-edit" style=" padding: 0.5em;
+                                background-color: green">
+                                 Edit</i>
+                                </a>
+                                </button>
+                            <button onclick="deleteAddress('<%=data._id%>')"> <i class="fa fa-minus-circle" style="padding: 0.5em;
+                                background-color: green"> Delete</i></button>
+                        </div>
+                 </div>
+                 <%})%>
+                 <div>
+                    <button class="btn   btn-primary" style=" padding: 0.5em;
+                    background-color: green;margin-top: 1em">
+                    <a href="/user/addAddress">
+                        Add Address
+                    </a>
+                </button>
+                 </div>
+
+                 <div>
+                    <p style="font-size: large;
+                    font-family: sans-serif;
+                    font-weight: 800">
+                    Select Address
+                    </p>
+                    <select name="select" aria-placeholder="Selelect Address" id="" value="Selelect Address" required style="display: block;width: 12em;">
+                    <option value="default" disabled selected value="Select Address">Select Address</option>
+                    <%userAddressDetails.forEach((data)=>{%>
+                        <option value="address"><%=data.houseNo%></option>
+                    <%})%>
+                    </select>
+                </div>
+                <div >
+                    <p style="font-size: large;
+                    font-family: sans-serif;
+                    font-weight: 800">Payment Method</p>
+                    <div>
+                        <input type="radio" name="paymentMethod" value="Cash on Delivery" checked>Cash on Delivery<br>
+                        <input type="radio" name="paymentMethod" value="Wallet">Wallet<br>
+                        <input type="radio" name="paymentMethod" value="Razorpay">Razorpay<br>
+                    </div>
+                </div>
+                <div>
+                    <button style=" padding: 0.5em;
+                    background-color: green;margin-top: 1em">
+                    <a href="/orderReceived">
+                        Order
+                        <i class="fa fa-arrow-circle-right">
+
+                        </i>
+                    </a>
+                    </button>
+                </div>
                     <!-- </form>                    -->
-               	</div>
+            </div>
                 <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
                 	<div class="cart-note">
                     	<div class="solid-border">
@@ -113,17 +143,7 @@
                 </div>
             </div>
         </div>
-        <div style="display: flex; justify-content: center;">
-            <%if(userCartData.length!=0){%>
-            <a href="/Checkout">
-            <button style="padding: 1em ; background-color: green; width: 9em;
-            border-radius: 11px;">
-                Proceed to checkout
-                <i class="fa fa-arrow-right"></i>
-            </button>
-            </a>
-            <%}%>
-        </div>
+        
     </div>
     <!--End Body Content-->
     
@@ -257,8 +277,19 @@
      <script src="assets/js/lazysizes.js"></script>
      <script src="assets/js/main.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </div>
 <script>
+
+   const grandTotal = document.getElementById("grandTotal")
+   const grandTotalValue = grandTotal.textContent
+
+   console.log(grandTotalValue)
+    
+</script>
+<script>
+
+    
 async function  deletData(id){
 
 
@@ -357,79 +388,56 @@ async  function incrMent(id){
 
     }
 
-async function decreMent(id){
+    async function deleteAddress(id){
 
-
-
-        // productId
-
-        let productId = document.getElementById("productId").value
-
-        console.log(productId)
-
-        // price 
-
-        let price = document.getElementById(`price${id}`).textContent
-
-        console.log(price)
-        // decreaseButton
-        let cartDecrease = document.getElementById(`${id}`).textContent
-        
-        let spanValue = document.getElementById(`${id}`)
-
-
-        // total value
-        let totalCastValue = document.getElementById(`total${id}`).textContent
-        let totalCast = document.getElementById(`total${id}`)
-
-
-
-        //grandTotal
-        let grandTotal = document.getElementById("grandTotal")
-
-        //TotalPrice
-
-        let priceTotal = document.getElementById("priceTotal")
-
-        if(cartDecrease >1)
-        {
-
-            let cartId ={
-                _id : id,
-                productId : productId
-            }
-            console.log(cartId)
-            let data = await fetch("/cart/deCrease",{
-
-                method:"PUT",
+        swal({
+            title: "Are you sure?",
+            text: "you want  delete categoties",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then(async(willDelete) => {
+            // If the user confirms deletion
+            if (willDelete) {
+                console.log(id)
+                const data = await fetch(`/user/daleteAdd${id}`,{
+                method:"DELETE",
                 headers:{
                     "Content-Type":"application/json"
-                },
-                body:JSON.stringify(cartId)
-            })
+                }
+              })
+    
+
+                const dataRes = await data.json()
+
+                if(dataRes.success){
+
+                await Swal.fire({
+                    title: "delete Address!",
+                    text: 'Address delete',
+                    icon: "success",
+                    timer:1500
+                    });
+
+                
+                    window.location.reload()
+                }
+               
+
+            } else {
+            // If the user cancels deletion
+            swal("ok");
+            }
+        });
 
 
-            const dataRes = await data.json()
+ 
 
-            console.log(dataRes)
-
-            spanValue.textContent = await dataRes.cartProduct.productQuantity
-            totalCast.textContent = await dataRes.cartProduct.totalCastPerproduct
-            grandTotal.textContent = await dataRes.grandTotal
-            priceTotal.textContent = await dataRes.grandTotal
-            window.location.reload()
-        }else{
-            Swal.fire({
-        title: "sorry",
-        text: "minimux limit should be 1",
-        icon: "error",
-        showCancelButton: true,
-
-        })
+}
+</script>
 
 
-        }
-    }
 </script>
 </body>
 

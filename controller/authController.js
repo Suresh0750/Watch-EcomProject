@@ -65,6 +65,7 @@ const updatePass = async(req,res)=>{
   console.log(`req reched updatePass router`)
   try{
     const  _id= req.session.userId 
+    console.log(req.params.id)
     const changPass = await bcrypt.hash(req.params.id,10)
     await userdata.findByIdAndUpdate({_id},{$set:{userPassword:changPass}});
     res.status(200).send({success:true})
@@ -274,6 +275,7 @@ const otpvalue = async (req,res)=>{
       await userdata({firstName,lastName,userMobile,userEmail,userPassword}).save()
   
       req.session.userData = null
+      const userDetail = await userdata.findOne({userEmail:userEmail})
       console.log("database stored")
       req.session.userIsthere ={
         isAlive:true,

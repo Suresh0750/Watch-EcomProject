@@ -112,7 +112,6 @@ const addCotegories = async (req,res)=>{
 const addCotegoriesPage = async (req,res)=>{
     try{
 
-      
         res.render("Admin/addCategories")
         
     }catch(err){

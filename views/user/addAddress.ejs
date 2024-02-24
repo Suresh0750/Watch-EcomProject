@@ -607,11 +607,12 @@
                     <div class="form-group">
                     <label>Mobile</label>
                     <input
-                        type="number"
+                        type="tel"
                         name="userMobile"
                         class="form-control p_input input"
-                        maxlength="10"
                         style ="background-color: #bba47a"
+                        min="10"
+                        max="10"
                         minlength="10"
                         maxlength="10"
                         required
@@ -660,10 +661,11 @@
                     <div class="form-group">
                     <label>Pin code</label>
                     <input
-                        type="text"
+                        type="tel"
                         name="pincode"
                         class="form-control p_input input"
                         style="background-color: #bba47a"
+                        min="6"
                         required  
                     />
                     </div>
@@ -839,8 +841,8 @@
             },
             userMobile:{
                 required: true,
-                minlength: 10,
-                maxlength:10
+                Number:true,
+                pattern:/^\d+(-\d+)*$/
             },
             houseNo:{
                 required:true,

@@ -2,9 +2,48 @@ const product = require("../models/productModule")
 const categories = require('../models/categoriesModel')
 const userId = require("../models/userModel") 
 const cartCollection = require("../models/cartModel")
+const {AddressModel} = require("../models/addressModel")
+
+// order received page
+
+const orderReceived = async(req,res)=>{
+
+    try{
+        const userId = req.session.userIsthere.userId
+        const userCortdelet = await cartCollection.findByIdAndDelete({userId:userId})
+        res.render("shop/orderReceived")
+
+    }catch(err){
+        console.log(`Error from orderReceived ${err}`)
+    }
+}
+
+// checkoutPage
 
 
+const checkout = async(req,res)=>{
 
+    try{
+        console.log(req.session.userIsthere)
+        const userId =req.session.userIsthere.userId
+
+        let userAddressDetails = await AddressModel.find({user_id:userId})
+        if(userAddressDetails.length==0){
+
+            res.redirect("/user/addAddress")
+        }
+        let userCartData = await grandTotal(req);
+
+        userCartData = userCartData.length==0 ? 0 : userCartData;
+    
+        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails})
+    }catch(err){
+        console.log(`Error from checkout Page ${err}`)
+    }
+
+}
+
+// !==================================================================================
 
 
 
@@ -38,7 +77,12 @@ const grandTotal = async (req)=>{
         const userId = req.session.userIsthere.userId
 
         let userCartData = await cartCollection.find({userId : userId}).populate("productId")
-    
+        console.log(userCartData)
+        if(userCartData.length==0)
+        {
+            req.session.grandTotal = 0
+            return userCartData
+        }
         let grandTotal =0
         for(var s of userCartData)
         {
@@ -48,7 +92,7 @@ const grandTotal = async (req)=>{
         }
     
         userCartData = await cartCollection.find({userId:userId}).populate("productId")
-    
+        
         req.session.grandTotal =  grandTotal
         req.session.save()
         return userCartData
@@ -122,11 +166,10 @@ const userCartPage = async (req,res)=>{
     try{
 
         let userCartData = await grandTotal(req);
-        
-
+        console.log( userCartData)
         // const userId = req.session.userIsthere.userId
         // const userViewCart = await cartCollection.find({userId:userId})
-        res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData,grandTotal})
+        res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData})
 
     }catch(err){
         console.log(` Error from userCartpage :\n${err}`)
@@ -143,7 +186,6 @@ const userCartPage = async (req,res)=>{
 const addCart = async (req,res)=>{
 
     try{
-        console.log(`req reached addCart`)
 
         const id = req.params.id
 
@@ -185,6 +227,7 @@ const addCart = async (req,res)=>{
 const singleProduct = async (req,res)=>{
 
     try{
+        console.log(req.params.id)
         const id = req.params.id
         const productDetails = await product.find({_id:id})
         const categoriesDetail = await categories.find({_id:id})
@@ -198,7 +241,7 @@ const singleProduct = async (req,res)=>{
 const landingPage = async (req,res)=>{
 
     try{
-        console.log('hello all')
+
         const allCatagory =  await categories.find({})
         req.session.userIsthere;
         res.render("shop/index",{isAlive:req.session.userIsthere,allCatagory})
@@ -209,6 +252,93 @@ const landingPage = async (req,res)=>{
  
 }
 
+// sort wit price 
+
+
+const sortPrice = async(req,res)=>{
+    try{
+
+
+        if(req.params.id == "lowToHigh"){
+
+            let data = req.session.categoriesFilter
+
+
+            let i=0
+            let temp;
+            let j;
+             while(i<data.length)
+            {
+                j=i+1
+                while(j<data.length){
+                    
+                    if(data[i].productPrice>data[j].productPrice)
+                    {
+                        temp= data[i]
+                        data[i]=data[j]
+                        data[j]=temp
+                    }
+                    
+                    j++
+                }
+
+                i++
+            }
+
+        
+            req.session.count = (req.session.categoriesFilter).length
+            req.session.save()
+            res.status(200).send({success:true})
+        }else if(req.params.id == "highToLow"){
+            let data = req.session.categoriesFilter
+            console.log(req.session.categoriesFilter)
+            let i=0
+            let temp;
+            let j;
+             while(i<data.length)
+            {
+                j=i+1
+                while(j<data.length){
+                    
+                    if(data[i].productPrice<data[j].productPrice)
+                    {
+                        temp= data[i]
+                        data[i]=data[j]
+                        data[j]=temp
+                    }
+                    
+                    j++
+                }
+           
+                i++
+            }
+            req.session.categoriesFilter = data
+            req.session.count = data.length
+            req.session.save()
+            res.status(200).send({success:true})
+        }
+        
+    }catch(err){
+        res.status(500).send({success:false})
+        console.log(`Error from sortPrice ${err}`)
+    }
+}
+// filterPrice wise
+
+const priceFilter = async (req,res)=>{
+    try{
+        const price = (req.params.id).split('-')
+
+        
+        req.session.categoriesFilter = await product.find({isListed:true,productPrice:{$gt:price[0],$lt:price[1]}})
+        req.session.count =  (req.session.categoriesFilter).length
+        req.session.save()
+        res.status(200).send({success:true})
+
+    }catch(err){
+        console.log(`Error from price Filter ${err}`)
+    }
+}
 
 
 // filter allproduct
@@ -216,7 +346,7 @@ const landingPage = async (req,res)=>{
 const categoriesFilter = async (req,res)=>{
 
     try{
-        console.log(req.query.categoriesName)
+
         req.session.categoriesFilter = await product.find({isListed:true,parentCategory:req.query.categoriesName})
         req.session.count =  (req.session.categoriesFilter).length 
 
@@ -231,6 +361,9 @@ const categoriesFilter = async (req,res)=>{
         console.log(`Error from categories filter page ${err}`)
     }
 }
+
+
+// render categoriesProduct Page
 const categoriesProduct = async (req,res)=>{
 
     try{
@@ -242,24 +375,28 @@ const categoriesProduct = async (req,res)=>{
         skip = (page-1)*limit
         req.session.categoriesFilter
         req.session.count
-        console.log(`count:\n ${req.session.count}`)
         req.session.save()
         // count = await product.find({isListed : true}).estimatedDocumentCount()
 
         // count = !req.session.count ? count: req.session.count==0 ? limit : req.session.count;
         // count = req.session.count ==0 ? limit : count;
-        console.log(count)
+
          productDetail = await product.find({isListed : true}).skip(skip).limit(limit)
 
-         productDetail =   req.session.categoriesFilter ?   req.session.categoriesFilter: productDetail;
+         productDetail = await  req.session.categoriesFilter ?   req.session.categoriesFilter: productDetail;
 
+         req.session.categoriesFilter = productDetail
+
+
+         req.session.save()
+
+        
          count = productDetail.length
-         console.log(productDetail)
          const categorie = await categories.find({})
          
         req.session.userIsthere;
         res.render("shop/categories",{productDetail,isAlive:req.session.userIsthere,count,limit,categorie})
-        req.session.categoriesFilter = null
+        // req.session.categoriesFilter = null
     }catch(err){
         console.log(`Error from categoriesProduct Page\n ${err}`)
     }
@@ -279,6 +416,12 @@ const logOut = async(req,res)=>{
     
 }
 module.exports = {
+
+    // order received page
+    orderReceived,
+    // checkout Page
+
+    checkout,
     // view cart
 
     deletCart,
@@ -286,6 +429,8 @@ module.exports = {
     decQty, // decreament cart userQuenty
 
     //--------------
+    sortPrice, // lowToHeigh 
+    priceFilter, // price wise filter
     categoriesFilter,
     userCartPage,
     addCart, // addCart from single product

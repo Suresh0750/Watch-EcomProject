@@ -314,6 +314,8 @@
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/lazysizes.js"></script>
         <script src="assets/js/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
         <script>
         
             
@@ -393,10 +395,18 @@
                             const json = await data.json();
                             
                             if (json.success) {
-                                alert("signUp success")
+                            await    Swal.fire({
+                                icon: 'success',
+                                title: 'Item Added to Cart',
+                                showConfirmButton: false,
+                                })
                                 window.location.replace('http://localhost:9001/');
                             }else{
-                                alert("singUP fail")
+                             await   Swal.fire({
+                                icon: 'error',
+                                title: 'Item Added to Cart',
+                                showConfirmButton: false,
+                                })
                                 // isWrongOtp= true
                                 window.location.replace(`http://localhost:9001/otpPage`);
                             }

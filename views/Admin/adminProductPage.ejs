@@ -322,23 +322,23 @@ const swalWithBootstrapButtons = Swal.mixin({
 async function unlist(id){
 
     const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: "btn btn-success",
-            cancelButton: "btn btn-danger"
-        },
-        buttonsStyling: false
-        });
-        swalWithBootstrapButtons.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, unlist it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true
-        }).then(async (result) => {
-        if (result.isConfirmed) {
-   
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, unlist it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+            }).then(async (result) => {
+            if (result.isConfirmed) {
+    
                 const data = await fetch(`/admin/unlist/${id}`,{
                       method:"PATCH",
                       headers:{
@@ -368,9 +368,9 @@ async function unlist(id){
         ) {
             swalWithBootstrapButtons.fire({
             title: "Cancelled",
-        text: "Your imaginary file is safe :)",
-        icon: "error"
-        });
+            text: "Your imaginary file is safe :)",
+            icon: "error"
+            });
   }
 });
 
