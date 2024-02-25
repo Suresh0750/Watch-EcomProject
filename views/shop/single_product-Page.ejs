@@ -66,25 +66,8 @@
                                         <div class="product-nav clearfix">					
                                             <a href="#" class="next" title="Next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
                                         </div>
-                                        <div class="prInfoRow">
-                                            <div class="product-stock"> <span class="instock ">In Stock</span> <span class="outstock hide">Unavailable</span> </div>
-                                            <div class="product-sku">SKU: <span class="variant-sku">19115-rdxs</span></div>
-                                            <div class="product-review"><a class="reviewLink" href="#tab2"><i class="font-13 fa fa-star"></i><i class="font-13 fa fa-star"></i><i class="font-13 fa fa-star"></i><i class="font-13 fa fa-star-o"></i><i class="font-13 fa fa-star-o"></i><span class="spr-badge-caption">6 reviews</span></a></div>
-                                        </div>
-                                        <p class="product-single__price product-single__price-product-template">
-                                            <span class="visually-hidden">Regular price</span>
-                                            <s id="ComparePrice-product-template"><span class="money">$600.00</span></s>
-                                            <span class="product-price__price product-price__price-product-template product-price__sale product-price__sale--single">
-                                                <span id="ProductPrice-product-template"><span class="money">$<%=productDetails.productImage1%></span></span>
-                                            </span>
-                                            <span class="discount-badge"> <span class="devider">|</span>&nbsp;
-                                                <span>You Save</span>
-                                                <span id="SaveAmount-product-template" class="product-single__save-amount">
-                                                <span class="money">$100.00</span>
-                                                </span>
-                                                <span class="off">(<span>16</span>%)</span>
-                                            </span>  
-                                        </p>
+                                      
+                                       
                                         <div class="orderMsg" data-user="23" data-time="24">
                                             <img src="assets/images/order-icon.jpg" alt="" /> <strong class="items">5</strong> sold in last <strong class="time">26</strong> hours</div>
                                         </div>
@@ -94,68 +77,26 @@
                                         </ul>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
                                     </div>
-                                    <div id="quantity_message">Hurry! Only  <span class="items">4</span>  left in stock.</div>
-                                    <form method="post" action="http://annimexweb.com/cart/add" id="product_form_10508262282" accept-charset="UTF-8" class="product-form product-form-product-template hidedropdown" enctype="multipart/form-data">
-                                        <div class="swatch clearfix swatch-0 option1" data-option-index="0">
-                                           
-                                        </div>
-                                        <div class="swatch clearfix swatch-1 option2" data-option-index="1">
-                                            <div class="product-form__item">
-                                              <label class="header">Size: <span class="slVariant">XS</span></label>
-                                              <div data-value="XS" class="swatch-element xs available">
-                                                <input class="swatchInput" id="swatch-1-xs" type="radio" name="option-1" value="XS">
-                                                <label class="swatchLbl medium rectangle" for="swatch-1-xs" title="XS">XS</label>
-                                              </div>
-                                              <div data-value="S" class="swatch-element s available">
-                                                <input class="swatchInput" id="swatch-1-s" type="radio" name="option-1" value="S">
-                                                <label class="swatchLbl medium rectangle" for="swatch-1-s" title="S">S</label>
-                                              </div>
-                                              <div data-value="M" class="swatch-element m available">
-                                                <input class="swatchInput" id="swatch-1-m" type="radio" name="option-1" value="M">
-                                                <label class="swatchLbl medium rectangle" for="swatch-1-m" title="M">M</label>
-                                              </div>
-                                              <div data-value="L" class="swatch-element l available">
-                                                <input class="swatchInput" id="swatch-1-l" type="radio" name="option-1" value="L">
-                                                <label class="swatchLbl medium rectangle" for="swatch-1-l" title="L">L</label>
-                                              </div>
-                                            </div>
-                                        </div>
-                                        <p class="infolinks"><a href="#sizechart" class="sizelink btn"> Size Guide</a> <a href="#productInquiry" class="emaillink btn"> Ask About this Product</a></p>
-                                        <!-- Product Action -->
-                                        <div class="product-action clearfix">
-                                                                      
-                                            
-                                        </div>
-                                        <!-- End Product Action -->
+                                    <div id="quantity_message">Hurry! Only  <span class="items"><%=productDetails[0].productStock%></span>  left in stock.</div>
+
+                                    <p>Quantity</p>
+                                    <form id="quenyForm">
+
+                                        <select name="Qty" id="Quantity" style="width: 4em" >
+    
+                                            <% let count = 1; %>
+                                            <% while (count <=productDetails[0].productStock){ %>
+                                                <% console.log(count)%>
+                                                <option value="<%=count%>"><%=count%></option>
+                                               
+                                            <%    count += 1;%>
+                                            <%};%>
+                                        </select>
                                     </form>
+                                   
                                     <input type="button" value="Add to cart" style="cursor: pointer;" onclick="addCart('<%=product._id%>')" >
                                     <%})%>
-                                    <div class="display-table shareRow">
-                                            <div class="display-table-cell medium-up--one-third">
-                                                <div class="wishlist-btn">
-                                                    <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist"><i class="icon anm anm-heart-l" aria-hidden="true"></i> <span>Add to Wishlist</span></a>
-                                                </div>
-                                            </div>
-                                            <div class="display-table-cell text-right">
-                                                <div class="social-sharing">
-                                                    <a target="_blank" href="#" class="btn btn--small btn--secondary btn--share share-facebook" title="Share on Facebook">
-                                                        <i class="fa fa-facebook-square" aria-hidden="true"></i> <span class="share-title" aria-hidden="true">Share</span>
-                                                    </a>
-                                                    <a target="_blank" href="#" class="btn btn--small btn--secondary btn--share share-twitter" title="Tweet on Twitter">
-                                                        <i class="fa fa-twitter" aria-hidden="true"></i> <span class="share-title" aria-hidden="true">Tweet</span>
-                                                    </a>
-                                                    <a href="#" title="Share on google+" class="btn btn--small btn--secondary btn--share" >
-                                                        <i class="fa fa-google-plus" aria-hidden="true"></i> <span class="share-title" aria-hidden="true">Google+</span>
-                                                    </a>
-                                                    <a target="_blank" href="#" class="btn btn--small btn--secondary btn--share share-pinterest" title="Pin on Pinterest">
-                                                        <i class="fa fa-pinterest" aria-hidden="true"></i> <span class="share-title" aria-hidden="true">Pin it</span>
-                                                    </a>
-                                                    <a href="#" class="btn btn--small btn--secondary btn--share share-pinterest" title="Share by Email" target="_blank">
-                                                        <i class="fa fa-envelope" aria-hidden="true"></i> <span class="share-title" aria-hidden="true">Email</span>
-                                                    </a>
-                                                 </div>
-                                            </div>
-                                        </div>
+                              
                                         
                                     <p id="freeShipMsg" class="freeShipMsg" data-price="199"><i class="fa fa-truck" aria-hidden="true"></i> GETTING CLOSER! ONLY <b class="freeShip"><span class="money" data-currency-usd="$199.00" data-currency="USD">$199.00</span></b> AWAY FROM <b>FREE SHIPPING!</b></p>
                                     <p class="shippingMsg"><i class="fa fa-clock-o" aria-hidden="true"></i> ESTIMATED DELIVERY BETWEEN <b id="fromDate">Wed. May 1</b> and <b id="toDate">Tue. May 7</b>.</p>
@@ -517,13 +458,18 @@
 
 async function addCart(id){
             
-        console.log(id)
+      const qty = {}
 
+      await  new FormData(quenyForm).forEach((value,key)=>{
+           qty[key] = value
+        })
+        console.log(qty)
         const data = await fetch(`/addCart${id}`,{
                                 method:"POST",
                                 headers:{
                                     "Content-Type":"application/json"
-                                }
+                                },
+                                body:JSON.stringify(qty)
                     })
 
             const dataRes = await data.json()

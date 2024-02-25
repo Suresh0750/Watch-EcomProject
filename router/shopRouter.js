@@ -7,7 +7,7 @@ const shopControler = require("../controller/shopController.js")
 const {isUser,isBlock} = require("../middlewares/userMiddleware.js")
 
 shopRouter.get("/",shopControler.landingPage)
-shopRouter.get("/categories",isUser,isBlock,shopControler.categoriesProduct)
+shopRouter.get("/categories",shopControler.categoriesProduct)
 shopRouter.get("/singleProduct:id",isUser,isBlock,shopControler.singleProduct)
 shopRouter.post("/logOut",isUser,isBlock,shopControler.logOut)
 shopRouter.post("/addCart:id",isUser,isBlock,shopControler.addCart)
@@ -33,8 +33,8 @@ shopRouter.get("/Checkout",isUser,isBlock,shopControler.checkout)
 
 
 // shop receive page
-
-shopRouter.get("/orderReceived",isUser,isBlock,shopControler.orderReceived)
+shopRouter.get("/orderReceivedPage",isUser,isBlock,shopControler.orderReceivedPage)
+shopRouter.post("/orderReceived",isUser,isBlock,shopControler.orderReceived)
 
 // userIncrease product
 

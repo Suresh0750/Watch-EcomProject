@@ -14,6 +14,7 @@
         	<div class="row">
                 <div class="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
                 	<!-- <form action="#" method="post" class="cart style2"> -->
+              
                 	<p style="font-size: large;
                     font-family: sans-serif;
                     font-weight: 800">Billing and Shipping information</p>
@@ -67,15 +68,16 @@
                  </div>
 
                  <div>
+                    <p id = "selectAddress" style="display: none; color: red;">Plesse Select Address</p>
                     <p style="font-size: large;
                     font-family: sans-serif;
                     font-weight: 800">
                     Select Address
                     </p>
-                    <select name="select" aria-placeholder="Selelect Address" id="" value="Selelect Address" required style="display: block;width: 12em;">
-                    <option value="default" disabled selected value="Select Address">Select Address</option>
+                    <select name="select" aria-placeholder="Selelect Address" id="selectAdd" value="Selelect Address"  required style="display: block;width: 12em;">
+                    <option disabled selected value="Select Address">Select Address</option>
                     <%userAddressDetails.forEach((data)=>{%>
-                        <option value="address"><%=data.houseNo%></option>
+                        <option value="<%=data.houseNo%>"><%=data.houseNo%></option>
                     <%})%>
                     </select>
                 </div>
@@ -83,22 +85,24 @@
                     <p style="font-size: large;
                     font-family: sans-serif;
                     font-weight: 800">Payment Method</p>
-                    <div>
+                    <form id="paymentMethodForm">
                         <input type="radio" name="paymentMethod" value="Cash on Delivery" checked>Cash on Delivery<br>
                         <input type="radio" name="paymentMethod" value="Wallet">Wallet<br>
                         <input type="radio" name="paymentMethod" value="Razorpay">Razorpay<br>
-                    </div>
+                    </form>
+                    
                 </div>
                 <div>
+                    <%if(cartTotal!=0){%>
                     <button style=" padding: 0.5em;
-                    background-color: green;margin-top: 1em">
-                    <a href="/orderReceived">
+                    background-color: green;margin-top: 1em"   onclick="userOrder()">
                         Order
                         <i class="fa fa-arrow-circle-right">
 
                         </i>
-                    </a>
+                    
                     </button>
+                    <%}%>
                 </div>
                     <!-- </form>                    -->
             </div>
@@ -281,6 +285,52 @@
 </div>
 <script>
 
+    async function userOrder(){
+
+
+        let selectAdd = document.getElementById("selectAdd").value
+
+        console.log(selectAdd)
+
+        if(selectAdd =="Select Address")
+        {
+            console.log(true)
+
+            let selectAddress = document.getElementById("selectAddress")
+            selectAddress.style.display = "block"
+            
+
+            return 
+        }
+
+        const value={}
+        console.log(`hi hello`)
+        new FormData(paymentMethodForm).forEach((payentMethod,key)=>{
+
+            value[key]= payentMethod
+            console.log(value)
+        })
+        value.selectAdd = selectAdd
+      const data = await fetch(`/orderReceived`,{
+        method:"post",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify(value)
+      })
+
+      const resData = await data.json()
+
+      if(resData.success)
+      {
+        window.location.href = "/orderReceivedPage"
+      }else(
+        alert("server error")
+      )
+
+    }
+
+    
    const grandTotal = document.getElementById("grandTotal")
    const grandTotalValue = grandTotal.textContent
 

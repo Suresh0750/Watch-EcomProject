@@ -42,11 +42,11 @@
                                     <td class="cart__update-wrapper cart-flex-item text-right">
                                         <div class="cart__qty text-center">
                                             <div class="qtyField">
-                                                <button onclick="decreMent('<%=cart._id%>')">
+                                                <button onclick="decreMent('<%=cart._id%>','<%=cart.productId.productStock%>')">
                                                     <i class="icon icon-minus"></i>
                                                 </button>
                                                 <span id="<%=cart._id%>" ><%=cart.productQuantity%></span>
-                                                <button onclick="incrMent('<%=cart._id%>')">
+                                                <button onclick="incrMent('<%=cart._id%>','<%=cart.productId.productStock%>')">
                                                     <i class="icon icon-plus"></i>
                                                 </button>
                                                 <!-- <input class="cart__qty-input qty" type="text" name="updates[]" id="qty" value="1" pattern="[0-9]*"> -->
@@ -280,14 +280,14 @@ async function  deletData(id){
 </script>
 <script>
 
-async  function incrMent(id){
+async  function incrMent(id,stack){
 
 
         // productId
-
+    console.log(stack)
         let productId = document.getElementById("productId").value
 
-        console.log(productId)
+        // console.log(productId)
         
 
 
@@ -315,14 +315,14 @@ async  function incrMent(id){
       
         
 
-        if(cartIncrease <5)
+        if( cartIncrease<=stack)
         {
 
             let cartId ={
                 _id : id,
                 productId : productId
             }
-            console.log(cartId)
+            // console.log(cartId)
             let data = await fetch("/cart/inCrease",{
 
                 method:"PUT",
@@ -335,43 +335,45 @@ async  function incrMent(id){
 
             const dataRes = await data.json()
 
-            console.log(dataRes)
+            // console.log(dataRes)
 
             spanValue.textContent = dataRes.cartProduct.productQuantity
             totalCast.textContent = dataRes.cartProduct.totalCastPerproduct
             grandTotal.textContent = dataRes.grandTotal
             priceTotal.textContent = dataRes.grandTotal
             window.location.reload()
+        
         }else{
             
 
             Swal.fire({
-        title: "sorry",
-        text: "limit exit!",
-        icon: "error",
-        showCancelButton: true,
+            title: "sorry",
+            text: "limit exit!",
+            icon: "error",
+            showCancelButton: true,
 
-            })
+                })
          }
+        
 
 
     }
 
-async function decreMent(id){
+async function decreMent(id,stack){
 
 
-
+console.log(stack)
         // productId
 
         let productId = document.getElementById("productId").value
 
-        console.log(productId)
+        // console.log(productId)
 
         // price 
 
         let price = document.getElementById(`price${id}`).textContent
 
-        console.log(price)
+        // console.log(price)
         // decreaseButton
         let cartDecrease = document.getElementById(`${id}`).textContent
         
@@ -391,7 +393,7 @@ async function decreMent(id){
 
         let priceTotal = document.getElementById("priceTotal")
 
-        if(cartDecrease >1)
+        if(cartDecrease >=1)
         {
 
             let cartId ={
@@ -411,7 +413,7 @@ async function decreMent(id){
 
             const dataRes = await data.json()
 
-            console.log(dataRes)
+            // console.log(dataRes)
 
             spanValue.textContent = await dataRes.cartProduct.productQuantity
             totalCast.textContent = await dataRes.cartProduct.totalCastPerproduct

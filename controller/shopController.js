@@ -4,14 +4,53 @@ const userId = require("../models/userModel")
 const cartCollection = require("../models/cartModel")
 const {AddressModel} = require("../models/addressModel")
 
+const orderModel = require("../models/orderModel")
+
+
+
+
+
+
 // order received page
+
+const orderReceivedPage = async(req,res)=>{
+    try{
+
+        res.render("shop/orderReceived")
+    }catch(err){
+        console.log(`Error from orderReceiedPage ${err}`)
+    }
+}
 
 const orderReceived = async(req,res)=>{
 
     try{
+        console.log('req reached orderReceived')
         const userId = req.session.userIsthere.userId
-        const userCortdelet = await cartCollection.findByIdAndDelete({userId:userId})
-        res.render("shop/orderReceived")
+
+
+        
+        const userCortdelet = await cartCollection.find({userId:userId})
+        console.log(userId)
+        console.log(userCortdelet)
+        console.log(req.body)
+        console.log("params"+req.params)
+        let i=0
+
+        const orderUser = {
+            userId: userId,
+            orderNumber:i,
+            paymentType:req.body.paymentMethod,
+            addressChosen:req.body.selectAdd
+        }
+
+        i++
+        await  userCortdelet.map(async(data)=>{
+                await cartCollection.findByIdAndDelete({_id:data._id})
+            })
+    
+        res.status(200).send({success:true})
+        // res.render("shop/orderReceived")
 
     }catch(err){
         console.log(`Error from orderReceived ${err}`)
@@ -188,7 +227,6 @@ const addCart = async (req,res)=>{
     try{
 
         const id = req.params.id
-
         const userId =  req.session.userIsthere.userId
         const exitCart = await cartCollection.find({userId:userId, productId:id})
         
@@ -204,7 +242,7 @@ const addCart = async (req,res)=>{
             const cart ={
                 userId : userId,
                 productId : productDatail._id,
-                productQuantity : productDatail.productStock,
+                productQuantity : req.body.Qty,
                 totalCastPerproduct : productDatail.productPrice
             }
             
@@ -231,6 +269,7 @@ const singleProduct = async (req,res)=>{
         const id = req.params.id
         const productDetails = await product.find({_id:id})
         const categoriesDetail = await categories.find({_id:id})
+        console.log(productDetails)
         req.session.userIsthere;
         res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session.userIsthere})
     }catch(err){
@@ -416,9 +455,10 @@ const logOut = async(req,res)=>{
     
 }
 module.exports = {
+    orderReceivedPage, // orderReceivedPage rendered
 
     // order received page
-    orderReceived,
+    orderReceived,         // check out to orderReceivedPage
     // checkout Page
 
     checkout,

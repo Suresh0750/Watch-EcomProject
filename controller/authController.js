@@ -341,9 +341,13 @@ const emailOtp = async (email) => {
 const otpPage = async (req, res) => {
 
   try {
+
+    if(req.session.otpPageGet){
+      req.session.isWrongOtp;
+      res.render("auth/OTP",{isWrongOtp:req.session.isWrongOtp})
+      req.session.otpPageGet = null // dont access url path
+    }
    
-    req.session.isWrongOtp;
-    res.render("auth/OTP",{isWrongOtp:req.session.isWrongOtp})
   } catch (err) {
     console.log(`err from otpPage\n ${err}`);
   }
@@ -372,6 +376,7 @@ const signUp = async(req,res)=>{
             console.log(`otp value ${otp}`)
             req.session.otp = otp
             req.session.userData = userData
+            req.session.otpPageGet = true
             res.redirect("/otpPage")
                                
           }else{

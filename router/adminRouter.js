@@ -8,6 +8,9 @@ const  uploadImage = require("../helper/multer")
 const adminController = require("../controller/adminController")
 const adCatagoriescontrol = require("../controller/adminCatogoricontroller")
 const adminProduct = require("../controller/productController")
+const orderManagement = require("../controller/orderManagment")
+
+
 
 // adminMiddler 
 const {isAdmin} = require("../middlewares/adminMiddleware")
@@ -45,5 +48,10 @@ adminRouter.patch("/unlist/:id",isAdmin,adminProduct.unListProduct)
 
 
 adminRouter.get("/adminlogut",isAdmin,adminController.logOut)
+
+
+// admin order Management
+
+adminRouter.get("/orderManagment",isAdmin,orderManagement.orderManagement)
 
 module.exports = adminRouter

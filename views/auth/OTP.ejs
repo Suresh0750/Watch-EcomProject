@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body class="page-template belle" style="background-color: whitesmoke">
-    <div class="pageWrapper" >                                                                                                                                                                              ;">
+    <div class="pageWrapper" >                                                                                                                                                                             
 
 
         <!--Top Header-->
@@ -320,11 +320,12 @@
         
             
 
+        function timer(){
+
+       
             let time = document.getElementById("timer")
             console.log(time)
             
-                
-                
                 
                 let a = 60
                  const timer = setInterval(()=>{
@@ -346,6 +347,11 @@
 
                 // button block
 
+            }
+
+            timer() // call timer function
+
+
                 let btnOtp = document.getElementById("btnOtp")
 
                 btnOtp.addEventListener("click",(e)=>{
@@ -361,6 +367,7 @@
                                 "Content-type":"appliction/json"
                             }
                         })
+                        timer()
                     }
                 })
                 
