@@ -1,5 +1,14 @@
 <%-include("../layouts/adminHeader.ejs")%>
-
+<style>
+  td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.error{
+  color: red;
+}
+</style>
 <main class="main-wrap">
     <header class="main-header navbar">
         <div class="col-search">
@@ -97,7 +106,9 @@
               alt="ds"
             />
           </td>
-          <td><%=user.categoryName%></td>
+          <td style="white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;"><%=user.categoryName%></td>
           
           <%if(user.isAvailable){%>
             <td>

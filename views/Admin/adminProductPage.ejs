@@ -293,13 +293,13 @@ const swalWithBootstrapButtons = Swal.mixin({
 
               if(dataRes.success)
               {
-                swalWithBootstrapButtons.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success",
-                    timer:1000
-                    });
-                window.location.href = "/admin/productPage"
+              await     swalWithBootstrapButtons.fire({
+                        title: "list!",
+                        text: "Your file has been list.",
+                        icon: "success",
+                        timer:1000
+                        });
+                        window.location.href = "/admin/productPage"
               }else{
                 swal("server error");
                   window.location.reload()
@@ -351,13 +351,14 @@ async function unlist(id){
 
                 if(dataRes.success)
                 {
-                    swalWithBootstrapButtons.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success",
-                    timer:1000
-                    });
-                  window.location.href = "/admin/productPage"
+                await   swalWithBootstrapButtons.fire({
+                        title: "unlist",
+                        text: "Your file has been unlist.",
+                        icon: "success",
+                        timer:1000
+                        });
+
+                        window.location.href = "/admin/productPage"
                 }else{
                     window.location.reload()
                 }

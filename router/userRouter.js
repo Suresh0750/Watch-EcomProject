@@ -18,5 +18,15 @@ userRouter.get("/editAddress:id",isUser,isBlock,userControll.editAddress)
 userRouter.put("/editUserData",isUser,isBlock,userControll.editUserData)
 userRouter.get("/changePassword",isUser,isBlock,userControll.changePassword)
 
+userRouter.get("/editProfile:id",isUser,isBlock,userControll.editProfile)              // edit profile is rendered
+userRouter.put("/editAndUpdateProfile",isUser,isBlock,userControll.editAndUpdateProfile)
+
+userRouter.get("/userOTPpage",isUser,isBlock,userControll.userOTPpage)
+userRouter.post("/userOtpValue",userControll.userOtpValue)
+
+// user change password
+
+userRouter.patch("/updateUserPass",userControll.updateUserPass)
+
 
 module.exports = userRouter

@@ -1,4 +1,9 @@
 <%-include("../layouts/adminHeader.ejs")%>
+<style>
+  .error{
+    color:red
+  }
+</style>
 <section class="content lists col-md-10">
   <div
     class="box border rounded p-2 d-flex flex-column align-items-center justify-content-center"
@@ -6,11 +11,12 @@
     <div class="w-50 shadow p-5">
       <h2 class="text-center my-3">Edit Category</h2>
 
-      <form id="form" action="/admin/updateCatogory<%=edit._id%>" method="post" enctype="multipart/form-data">
+      <form id="categoryEdit" action="/admin/updateCatogory<%=edit._id%>" method="post" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="category" class="form-label text-secondary"
             >Category Name</label
           >
+         
           <input
             type="text"
             class="form-control"
@@ -24,15 +30,19 @@
           <label for="description" class="form-label text-secondary"
             >Category Description</label
           >
-          <input
+          <textarea id="w3review" name="description" class="form-control"
+          id="description" aria-describedby="emailHelp"  id="categoryName" rows="4" cols="50"  value="<%=edit.description%>" style="white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;" required><%=edit.description%></textarea>
+          <!-- <input
             type="text"
             class="form-control"
             id="description"
             aria-describedby="emailHelp"
             name="description"
             value="<%=edit.description%>"
-            
-          />
+            required
+          /> -->
         </div>
         <div class="mb-3 d-flex gap-3">
           <div>
@@ -41,7 +51,7 @@
             style="width: 100px; height: 100px">
         <div class="input-group mb-3">
             <input name="image" id="image" type="file" class="form-control"
-                placeholder="Product Image1" onchange="displayImage1(event)" required>
+                placeholder="Product Image1" onchange="displayImage1(event)" >
         </div>
           </div>
         </div>
@@ -88,19 +98,30 @@
       </form>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- jquery for validate -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
   <script>
-    $("#form").validate({
-      rules: {
-        categoryName: {
-          required: true,
-          pattern: /^[a-zA-Z ]+$/,
-        },
-        description: {
-          required: true,
-          pattern: /^[a-zA-Z ]+$/,
-        },
-      },
-    });
+    
+    $("#categoryEdit").validate({
+                    rules:{
+                        categoryName:{
+                            required:true,
+                            pattern:/^[a-zA-Z]/
+                        },
+                    description:{
+                        required:true,
+                        pattern: /^[a-zA-Z]/
+
+                    }
+                }
+                
+        })
   </script>
 <script>
   function displayImage1(e){

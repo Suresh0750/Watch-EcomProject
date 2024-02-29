@@ -1,5 +1,9 @@
 <%-include("../layouts/adminHeader.ejs")%>
-
+<style>
+    .error{
+        color: red;
+    }
+</style>
 <main class="main-wrap">
     <header class="main-header navbar">
         <div class="col-search">
@@ -45,6 +49,10 @@
                     <!-- action="/admin/editProductData<%=productData._id%>" -->
                     <form id="editProduct" action="/admin/editProductData<%=productData._id%>" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="productId" value="<%=productData._id%>">
+
+                        <%if(isProductExist){%>
+                            <h2 class="error">Product alreay exist</h2>
+                        <%}%>
                         <div class="form-group">    
                             <label for="productName">Product Name</label>
                             <input type="text" class="form-control" id="productName"
@@ -54,8 +62,8 @@
                             <img src="../images/categoriedImages/<%=productData.productImage1%>"  alt="" id="img1"
                                 style="width: 100px; height: 100px">
                             <div class="input-group mb-3">
-                                <input name="productImage1" id="productImage1" type="file" value="<%=productData.productImage1%>" class="form-control" accept="image/*"
-                                    placeholder="Product Image1" onchange="displayImage2(event)" required>
+                                <input name="productImage1" id="productImage1" type="file" value="" class="form-control" accept="image/*"
+                                    placeholder="Product Image1" onchange="displayImage1(event)" >
                             </div>
                         </div>
 
@@ -63,25 +71,27 @@
                             <img src="../images/categoriedImages/<%=productData.productImage2%>" alt="" id="img2"
                                 style="width: 100px; height: 100px">
                             <div class="input-group mb-3">
-                                <input name="productImage2" id="productImage2" value="<%=productData.productImage2%>" type="file" accept="image/*"  class="form-control"
-                                    placeholder="Product Image2" onchange="displayImage2(event)" required>
+                                <input name="productImage2" id="productImage2" value="" type="file" accept="image/*"  class="form-control"
+                                    placeholder="Product Image2" onchange="displayImage2(event)" >
                             </div>
                         </div>
                         <div class="input-group mb-3">
                             <img src="../images/categoriedImages/<%=productData.productImage3%>" alt="" id="img3"
                                 style="width: 100px; height: 100px" id="preview1">
                             <div class="input-group mb-3">
-                                <input name="productImage3" type="file" class="form-control" accept="image/*"  value="<%=productData.productImage3%>" onchange="displayImage3(event)">
+                                <input name="productImage3" type="file" class="form-control" id="productImage3" accept="image/*"  value="" onchange="displayImage3(event)">
                             </div>
                         </div>
                         <div class="input-group mb-3">
+                            <label>Product Price</label>
                             <input name="productPrice" type="text" class="form-control"
-                                value="<%=productData.productPrice%>">
+                                value="<%=productData.productPrice%>" min="0"> 
                         </div>
 
                         <div class="input-group mb-3">
+                            <label>Product Stock</label>
                             <input name="productStock" type="text" class="form-control"
-                                value="<%=productData.productStock%>">
+                                value="<%=productData.productStock%>" min="0">
                         </div>
 
 
@@ -91,12 +101,17 @@
                                 <label for="Category">Category</label>
 
                                 <select class="form-control p_input" name="category" placeholder="category" required>
-                                    <option value="Select" disabled selected>
-                                           Select
+                                    <option value="<%=productData.parentCategory%>" selected>
+                                           <%=productData.parentCategory%>
                                     </option>
-                                    <%category.forEach((category)=>{%>
-                                        <option value="<%=category.categoryName%>">
-                                            <%=category.categoryName%>
+                                    <% let parentCategory = productData.parentCategory%>
+                                    <% console.log(`parentCategory : ${parentCategory}`)%>
+                                    <%category.forEach((value)=>{%>
+                                        <option value="<%=value.categoryName%>">
+                                        <%if(parentCategory == value.categoryName){%>
+                                            <% return; %>
+                                        <%}%>
+                                            <%=value.categoryName%>
                                         </option>
                                     <%})%>
 
@@ -115,9 +130,11 @@
                 </div>
 
 
-                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
             </body>
 
             </html>
@@ -127,11 +144,24 @@
 
             <script>
 
+                         (function  () {
+                            const oldImageName1 = "<%=productData.productImage1%>";
+                            document.getElementById('productImage1').value = oldImageName1
+                            // .setAttribute('value', oldImageName1);
+                            const oldImageName2 = "<%=productData.productImage2%>";
+                            document.getElementById('productImage2').value=oldImageName2
+                            // .setAttribute('value', oldImageName2);
+                            const oldImageName3 = "<%=productData.productImage3%>";
+                            document.getElementById('productImage3').value = oldImageName3
+                            // ('value', oldImageName3);
+                        })
+                        ()
+                        
                 function displayImage1(e){
                     let img = document.getElementById("img1");
                     img.src = URL.createObjectURL(e.target.files[0]);
                 }
-                function displayImage1(e){
+                function displayImage2(e){
                     let img = document.getElementById("img2");
                     img.src = URL.createObjectURL(e.target.files[0]);
                 }
@@ -143,32 +173,25 @@
             </script>
 
 
-            <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
-            integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-          ></script>
+          
         <script>
             $("#editProduct").validate({
                 rules:{
                     productName:{
-                        required:true
-                    },
-                    productImage1:{
-                        required:true
-                    },
-                    productImage2:{
-                        required:true
-                    },
-                    productImage3:{
-                        required:true
+                        required:true,
+                        pattern: /^[a-zA-Z]/
                     },
                     productPrice:{
-                        required:true
+                        required:true,
+                        min:0,
+                        minlength:1,
+                        pattern:/^\d+(-\d+)*$/
                     },
                     productStock:{
-                        required:true
+                        required:true,
+                        min:0,
+                        minlength:1,
+                        pattern:/^\d+(-\d+)*$/
                     }
                 }
                 

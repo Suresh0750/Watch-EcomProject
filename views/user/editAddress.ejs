@@ -489,6 +489,7 @@
                   <th>Address</th>
                   <th>State</th>
                   <th class="">City</th>
+                  <th>pincode</th>
 
                 </tr>
               </thead>
@@ -518,6 +519,10 @@
                   </td>
                   <td>
                     <input type="text" value="<%=address.city%>" name="city">
+                    
+                  </td>
+                  <td>
+                    <input type="text" value="<%=address.pincode%>" name="pincode">
                     
                   </td>
                 </tr>
@@ -576,6 +581,11 @@ $("#editeAddress").validate({
                 pattern:/^[a-zA-Z]+$/
                 
             },
+            pincode:{
+              required:true,
+              minlength:6,
+              pattern:/^\d+(-\d+)*$/
+            }
         },  
     submitHandler: async function(editeAddress,e){
 
@@ -602,12 +612,13 @@ $("#editeAddress").validate({
       const dataRes = await data.json()
       console.log(dataRes)
       if(dataRes.success){
+        
         await Swal.fire({
                 title: "edit success!",
                 text: 'Address edit',
                 icon: "success",
                 showConfirmButton: false,
-               timer:1500
+                timer:1500
                 });
 
               

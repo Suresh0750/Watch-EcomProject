@@ -239,9 +239,9 @@
                         userPassword:{
                             required: true,
                             minlength: 6,
-                            maxlength:10,
-                            pattern:/^[a-zA-Z0-9]/
-                        }
+                            pattern: /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/
+                        },
+                        
 
                     },
                    submitHandler: async function(loginUser,e){

@@ -45,8 +45,12 @@
                         <form id="addProForm" action="/admin/addProductData" method="post" enctype="multipart/form-data">
                             <div class="modal-body">
                                 <div class="input-group mb-3">
+                                    <div>
+
+                                        <label for="productName" class="form-label" style="display: block;" >Product Name</label><br>
+                                    </div>
                                     <input name="productName" id="productName" type="name" class="form-control"
-                                        placeholder="Product Name" required />
+                                        placeholder="Product Name" required  style="display: block;"/>
                                 </div>
 
                                 <div class="input-group mb-3">
@@ -120,10 +124,12 @@
                                 </div> -->
 
                                 <div class="input-group mb-3">
+                                    <label for="productPrice" style="display: block;">Product Price : </label> <br>
                                     <input name="productPrice" type="tel" class="form-control"
-                                        placeholder="Product Price" required />
+                                        placeholder="Product Price" id="productPrice" required />
                                 </div>
                                 <div class="input-group mb-3">
+                                    <label for="Product Stock" style="display: block;">Product Stock : </label> <br>
                                     <input name="productStock" type="tel" class="form-control"
                                         placeholder="Product Stock" required />
                                 </div>
@@ -191,9 +197,10 @@
                     productName:{
                         required:true,
                         minlength:3,
+                        pattern:/^[a-zA-Z]/
                     },
                     parentCategory:{
-                        required:true
+                        required:true,
                     },
                     productPrice:{
                         required:true,
@@ -216,17 +223,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css'>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js'></script>
+<script src="sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 
 <script>
     let crop = [];
-    function loadFile(event) {
+async   function loadFile(event) {
       let imageDiv = document.getElementById("imageDiv");
       imageDiv.innerHTML = "";
 
-      const maxImages = 4;
+      const maxImages = 3;
       const files = event.target.files;
       if (files.length > maxImages) {
+        
         alert(`Please select only up to ${maxImages} images.`);
         document.getElementById("image").value = ""; // Clear the file input
         return;

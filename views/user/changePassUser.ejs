@@ -89,11 +89,15 @@
                                 <div class="form-group">
                                     <label for="cofirmPassword">Current Password</label>
                                     <input type="hidden" name="id" value="<%=userId%>">
-                                    <input type="text" name="currentPass" placeholder="" id="cofirmPassword" class="" autocorrect="off" autocapitalize="off" autofocus="">
+                                    <input type="text" name="currentPass" placeholder="Current Password" id="cofirmPassword" class="" autocorrect="off" autocapitalize="off" autofocus="">
                                 </div>
                                 <div class="form-group">
                                     <label for="cofirmPassword">New Password</label>
-                                    <input type="text" name="newPass" placeholder="" id="newPass" class="" autocorrect="off" autocapitalize="off" autofocus="">
+                                    <input type="password" name="newPass" placeholder="New Password" title="Give Strong Password" id="newPass" class="" autocorrect="off" autocapitalize="off" autofocus="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cofirmPassword">Confirm Password</label>
+                                    <input type="password" name="ConfirmPass" placeholder="ConfirmPass" id="ConfirmPass" class="" autocorrect="off" autocapitalize="off" autofocus="">
                                 </div>
                             </div>
                           </div>
@@ -191,6 +195,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
 </div>
 <style>
     .error{
@@ -206,16 +213,19 @@
                         currentPass:{
                             required:true,
                             minlength:6,
-                            maxlenght:10
+                            pattern: /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/
                         },
                         newPass:{
                             required:true,
                             minlength:6,
-                            maxlenght:10
+                            pattern: /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/
                         },
-
+                        ConfirmPass:{
+                            required:true,
+                            equalTo:"#newPass"
+                        }
                     },
-                    submitHandler: async function(setNewPass,e){
+                    submitHandler : async function(setNewPass,e){
                         e.preventDefault()
 
                         const pass = {}
@@ -236,9 +246,23 @@
 
                         if(forGotRes.success)
                         {
+                        await   Swal.fire({
+                                icon: 'success',
+                                title: 'Password change success',
+                                showConfirmButton: false,
+                                timer: 1500
+                                })
                             console.log("password changed")
                             window.location.href = "/user/profile" // redirect the req for render the forgot Password Otp page
                             // window.location.replace("http://localhost:9001/forgetEmailOtp")
+                        }else if(forGotRes.pass== false){
+                            await   Swal.fire({
+                                    icon: 'error',
+                                    title: 'current password is wrong',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                    })
+
                         }
                     }
             })

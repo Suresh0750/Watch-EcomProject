@@ -611,8 +611,6 @@
                         name="userMobile"
                         class="form-control p_input input"
                         style ="background-color: #bba47a"
-                        min="10"
-                        max="10"
                         minlength="10"
                         maxlength="10"
                         required
@@ -665,7 +663,7 @@
                         name="pincode"
                         class="form-control p_input input"
                         style="background-color: #bba47a"
-                        min="6"
+                        minlength="6"
                         required  
                     />
                     </div>
@@ -675,6 +673,11 @@
                 <input type="submit"  value=" Add" class="showonhover btn btn-primary w-100">
                 </div>
             </form>
+            <div id="Edit_profile" style="margin-top: 1em;" onclick="returnProfile(event)">
+                <button style="padding: 10px 18px;
+                background-color: black;
+                color: white;cursor: pointer;"> back</button>
+              </div>
         </div>
         </div>
     </div>
@@ -829,6 +832,16 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+<script>
+    
+    async function returnProfile(e){
+
+                e.preventDefault()
+
+                window.location.href ="/user/profile"
+
+                }
+</script>
 
 
 <script>
@@ -840,8 +853,10 @@
                 pattern:/^[a-zA-Z]+$/
             },
             userMobile:{
-                required: true,
-                Number:true,
+                required:true,
+                minlength:10,
+                maxlength:10,
+                number:true,
                 pattern:/^\d+(-\d+)*$/
             },
             houseNo:{
@@ -860,7 +875,8 @@
             pincode:{
                 required:true,
                 minlength:6,
-                Number: true,
+                pattern:/^\d+(-\d+)*$/
+                
             }
         },  
     })

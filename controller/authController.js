@@ -20,7 +20,7 @@ const adminVerfy = async(req,res)=>{
     if(email == req.body.adminEmail && pass == req.body.adminPass)
     {
       req.session.isAdmin = true;
-      isAdmin = req.session.isAdmin
+      let isAdmin = req.session.isAdmin
       res.status(200).send({success:true,isAdmin})
     }else{
       
@@ -80,8 +80,16 @@ const updatePass = async(req,res)=>{
 
 const confirmPass = async(req,res)=>{
 
+  if(req.session.isSuccessOtp){
+
+    req.session.forGetEmail  = null         // forget pass of email 
+
+    req.session.isSuccessOtp = null
+    res.render("auth/changePassword")
+
+  }
+
   console.log(`req reached confirmPass router`)
-  res.render("auth/changePassword")
 }
 
 
@@ -96,11 +104,14 @@ const fOP=async(req,res)=>{
 
     const fPO= Number(req.params.id)
 
-    console.log(`${fPO}`)
-     const genOtp = req.session.otp
-
+    const genOtp =Number(req.session.otp)
+    
+    console.log(`${fPO} : ${genOtp}`)
      if(fPO === genOtp)
      {
+      req.session.isSuccessOtp = true
+      req.session.otp = null
+      req.session.save()
       res.status(200).send({success:true})
      }else{
       res.status(500).send({success:false})
@@ -108,7 +119,7 @@ const fOP=async(req,res)=>{
 
   }catch(err){
 
-      console.log(`Error from err router`)
+      console.log(`Error from err router ${err}`)
   }
   
 }
@@ -121,10 +132,14 @@ const fOP=async(req,res)=>{
 const forgetOtp = async(req,res)=>{
 
   try{
-    console.log(`req from forgetOtp`)
-    req.session.isWrongOtp;
-    isWrongOtp = req.session.isWrongOtp;
-    res.render("auth/forgotPasswordOtp",{isWrongOtp})
+    if( req.session.forGetEmail){
+
+      console.log(`req from forgetOtp`)
+      req.session.isWrongOtp;
+      isWrongOtp = req.session.isWrongOtp                
+      req.session.save()
+      res.render("auth/forgotPasswordOtp",{isWrongOtp})
+    }
 
   }catch(err){
 
@@ -144,21 +159,20 @@ const isEmailThere = async (req,res)=>{
 
   try{
         console.log('req entered  isEmailThere  routered')
-        console.log(req.params.id)
         const chechEmail = req.params.id
         const isDetail = await userdata.findOne({userEmail:chechEmail})
 
-        console.log(`isDetail ${isDetail}`)
       if(isDetail){
         console.log(`${isDetail._id}`)
+        
+        req.session.forGetEmail = chechEmail
         req.session.userId = isDetail._id
         const forgotOtp=await emailOtp(chechEmail)
-        
         req.session.otp = forgotOtp
-        // req.session.isWrongOtp;
-        // isWrongOtp = req.session.isWrongOtp;
+      
         req.session.save()
         res.status(200).send({success:true})
+        
 
       }else{
 
@@ -242,7 +256,10 @@ const resendOtp = async(req,res)=>{
 
   try{
 
-    const {userEmail} = req.session.userData
+
+    const userEmail = req.session.forGetEmail
+
+    console.log(userEmail)
    
     const resendOtp = await emailOtp(userEmail)
   
@@ -269,7 +286,7 @@ const otpvalue = async (req,res)=>{
 
     if(otp === genOtp)
     {
-  
+      req.session.otp = null
       const {firstName,lastName,userMobile,userEmail,userPassword} = req.session.userData
      
       await userdata({firstName,lastName,userMobile,userEmail,userPassword}).save()
@@ -282,6 +299,7 @@ const otpvalue = async (req,res)=>{
         userName:firstName,
         userId :userDetail._id
       }
+      req.session.save()
       res.status(200).send({ success: true });
   
     }else{
@@ -341,11 +359,12 @@ const emailOtp = async (email) => {
 const otpPage = async (req, res) => {
 
   try {
-
+    console.log(req.session.otpPageGet)
     if(req.session.otpPageGet){
       req.session.isWrongOtp;
       res.render("auth/OTP",{isWrongOtp:req.session.isWrongOtp})
       req.session.otpPageGet = null // dont access url path
+      req.session.save()
     }
    
   } catch (err) {
@@ -412,6 +431,7 @@ const forgetPage = async (req, res) => {
     req.session.invalidEmail;
     req.session.save()
     res.render("auth/Forgot password",{invalidEmail:req.session.invalidEmail});
+    req.session.invalidEmail = false
   } catch (err) {
     console.log(`err from forgetPage\n ${err}`);
   }

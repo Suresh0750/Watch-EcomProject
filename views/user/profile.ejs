@@ -581,7 +581,7 @@
               <div class="row">
               
                 <div class="col-md-8 col-lg-9 col-xl-10 col-12">
-                    <form class="form-horizontal">
+               
                       <div class="form-group row">
                         <label for="" class="col-md-3 control-label">First Name</label>
                         <div class="col-md-7">
@@ -612,8 +612,14 @@
                           <input type="password" class="form-control" placeholder="*****" disabled>
                         </div>
                       </div>
-                     
-                    </form>
+
+                      <div id="Edit profile">
+                        <a href="/user/editProfile<%=profileDetails._id%>">
+                          <button style="padding: 10px 18px;
+                          background-color: black;
+                          color: white;cursor: pointer;"> Edit profile</button>
+                        </a>
+                      </div>
                 </div>
               </div>
             </div>
@@ -632,11 +638,6 @@
     
   </div>
 
-  <script>
-    var d = new Date();
-    var year = d.getFullYear();
-    document.getElementById("copy-year").innerHTML = year;
-  </script>
 
   <!-- LOGIN MODAL -->
   

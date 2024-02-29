@@ -354,12 +354,13 @@
 
                 let btnOtp = document.getElementById("btnOtp")
 
-                btnOtp.addEventListener("click",(e)=>{
+                btnOtp.addEventListener("click",async(e)=>{
 
                     e.preventDefault()
                     if(btnOtp.value == 'Resend otp')
                     {
-                        alert("otp resend")
+                        
+                        
                         btnOtp.value = "Verify OTP"
                         fetch("/resendOtp",{
                             method:"POST",
@@ -368,6 +369,11 @@
                             }
                         })
                         timer()
+                        await   Swal.fire({
+                                icon: 'success',
+                                title: 'Resend OTP success',
+                                showConfirmButton: false,
+                                })
                     }
                 })
                 
@@ -385,37 +391,41 @@
                         
                         
                         btn.addEventListener("click", async (e)=>{
+
+                            e.preventDefault()
                             
                             OtpNum = OtpValue.value
                             console.log(`${OtpNum}`)
                             
                             const data = await fetch(`/otpValue${OtpNum}`,{
-                                method:"POST",
-                                headers:{
-                                    "Content-Type":"application/json"
-                                },
-                                body:JSON.stringify({OtpNum})
-                            })
+                                                method:"POST",
+                                                headers:{
+                                                    "Content-Type":"application/json"
+                                                },
+                                                body:JSON.stringify({OtpNum})
+                                            })
                             
                             console.log(`fectch response ${data}`)
                             
                             const json = await data.json();
                             
                             if (json.success) {
-                            await    Swal.fire({
-                                icon: 'success',
-                                title: 'Item Added to Cart',
-                                showConfirmButton: false,
-                                })
-                                window.location.replace('http://localhost:9001/');
+                            await   Swal.fire({
+                                    icon: 'success',
+                                    title: 'OTP success',
+                                    showConfirmButton: false,
+                                    timer:5000
+                                    })
+                                    
+                                    window.location.replace('http://localhost:9001/');
                             }else{
                              await   Swal.fire({
-                                icon: 'error',
-                                title: 'Item Added to Cart',
-                                showConfirmButton: false,
-                                })
+                                    icon: 'error',
+                                    title: 'Passward wrong',
+                                    showConfirmButton: false,
+                                    })
                                 // isWrongOtp= true
-                                window.location.replace(`http://localhost:9001/otpPage`);
+                                // window.location.replace(`http://localhost:9001/otpPage`);
                             }
                             
                             
