@@ -273,6 +273,8 @@ const resendOtp = async(req,res)=>{
 
 }
 
+
+
 //OtpValue
 
 const otpvalue = async (req,res)=>{

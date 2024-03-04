@@ -6,18 +6,18 @@ const orderSchema= new mongoose.Schema({
     orderDate: { type: Date, required:true, default: new Date()},
     paymentType: {type: String, default:'toBeChosen'},
     orderStatus: {type: String, default:'Pending'},
-    addressChosen : { type: mongoose.Types.ObjectId, required: true, ref: 'addresses'},
+    addressChosen : { type: mongoose.Types.ObjectId, required: true, ref: 'addresscollections'},
     cartData: { type: Array},
     grandTotalCost: { type: Number},
-    paymentId: {type: String,},
-    coupon: {
-		type: mongoose.Schema.ObjectId,
-		ref: 'coupons',
-	},
-    discountAmount: {
-		type: mongoose.Schema.ObjectId,
-        ref:'products'
-	},
+    // paymentId: {type: String,},
+  //   coupon: {
+	// 	type: mongoose.Schema.ObjectId,
+	// 	ref: 'coupons',
+	// },
+  //   discountAmount: {
+	// 	type: mongoose.Schema.ObjectId,
+  //       ref:'products'
+	// },
 
 })
 

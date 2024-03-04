@@ -14,9 +14,9 @@ shopRouter.post("/addCart:id",isUser,isBlock,shopControler.addCart)
 
 // filter product 
 
-shopRouter.get("/categories/filter",isUser,isBlock,shopControler.categoriesFilter)
-shopRouter.post("/priceWiseFilter:id",isUser,isBlock,shopControler.priceFilter)
-shopRouter.post("/sortPrice:id",isUser,isBlock,shopControler.sortPrice)
+shopRouter.get("/categories/filter",shopControler.categoriesFilter)
+shopRouter.post("/priceWiseFilter:id",shopControler.priceFilter)
+shopRouter.post("/sortPrice:id",shopControler.sortPrice)
 
 
 

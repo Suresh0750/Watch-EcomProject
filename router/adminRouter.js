@@ -53,5 +53,6 @@ adminRouter.get("/adminlogut",isAdmin,adminController.logOut)
 // admin order Management
 
 adminRouter.get("/orderManagment",isAdmin,orderManagement.orderManagement)
+adminRouter.get("/adminOrder/orderStatus:id",isAdmin,orderManagement.orderStatus)
 
 module.exports = adminRouter

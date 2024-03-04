@@ -77,7 +77,7 @@
                     <select name="select" aria-placeholder="Selelect Address" id="selectAdd" value="Selelect Address"  required style="display: block;width: 12em;">
                     <option disabled selected value="Select Address">Select Address</option>
                     <%userAddressDetails.forEach((data)=>{%>
-                        <option value="<%=data.houseNo%>"><%=data.houseNo%></option>
+                        <option value="<%=data._id%>"><%=data.houseNo%></option>
                     <%})%>
                     </select>
                 </div>
@@ -133,8 +133,7 @@
                                 <div style="display: flex;flex-direction: row; justify-content: space-between; ">
                                     <p class="text">Grand Total</p>
                                     <span id="grandTotal" >
-                                        ₹<%=cartTotal%>
-                                        
+                                        ₹<%=cartTotal%>  
                                     </span>
                                 </div>
                             </div>
@@ -285,6 +284,11 @@
 </div>
 <script>
 
+const grandTotal = document.getElementById("grandTotal")
+     const grandTotalValue = grandTotal.textContent
+
+   console.log(grandTotalValue)
+
     async function userOrder(){
 
 
@@ -305,12 +309,16 @@
 
         const value={}
         console.log(`hi hello`)
+
+   
         new FormData(paymentMethodForm).forEach((payentMethod,key)=>{
 
             value[key]= payentMethod
             console.log(value)
         })
         value.selectAdd = selectAdd
+
+        value.grandTotal =grandTotalValue.replace(/\\s+/g, '').match(/\d+/g);
       const data = await fetch(`/orderReceived`,{
         method:"post",
         headers:{
@@ -331,10 +339,7 @@
     }
 
     
-   const grandTotal = document.getElementById("grandTotal")
-   const grandTotalValue = grandTotal.textContent
 
-   console.log(grandTotalValue)
     
 </script>
 <script>
@@ -361,82 +366,6 @@ async function  deletData(id){
 </script>
 <script>
 
-async  function incrMent(id){
-
-
-        // productId
-
-        let productId = document.getElementById("productId").value
-
-        console.log(productId)
-        
-
-
-        // price 
-
-        let price = document.getElementById(`price${id}`).textContent
-
-     
-        // increase button
-        let cartIncrease = document.getElementById(`${id}`).textContent
-
-        let spanValue = document.getElementById(`${id}`)
-        
-        // total value
-        // let totalCastValue = document.getElementById(`total${id}`).textContent
-        let totalCast = document.getElementById(`total${id}`)
-      
-        // total Price
-        let priceTotal = document.getElementById("priceTotal")
-
-
-        //grandTotal
-        let grandTotal = document.getElementById("grandTotal")
-
-      
-        
-
-        if(cartIncrease <5)
-        {
-
-            let cartId ={
-                _id : id,
-                productId : productId
-            }
-            console.log(cartId)
-            let data = await fetch("/cart/inCrease",{
-
-                method:"PUT",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(cartId)
-            })
-
-
-            const dataRes = await data.json()
-
-            console.log(dataRes)
-
-            spanValue.textContent = dataRes.cartProduct.productQuantity
-            totalCast.textContent = dataRes.cartProduct.totalCastPerproduct
-            grandTotal.textContent = dataRes.grandTotal
-            priceTotal.textContent = dataRes.grandTotal
-            window.location.reload()
-        }else{
-            
-
-            Swal.fire({
-        title: "sorry",
-        text: "limit exit!",
-        icon: "error",
-        showCancelButton: true,
-
-            })
-         }
-
-
-    }
 
     async function deleteAddress(id){
 

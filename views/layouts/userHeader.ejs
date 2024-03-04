@@ -400,24 +400,28 @@
 
             const logOut = document.getElementById("logOut")
 
-            logOut.addEventListener("click",async(e)=>{
+            if(logOut){
+                logOut.addEventListener("click",async(e)=>{
 
-                e.preventDefault()
+                    e.preventDefault()
 
-            const data =await fetch("/logOut",{
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json"
+                    const data =await fetch("/logOut",{
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json"
+                        }
+                    })
+
+                    const dataRes = await data.json()
+
+                    if(dataRes.success)
+                    {
+                    console.log("logOut")
+                    window.location.href = "/"
                     }
-                })
 
-            const dataRes = await data.json()
-
-            if(dataRes.success)
-            {
-                console.log("logOut")
-                window.location.href = "/"
+                    })
             }
-            
-            })
+
+       
         </script>

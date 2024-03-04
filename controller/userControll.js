@@ -57,11 +57,11 @@ const userOTPpage = async (req,res)=>{
 const editAndUpdateProfile = async(req,res)=>{
     try{
 
-        console.log(req.body)
         const {userId,userEmail,lastName,firstName:userMobile} = req.body
 
-
-
+    
+        req.session.userIsthere.userName = req.body.firstName
+        req.session.save()
         const userDetail = await userCollection.findById({_id:userId})
 
         if(userEmail === userDetail.userEmail){
@@ -73,12 +73,11 @@ const editAndUpdateProfile = async(req,res)=>{
 
            const emailIsthere = await userCollection.findOne({userEmail:req.body.userEmail})
 
-           console.log(typeof(emailIsthere))
+        
 
-        console.log(`emailIsthere : \n ${emailIsthere}`)
            if(!emailIsthere){
 
-               console.log(`emailNew`)
+          
             const profileEditOTP = await emailOtp(req.body.userEmail)
 
             req.session.forGetEmail = req.body.userEmail
@@ -110,7 +109,7 @@ const editProfile = async(req, res)=>{
     try{
         const id = req.params.id
         const profileDetails = await userCollection.findOne({_id:id})
-        console.log(`EditProfile controle reach`)
+        
         res.render("user/editProfile",{isAlive:req.session.userIsthere,profileDetails})
     }catch(err){
 
@@ -130,22 +129,22 @@ const updateUserPass = async(req,res)=>{
 
         const passMatch = await bcrypt.compare(user.currentPass,userDetail.userPassword)
 
-        console.log(passMatch)
+      
 
         if(passMatch)
         {
             const newPass = user.newPass
             const passwordDcrypt = await bcrypt.hash(newPass,10)
-            console.log(passwordDcrypt)
+            
             await userCollection.findByIdAndUpdate({_id:user.id},{userPassword:passwordDcrypt})
-            console.log('success')
+            
             res.status(200).send({success:true})
         }else{
 
             res.status(501).send({success:false,pass:false})
         }
 
-        console.log(req.body)
+        
     }catch(err){
         res.status(501).send({success:false})
         console.log(`Error from updateUserPass ${err}`)

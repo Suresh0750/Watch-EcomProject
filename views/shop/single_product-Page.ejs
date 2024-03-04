@@ -80,7 +80,7 @@
                                     <div id="quantity_message">Hurry! Only  <span class="items"><%=productDetails[0].productStock%></span>  left in stock.</div>
 
                                     <p>Quantity</p>
-                                    <form id="quenyForm">
+                                    <form id="quantityForm">
 
                                         <select name="Qty" id="Quantity" style="width: 4em" >
     
@@ -460,7 +460,7 @@ async function addCart(id){
             
       const qty = {}
 
-      await  new FormData(quenyForm).forEach((value,key)=>{
+      await  new FormData(quantityForm).forEach((value,key)=>{
            qty[key] = value
         })
         console.log(qty)

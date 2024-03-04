@@ -9,20 +9,18 @@ const orderModel = require("../models/orderModel")
 
 
 
-
-
 // order received page
 
 const orderReceivedPage = async(req,res)=>{
     try{
-
-        res.render("shop/orderReceived")
+      
+        res.render("shop/orderReceived",{userOrderNo:req.session.orderNumber})
     }catch(err){
         console.log(`Error from orderReceiedPage ${err}`)
     }
 }
 
-const orderReceived = async(req,res)=>{
+const orderReceived = async (req,res)=>{
 
     try{
         console.log('req reached orderReceived')
@@ -30,21 +28,25 @@ const orderReceived = async(req,res)=>{
 
 
         
-        const userCortdelet = await cartCollection.find({userId:userId})
-        console.log(userId)
-        console.log(userCortdelet)
-        console.log(req.body)
-        console.log("params"+req.params)
-        let i=0
+        const userCortdelet = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
+  
+  
 
         const orderUser = {
             userId: userId,
-            orderNumber:i,
+            orderNumber:(await orderModel.countDocuments()) + 1,
             paymentType:req.body.paymentMethod,
-            addressChosen:req.body.selectAdd
+            addressChosen:req.body.selectAdd,
+            grandTotalCost:req.body.grandTotal[0],
+            cartData:userCortdelet
         }
 
-        i++
+ 
+        req.session.orderNumber = orderUser.orderNumber          // user order No
+                        
+
+        await orderModel(orderUser).save()
+
         await  userCortdelet.map(async(data)=>{
                 await cartCollection.findByIdAndDelete({_id:data._id})
             })
@@ -226,17 +228,22 @@ const addCart = async (req,res)=>{
 
     try{
 
+        console.log(`product quentity ${req.body}`)
+        console.log(JSON.stringify(req.body))
         const id = req.params.id
         const userId =  req.session.userIsthere.userId
-        const exitCart = await cartCollection.find({userId:userId, productId:id})
-        
-        if(exitCart.length !=0){
-            
-            await cartCollection.updateOne({_id:exitCart._id},{$inc:{productQuantity:1}})
+        const exitCart = await cartCollection.findOne({userId:userId, productId:id})
+        console.log(exitCart)
+        console.log(JSON.stringify(exitCart))
+        if(!exitCart){
+            console.log(id)
+            console.log(id)
+            await cartCollection.findByIdAndUpdate({_id:exitCart._id},{$inc:{productQuantity:req.body.Qty}})
+            console.log("2"+id)
             res.status(200).send({success:true})
         }else{
 
-            
+            console.log(`enter else`)
             const productDatail = await product.findOne({_id:id})
             
             const cart ={
@@ -367,9 +374,11 @@ const sortPrice = async(req,res)=>{
 const priceFilter = async (req,res)=>{
     try{
         const price = (req.params.id).split('-')
-
+        console.log(price)
         
-        req.session.categoriesFilter = await product.find({isListed:true,productPrice:{$gt:price[0],$lt:price[1]}})
+        req.session.categoriesFilter = await product.find({isListed:true,productPrice:{$gte:price[0],$lte:price[1]}})
+
+        console.log(req.session.categoriesFilter)
         req.session.count =  (req.session.categoriesFilter).length
         req.session.save()
         res.status(200).send({success:true})
@@ -386,6 +395,12 @@ const categoriesFilter = async (req,res)=>{
 
     try{
 
+        if(req.query.categoriesName == "all"){
+            req.session.categoriesFilter = await product.find({isListed:true})
+            req.session.save()
+            return res.redirect("/categories")
+
+        }
         req.session.categoriesFilter = await product.find({isListed:true,parentCategory:req.query.categoriesName})
         req.session.count =  (req.session.categoriesFilter).length 
 
