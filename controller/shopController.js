@@ -233,13 +233,12 @@ const addCart = async (req,res)=>{
         const id = req.params.id
         const userId =  req.session.userIsthere.userId
         const exitCart = await cartCollection.findOne({userId:userId, productId:id})
-        console.log(exitCart)
+
         console.log(JSON.stringify(exitCart))
-        if(!exitCart){
-            console.log(id)
-            console.log(id)
+        if(exitCart){
+           
             await cartCollection.findByIdAndUpdate({_id:exitCart._id},{$inc:{productQuantity:req.body.Qty}})
-            console.log("2"+id)
+
             res.status(200).send({success:true})
         }else{
 
@@ -276,9 +275,17 @@ const singleProduct = async (req,res)=>{
         const id = req.params.id
         const productDetails = await product.find({_id:id})
         const categoriesDetail = await categories.find({_id:id})
-        console.log(productDetails)
+        let productQuantity = await cartCollection.findOne({productId:id,userId:req.session.userIsthere.userId})
+
+        console.log(`productQuantity\n${productQuantity}`)
+        productQuantity = productQuantity?.productQuantity || 0
+
+        console.log(`productQuantity\n${productQuantity}`)
+        console.log(`productDetails\n${productDetails}`)
+
+
         req.session.userIsthere;
-        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session.userIsthere})
+        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session.userIsthere,productQuantity})
     }catch(err){
         console.log(`Error from singleProduct`)
     }
@@ -436,6 +443,29 @@ const categoriesProduct = async (req,res)=>{
         // count = req.session.count ==0 ? limit : count;
 
          productDetail = await product.find({isListed : true}).skip(skip).limit(limit)
+
+
+         // if admin unlisted the product while user adctive in website
+         if(req.session.categoriesFilter){
+
+            let data = req.session.categoriesFilter
+
+            let i=0
+
+            let listData = []
+            while(i<data.length){
+
+                filterData = await product.findOne({_id:data[i]._id,isListed : true})
+                
+                if(filterData){
+
+                    listData.push(filterData)  
+                }
+                i++
+            }
+            console.log(`listData\n ${listData}`)
+            req.session.categoriesFilter = listData 
+         }
 
          productDetail = await  req.session.categoriesFilter ?   req.session.categoriesFilter: productDetail;
 

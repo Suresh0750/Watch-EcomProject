@@ -101,13 +101,13 @@
                               <% if (product.isListed) { %>
                                 <td>
                                     <!-- <form action="/admin/unlist/<%= product._id %>" method="POST"> -->
-                                        <button type="submit" class="btn btn-success" onclick="unlist('<%= product._id %>')" style="margin-bottom: 80px;">Unlist</button>
+                                        <button type="submit" class="btn btn-danger" onclick="unlist('<%= product._id %>')" style="margin-bottom: 80px;">Unlist</button>
                                     <!-- </form> -->
                                 </td>
                                 <% } else { %>
                                     <td>
                                         <!-- <form action="/admin/list/<%= product._id %>" method="POST"> -->
-                                            <button type="submit" class="btn btn-danger" onclick="list('<%= product._id %>')" style="margin-bottom: 80px;">List</button>
+                                            <button type="submit" class="btn btn-success" onclick="list('<%= product._id %>')" style="margin-bottom: 80px;">List</button>
                                         <!-- </form> -->
                                     </td>
                                     <% } %>

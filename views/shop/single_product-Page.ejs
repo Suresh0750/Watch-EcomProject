@@ -77,7 +77,7 @@
                                         </ul>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
                                     </div>
-                                    <div id="quantity_message">Hurry! Only  <span class="items"><%=productDetails[0].productStock%></span>  left in stock.</div>
+                                    <div id="quantity_message">Hurry! Only  <span class="items" id="productStock"><%=productDetails[0].productStock%></span>  left in stock.</div>
 
                                     <p>Quantity</p>
                                     <form id="quantityForm">
@@ -451,39 +451,53 @@
         	<div class="pswp__bg"></div>
             <div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div><div class="pswp__item"></div><div class="pswp__item"></div></div><div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button><button class="pswp__button pswp__button--share" title="Share"></button><button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button><button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button><button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div>
 
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     
-    
-
+    let cartQuantity = "<%=productQuantity%>"       // user cartcollection user cartQuantity
+    const productStock = "<%=productDetails[0].productStock%>"
 async function addCart(id){
             
-      const qty = {}
+      const qty ={}
 
       await  new FormData(quantityForm).forEach((value,key)=>{
            qty[key] = value
         })
         console.log(qty)
-        const data = await fetch(`/addCart${id}`,{
-                                method:"POST",
-                                headers:{
-                                    "Content-Type":"application/json"
-                                },
-                                body:JSON.stringify(qty)
-                    })
+        let addQuantity = Number(cartQuantity)+Number(qty.Qty)
+        if(addQuantity<=productStock){
 
-            const dataRes = await data.json()
+            const data = await fetch(`/addCart${id}`,{
+                                    method:"POST",
+                                    headers:{
+                                        "Content-Type":"application/json"
+                                    },
+                                    body:JSON.stringify(qty)
+                        })
+    
+                const dataRes = await data.json()
+    
+                if(dataRes.success)
+                {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Item Added to Cart',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
 
-            if(dataRes.success)
-            {
-                    Swal.fire({
-                    icon: 'success',
-                    title: 'Item Added to Cart',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
+                    window.location.reload()
+                }
+        }else{
+            Swal.fire({
+                        icon: 'error',
+                        title: 'cart limit exceeded',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
         }
+    }
 
 
 

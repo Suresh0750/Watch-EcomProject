@@ -13,11 +13,7 @@ const orderStatus = async (req,res)=>{
 
         const orderData = await orderCollection.findById({_id:id}).populate("addressChosen")
 
-        console.log(`===============`)
-        console.log(orderData)
-        console.log(`===============`)
-        console.log(JSON.stringify(orderData))
-        console.log(`===============`)
+
 
 
         res.render("admin/orderStatus",{orderData})

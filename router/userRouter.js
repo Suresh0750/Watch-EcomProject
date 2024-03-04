@@ -29,4 +29,9 @@ userRouter.post("/userOtpValue",userControll.userOtpValue)
 userRouter.patch("/updateUserPass",userControll.updateUserPass)
 
 
+
+// all orders
+
+userRouter.get("/orders",isUser,isBlock,userControll.allOrders)
+userRouter.get("/orderDetails:id",isUser,isBlock,userControll.orderDetails)
 module.exports = userRouter

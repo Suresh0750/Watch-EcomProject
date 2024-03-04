@@ -258,6 +258,7 @@
      <script src="assets/js/main.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 async function  deletData(id){
 
@@ -311,10 +312,12 @@ async  function incrMent(id,stack){
         //grandTotal
         let grandTotal = document.getElementById("grandTotal")
 
-      
-        
 
-        if( cartIncrease<=stack)
+        
+        cartIncrease = Number(cartIncrease)
+        stack = Number(stack)
+
+        if( cartIncrease<stack)
         {
 
             let cartId ={
@@ -346,7 +349,7 @@ async  function incrMent(id,stack){
             
             Swal.fire({
             title: "sorry",
-            text: "limit exit!",
+            text: " cart limit exceed!",
             icon: "error",
             showCancelButton: true,
 
@@ -391,7 +394,9 @@ console.log(stack)
 
         let priceTotal = document.getElementById("priceTotal")
 
-        if(cartDecrease >=1)
+        cartDecrease = Number(cartDecrease)
+
+        if(cartDecrease >1)
         {
 
             let cartId ={
@@ -420,12 +425,12 @@ console.log(stack)
             window.location.reload()
         }else{
             Swal.fire({
-        title: "sorry",
-        text: "minimux limit should be 1",
-        icon: "error",
-        showCancelButton: true,
+                icon: "error",
+                title: "sorry",
+                text: "minimux limit should be 1",
+                showCancelButton: true,
 
-        })
+            })
 
 
         }

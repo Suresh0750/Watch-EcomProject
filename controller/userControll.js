@@ -2,13 +2,55 @@
 const userCollection = require("../models/userModel")
 const {AddressModel} = require("../models/addressModel")
 const {emailOtp} = require("./authController")
+const orderData = require("../models/orderModel")
 const bcrypt = require("bcrypt")
 
 
 
+//orderDetails show user
+
+const orderDetails = async (req,res)=>{
+
+    try{
+        const id = req.params.id
+        const orderDetail = await  orderData.findById({_id:id}).populate("addressChosen")
+        console.log("orderDetail\n"+orderDetail)
+      console.log(JSON.stringify(orderDetail))
+        const user = await userCollection.findById({_id:orderDetail.userId})
+        console.log(`user\n`+user)
+        res.render("user/single-order",{isAlive:req.session.userIsthere,order:orderDetail,user})
+    }catch(err){
+        console.log(`Error from orderDetails ${err}`)
+    }
+}
+
+
+
+//user allOrders
+
+const allOrders = async(req,res)=>{
+
+    try{
+       
+        let count;
+        let limit = 5
+        let skip;
+        let page = req.query?.page || 1 ;
+        
+        skip = (page-1)*limit
+        const userId = req.session?.userIsthere?.userId
+      
+        const orderDetails = await orderData.find({userId:userId}).skip(skip).limit(limit)
+        count = await orderData.find({userId:userId}).countDocuments()
+
+        res.render("user/userOrder",{isAlive:req.session.userIsthere,orderDetails,count,limit,page})
+
+    }catch(err){
+        console.log(`Error form allOrders ${err} `)
+    }
+}
+
 //userOtpValue verify 
-
-
 
 const userOtpValue = async (req,res)=>{
 
@@ -22,9 +64,9 @@ const userOtpValue = async (req,res)=>{
 
             const isUser = req.session.userIsthere
 
-            const userChangeEmail = req.session.forGetEmail
-            await userCollection.findByIdAndUpdate({_id:isUser.userId},{$set:{userEmail:userChangeEmail}})
-
+            const userChange = req.session.forGetEmail
+            await userCollection.findByIdAndUpdate({_id:isUser.userId},{$set:{firstName:userChange.firstName,lastName:userChange.lastName,userMobile:userChange.userMobile,userEmail:userChange.userEmail}})
+           
             res.status(200).send({success:true})
 
         }
@@ -67,7 +109,7 @@ const editAndUpdateProfile = async(req,res)=>{
         if(userEmail === userDetail.userEmail){
            
             await userCollection.findByIdAndUpdate({_id:userId},{firstName:req.body.firstName,lastName:req.body.lastName,userMobile:req.body.userMobile,userEmail:req.body.userEmail})
-            console.log(`update success`)
+    
             res.status(200).send({success:true,otp:false})
         }else{
 
@@ -80,8 +122,8 @@ const editAndUpdateProfile = async(req,res)=>{
           
             const profileEditOTP = await emailOtp(req.body.userEmail)
 
-            req.session.forGetEmail = req.body.userEmail
-
+            // req.session.forGetEmail = req.body.userEmail
+            req.session.forGetEmail = req.body
             req.session.otp = profileEditOTP
 
             req.session.save()
@@ -160,7 +202,7 @@ const changePassword = async (req,res)=>{
         res.render("user/changePassUser",{userId})
 
     }catch(err){
-
+        console.log(`Error from changePassword ${err}`)
     }
 }
 
@@ -223,11 +265,7 @@ const myAddress = async (req,res)=>{
 
         const {userId} = req.session.userIsthere
 
-        console.log(userId)
-
         const userAddress = await  AddressModel.find({user_id:userId})
-
-        console.log(`userAddress\n ${userAddress}` )
 
         res.render("user/myAddress",{isAlive:req.session.userIsthere,userAddress})
 
@@ -240,8 +278,7 @@ const myAddress = async (req,res)=>{
 const addAddressData = async (req,res)=>{
 
     try{
-        console.log(req.body)
-        console.log(req.session.userIsthere)
+
 
         const {userId} = req.session.userIsthere
 
@@ -302,6 +339,8 @@ const profile = async (req,res)=>{
 
 
 module.exports = {
+    orderDetails,               // orderDetails view order for user
+    allOrders,                  // all orders 
     userOtpValue ,              //  verfy the otp for user profile update new email
     userOTPpage,                // userOTPpage rendered
     editAndUpdateProfile,       //editAndUpdateProfile
