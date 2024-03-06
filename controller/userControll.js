@@ -7,17 +7,56 @@ const bcrypt = require("bcrypt")
 
 
 
+//returnOrder
+
+const returnOrder = async (req,res)=>{
+
+    try{
+
+        console.log(req.body)
+
+        const id = req.body.orderId
+
+        await orderData.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
+
+        res.status(200).send({success:true})
+
+    }catch(err){
+
+        console.log(`Error from returnOrder ${err}`)
+    }
+}
+
+
+
+// user cancel the order
+
+const cancelorder = async (req,res)=>{
+
+    try{
+
+        console.log(req.method)
+        console.log(req.body)
+
+        await orderData.findByIdAndUpdate({_id:req.body.orderId},{orderStatus:"Cancelled"})
+
+        res.status(200).send({success:true})
+    }catch (err){
+        console.log(`Error from cancelorder ${err}`)
+    }
+}
+
 //orderDetails show user
 
 const orderDetails = async (req,res)=>{
 
     try{
         const id = req.params.id
+
         const orderDetail = await  orderData.findById({_id:id}).populate("addressChosen")
-        console.log("orderDetail\n"+orderDetail)
-      console.log(JSON.stringify(orderDetail))
+   
         const user = await userCollection.findById({_id:orderDetail.userId})
-        console.log(`user\n`+user)
+        
         res.render("user/single-order",{isAlive:req.session.userIsthere,order:orderDetail,user})
     }catch(err){
         console.log(`Error from orderDetails ${err}`)
@@ -42,6 +81,8 @@ const allOrders = async(req,res)=>{
       
         const orderDetails = await orderData.find({userId:userId}).skip(skip).limit(limit)
         count = await orderData.find({userId:userId}).countDocuments()
+
+
 
         res.render("user/userOrder",{isAlive:req.session.userIsthere,orderDetails,count,limit,page})
 
@@ -339,6 +380,8 @@ const profile = async (req,res)=>{
 
 
 module.exports = {
+    returnOrder,                // returnOrder 
+    cancelorder,                //
     orderDetails,               // orderDetails view order for user
     allOrders,                  // all orders 
     userOtpValue ,              //  verfy the otp for user profile update new email

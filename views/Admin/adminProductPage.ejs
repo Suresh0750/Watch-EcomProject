@@ -224,7 +224,7 @@ const swalWithBootstrapButtons = Swal.mixin({
 
               if(dataRes.success)
               {
-                swalWithBootstrapButtons.fire({
+             await   swalWithBootstrapButtons.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",
                     icon: "success",
@@ -233,18 +233,18 @@ const swalWithBootstrapButtons = Swal.mixin({
 
                 window.location.href = "/admin/productPage"
               }else{
-                swal(" server error try again ")
+               await swal(" server error try again ")
               }
 
         } else if (
             /* Read more about handling dismissals below */
             result.dismiss === Swal.DismissReason.cancel
         ) {
-            swalWithBootstrapButtons.fire({
+        await    swalWithBootstrapButtons.fire({
             title: "Cancelled",
-        text: "Your imaginary file is safe :)",
-        icon: "error"
-        });
+            text: "Your imaginary data is safe :)",
+            icon: "error"
+            });
   }
 });
 

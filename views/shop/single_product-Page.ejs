@@ -68,18 +68,21 @@
                                         </div>
                                       
                                        
-                                        <div class="orderMsg" data-user="23" data-time="24">
-                                            <img src="assets/images/order-icon.jpg" alt="" /> <strong class="items">5</strong> sold in last <strong class="time">26</strong> hours</div>
-                                        </div>
+                                     
                                     <div class="product-single__description rte">
                                         <ul>
                                             <%=categoriesDetail.description%>
                                         </ul>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
                                     </div>
+                                    <%if(productDetails[0].productStock != 0){%>
                                     <div id="quantity_message">Hurry! Only  <span class="items" id="productStock"><%=productDetails[0].productStock%></span>  left in stock.</div>
 
                                     <p>Quantity</p>
+
+                                    
+
+                                    
                                     <form id="quantityForm">
 
                                         <select name="Qty" id="Quantity" style="width: 4em" >
@@ -95,6 +98,11 @@
                                     </form>
                                    
                                     <input type="button" value="Add to cart" style="cursor: pointer;" onclick="addCart('<%=product._id%>')" >
+                                    <%}else{%>
+
+                                        <h2 style="color: red
+                                        ;"> Product Stock is exceeded</h2>
+                                    <%}%>
                                     <%})%>
                               
                                         

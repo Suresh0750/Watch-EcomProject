@@ -14,7 +14,7 @@ const orderModel = require("../models/orderModel")
 const orderReceivedPage = async(req,res)=>{
     try{
       
-        res.render("shop/orderReceived",{userOrderNo:req.session.orderNumber})
+        res.render("shop/orderReceived",{isAlive:req.session.userIsthere,userOrderNo:req.session.orderNumber})
     }catch(err){
         console.log(`Error from orderReceiedPage ${err}`)
     }
@@ -41,7 +41,24 @@ const orderReceived = async (req,res)=>{
             cartData:userCortdelet
         }
 
+        console.log("userCortdelet\n"+JSON.stringify(userCortdelet))
  
+
+        // decrease product stock in product collection after user booking the product
+        if(userCortdelet){
+            
+                let i=0
+                let productStockDec = userCortdelet
+
+                while(i<productStockDec.length){
+                    let id = productStockDec[i].productId._id
+                    let productStock =Number(productStockDec[i].productQuantity)
+                    console.log(`productStock Number\n ${productStock}`)
+                    await product.findByIdAndUpdate({_id:id},{$inc:{productStock:-productStock}})
+                    i++
+                }
+
+        }
         req.session.orderNumber = orderUser.orderNumber          // user order No
                         
 
@@ -295,7 +312,9 @@ const landingPage = async (req,res)=>{
 
     try{
 
-        const allCatagory =  await categories.find({})
+        const allCatagory =  await categories.find({isAvailable:true})
+
+        console.log("allCatagory\n"+allCatagory)
         req.session.userIsthere;
         res.render("shop/index",{isAlive:req.session.userIsthere,allCatagory})
     }catch(err){
@@ -402,15 +421,17 @@ const categoriesFilter = async (req,res)=>{
 
     try{
 
+        let limit = 12
         if(req.query.categoriesName == "all"){
-            req.session.categoriesFilter = await product.find({isListed:true})
+            req.session.count = await product.find({isListed:true}).estimatedDocumentCount()
+            req.session.categoriesFilter = await product.find({isListed:true}).limit(limit)
             req.session.save()
             return res.redirect("/categories")
 
         }
         req.session.categoriesFilter = await product.find({isListed:true,parentCategory:req.query.categoriesName})
         req.session.count =  (req.session.categoriesFilter).length 
-
+        req.query.page = 1
        
         req.session.save()
      
@@ -437,13 +458,10 @@ const categoriesProduct = async (req,res)=>{
         req.session.categoriesFilter
         req.session.count
         req.session.save()
-        // count = await product.find({isListed : true}).estimatedDocumentCount()
-
-        // count = !req.session.count ? count: req.session.count==0 ? limit : req.session.count;
-        // count = req.session.count ==0 ? limit : count;
 
          productDetail = await product.find({isListed : true}).skip(skip).limit(limit)
 
+        console.log(`document length \n ${productDetail.length}`)
 
          // if admin unlisted the product while user adctive in website
          if(req.session.categoriesFilter){
@@ -461,9 +479,11 @@ const categoriesProduct = async (req,res)=>{
 
                     listData.push(filterData)  
                 }
+                
                 i++
+
             }
-            console.log(`listData\n ${listData}`)
+            
             req.session.categoriesFilter = listData 
          }
 
@@ -471,11 +491,10 @@ const categoriesProduct = async (req,res)=>{
 
          req.session.categoriesFilter = productDetail
 
-
          req.session.save()
 
         
-         count = productDetail.length
+         count  = productDetail.length
          const categorie = await categories.find({})
          
         req.session.userIsthere;

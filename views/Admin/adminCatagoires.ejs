@@ -215,15 +215,15 @@
 
                 if(dataRes.success)
                 {
-                  swal("delete Success")
+                await  swal("delete Success")
                   window.location.href = "/admin/catagories"
                 }else{
-                  swal(" server error try again ")
+                await  swal(" server error try again ")
                 }
 
             } else {
             // If the user cancels deletion
-            swal("ok");
+            await  swal("ok");
             }
         });
 
@@ -266,7 +266,7 @@
 
                   if(dataRes.success)
                   {
-                    swal("success")
+                   await swal("success")
                     window.location.href = "/admin/catagories"
                   }
          
@@ -304,14 +304,14 @@
                 const dataRes = await data.json()
 
                 if(dataRes.success){
-                  swal('unlist success')
+               await   swal('unlist success')
                 window.location.href = "/admin/catagories"
                 }
          
             console.log("Deleting user with ID:", userId);
             } else {
             // If the user cancels deletion
-            swal("ok");
+            await swal("ok");
             }
         });
 

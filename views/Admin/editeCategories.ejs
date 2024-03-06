@@ -4,6 +4,26 @@
     color:red
   }
 </style>
+
+<header class="main-header navbar">
+  <div class="col-search">
+      <form class="searchform">
+          <div class="input-group">
+              <input list="search_terms" type="text" class="form-control" placeholder="Search term" style="margin-left: 22em">
+              <button class="btn btn-light bg"  type="button"> <i class="material-icons md-search"></i></button>
+          </div>
+          <datalist id="search_terms">
+              <option value="Products">
+              <option value="New orders">
+              <option value="Apple iphone">
+              <option value="Ahmed Hassan">
+          </datalist>
+      </form>
+  </div>
+  <div>
+      <a href="/admin/adminlogut" class="btn btn-primary">Logout</a>
+  </div>
+</header>
 <section class="content lists col-md-10">
   <div
     class="box border rounded p-2 d-flex flex-column align-items-center justify-content-center"

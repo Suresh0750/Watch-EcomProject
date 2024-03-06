@@ -30,8 +30,11 @@ userRouter.patch("/updateUserPass",userControll.updateUserPass)
 
 
 
-// all orders
+// all orders in user
 
 userRouter.get("/orders",isUser,isBlock,userControll.allOrders)
 userRouter.get("/orderDetails:id",isUser,isBlock,userControll.orderDetails)
+userRouter.patch("/cancelorder",userControll.cancelorder)
+userRouter.patch("/returnOrder",userControll.returnOrder)
+
 module.exports = userRouter

@@ -1,5 +1,58 @@
 const orderCollection = require("../models/orderModel")
 
+
+
+
+// orderStatu update
+
+
+const updateOrderStatus = async (req,res)=>{
+
+    try{
+
+        const idwithStatus = req.params.id
+
+        const id=idwithStatus.slice(1)
+
+        const statusIdentify = idwithStatus[0]
+
+        if(statusIdentify === "P"){
+
+            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Pending"})
+            
+            res.redirect("/admin/orderManagment")
+        }else if(statusIdentify === "S" ){
+            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Shipped"})
+            
+            res.redirect("/admin/orderManagment")
+
+        }else if(statusIdentify === "D"){
+            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Delivered"})
+            
+            res.redirect("/admin/orderManagment")
+
+        }else if(statusIdentify === "R"){
+
+            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
+            
+            res.redirect("/admin/orderManagment")
+
+
+        }else if(statusIdentify === "C"){
+            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Cancelled"})
+            
+            res.redirect("/admin/orderManagment")
+
+        }
+
+        
+
+    }catch (err){
+        console.log(`Error fron updateOrderStatus ${err}`)
+    }
+}
+
+
 //orderStatus
 
 const orderStatus = async (req,res)=>{
@@ -50,6 +103,7 @@ const orderManagement = async (req,res)=>{
 
 
 module.exports = {
+    updateOrderStatus,          // update order status pending , shiped , deliverd
     orderStatus,
     orderManagement,
 }
