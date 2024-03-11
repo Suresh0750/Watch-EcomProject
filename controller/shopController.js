@@ -3,11 +3,16 @@ const categories = require('../models/categoriesModel')
 const userId = require("../models/userModel") 
 const cartCollection = require("../models/cartModel")
 const {AddressModel} = require("../models/addressModel")
-
 const orderModel = require("../models/orderModel")
+const razorPay = require("razorpay")
 
+const {KeyId,KeySecret} = process.env
 
-
+let instance = new razorPay({
+    key_id: KeyId,
+    key_secret: KeySecret, 
+  });
+  
 
 // order received page
 
@@ -19,17 +24,19 @@ const orderReceivedPage = async(req,res)=>{
         console.log(`Error from orderReceiedPage ${err}`)
     }
 }
-
+// order   datas Received 
 const orderReceived = async (req,res)=>{
 
     try{
-        console.log('req reached orderReceived')
+       
         const userId = req.session.userIsthere.userId
 
 
+        console.log(`peyment\n${req.body}`)
         
         const userCortdelet = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
   
+        console.log("req.body.paymentMethod\n"+req.body.paymentMethod)
   
 
         const orderUser = {
@@ -41,24 +48,7 @@ const orderReceived = async (req,res)=>{
             cartData:userCortdelet
         }
 
-        console.log("userCortdelet\n"+JSON.stringify(userCortdelet))
  
-
-        // decrease product stock in product collection after user booking the product
-        if(userCortdelet){
-            
-                let i=0
-                let productStockDec = userCortdelet
-
-                while(i<productStockDec.length){
-                    let id = productStockDec[i].productId._id
-                    let productStock =Number(productStockDec[i].productQuantity)
-                    console.log(`productStock Number\n ${productStock}`)
-                    await product.findByIdAndUpdate({_id:id},{$inc:{productStock:-productStock}})
-                    i++
-                }
-
-        }
         req.session.orderNumber = orderUser.orderNumber          // user order No
                         
 
@@ -75,6 +65,53 @@ const orderReceived = async (req,res)=>{
         console.log(`Error from orderReceived ${err}`)
     }
 }
+// razorPay genOrder
+
+
+const genOrder = async (req,res)=>{
+
+
+    try{
+
+        console.log("genOrder\n"+JSON.stringify(req.body))
+
+        const payMentValue = req.body
+
+        console.log(payMentValue.grandTotal[0])
+        console.log(process.env.KeyId)
+        console.log(process.env.KeySecret)
+    
+        instance.orders
+          .create({
+            amount: payMentValue.grandTotal[0] + "00",
+            currency: "INR",
+            receipt: "receipt#1",
+          }).then((order) => {
+            console.log('1')
+
+            console.log(`order\n${order.id} `)
+            res.json(order)
+            // return res.send({ orderId: order.id });
+          }).catch((err)=>{
+            console.log(err)
+          });
+
+    }catch(err){
+
+        console.log(err)
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
 
 // checkoutPage
 
@@ -82,7 +119,7 @@ const orderReceived = async (req,res)=>{
 const checkout = async(req,res)=>{
 
     try{
-        console.log(req.session.userIsthere)
+        
         const userId =req.session.userIsthere.userId
 
         let userAddressDetails = await AddressModel.find({user_id:userId})
@@ -135,7 +172,7 @@ const grandTotal = async (req)=>{
         const userId = req.session.userIsthere.userId
 
         let userCartData = await cartCollection.find({userId : userId}).populate("productId")
-        console.log(userCartData)
+        
         if(userCartData.length==0)
         {
             req.session.grandTotal = 0
@@ -224,9 +261,7 @@ const userCartPage = async (req,res)=>{
     try{
 
         let userCartData = await grandTotal(req);
-        console.log( userCartData)
-        // const userId = req.session.userIsthere.userId
-        // const userViewCart = await cartCollection.find({userId:userId})
+        
         res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData})
 
     }catch(err){
@@ -245,13 +280,12 @@ const addCart = async (req,res)=>{
 
     try{
 
-        console.log(`product quentity ${req.body}`)
-        console.log(JSON.stringify(req.body))
+      
         const id = req.params.id
         const userId =  req.session.userIsthere.userId
         const exitCart = await cartCollection.findOne({userId:userId, productId:id})
 
-        console.log(JSON.stringify(exitCart))
+        
         if(exitCart){
            
             await cartCollection.findByIdAndUpdate({_id:exitCart._id},{$inc:{productQuantity:req.body.Qty}})
@@ -259,7 +293,7 @@ const addCart = async (req,res)=>{
             res.status(200).send({success:true})
         }else{
 
-            console.log(`enter else`)
+           
             const productDatail = await product.findOne({_id:id})
             
             const cart ={
@@ -294,11 +328,9 @@ const singleProduct = async (req,res)=>{
         const categoriesDetail = await categories.find({_id:id})
         let productQuantity = await cartCollection.findOne({productId:id,userId:req.session.userIsthere.userId})
 
-        console.log(`productQuantity\n${productQuantity}`)
         productQuantity = productQuantity?.productQuantity || 0
 
-        console.log(`productQuantity\n${productQuantity}`)
-        console.log(`productDetails\n${productDetails}`)
+      
 
 
         req.session.userIsthere;
@@ -312,9 +344,7 @@ const landingPage = async (req,res)=>{
 
     try{
 
-        const allCatagory =  await categories.find({isAvailable:true})
-
-        console.log("allCatagory\n"+allCatagory)
+        const allCatagory =  await categories.find({})
         req.session.userIsthere;
         res.render("shop/index",{isAlive:req.session.userIsthere,allCatagory})
     }catch(err){
@@ -324,94 +354,124 @@ const landingPage = async (req,res)=>{
  
 }
 
+
+// sortCategory 
+
+async function sortCategory (req,products,gte,lte,skip,limit,){
+
+console.log(req.session.sortPrice)
+
+    const categorWiseProduct =  req.session.categorie
+
+    if(req.session.sortPrice === "lowToHigh"){
+        
+
+        let productValue = await product.find({isListed:true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).sort({"productPrice":1}).skip(skip).limit(limit)           //* sort the product assending order with category wise
+
+        return productValue
+
+    }else{
+
+        let productValue = await product.find({isListed:true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).sort({"productPrice":-1}).skip(skip).limit(limit)            //* sort the product assending order without category wise
+
+        return productValue
+
+    }
+
+
+}
+
+// sort the Product
+
+
+async function sort(req,products,gte,lte,skip,limit){
+
+    
+
+    if(req.session.sortPrice === "lowToHigh"){
+
+        let productValue = await product.find({isListed:true,productPrice:{$gte:gte,$lte:lte}}).sort({"productPrice":1}).skip(skip).limit(limit)        //* sort the product assending order without category wise
+
+        return productValue
+
+    }else{
+
+        let productValue = await product.find({isListed:true,productPrice:{$gte:gte,$lte:lte}}).sort({"productPrice":-1}).skip(skip).limit(limit)        //* sort the product dessending order without category wise
+
+        return productValue
+
+    }
+
+}
+
+
+
 // sort wit price 
 
 
 const sortPrice = async(req,res)=>{
+
+
     try{
 
+            if(req.params.id === "clearSort"){
 
-        if(req.params.id == "lowToHigh"){
+                req.session.sortPrice = null        //* clear the sorting 
+               
+                req.session.save()
+                res.status(200).send({success:true})
+            }else{
 
-            let data = req.session.categoriesFilter
-
-
-            let i=0
-            let temp;
-            let j;
-             while(i<data.length)
-            {
-                j=i+1
-                while(j<data.length){
-                    
-                    if(data[i].productPrice>data[j].productPrice)
-                    {
-                        temp= data[i]
-                        data[i]=data[j]
-                        data[j]=temp
-                    }
-                    
-                    j++
-                }
-
-                i++
+                req.session.sortPrice = req.params.id     //* sort price 
+                
+                req.session.save()
+                res.status(200).send({success:true})
             }
 
-        
-            req.session.count = (req.session.categoriesFilter).length
-            req.session.save()
-            res.status(200).send({success:true})
-        }else if(req.params.id == "highToLow"){
-            let data = req.session.categoriesFilter
-            console.log(req.session.categoriesFilter)
-            let i=0
-            let temp;
-            let j;
-             while(i<data.length)
-            {
-                j=i+1
-                while(j<data.length){
-                    
-                    if(data[i].productPrice<data[j].productPrice)
-                    {
-                        temp= data[i]
-                        data[i]=data[j]
-                        data[j]=temp
-                    }
-                    
-                    j++
-                }
-           
-                i++
-            }
-            req.session.categoriesFilter = data
-            req.session.count = data.length
-            req.session.save()
-            res.status(200).send({success:true})
-        }
-        
+      
+
     }catch(err){
-        res.status(500).send({success:false})
+
         console.log(`Error from sortPrice ${err}`)
+
     }
+
+
+
 }
 // filterPrice wise
 
 const priceFilter = async (req,res)=>{
+
+
     try{
-        const price = (req.params.id).split('-')
-        console.log(price)
+
         
-        req.session.categoriesFilter = await product.find({isListed:true,productPrice:{$gte:price[0],$lte:price[1]}})
+        const price = (req.params.id).split('-')
+        
 
-        console.log(req.session.categoriesFilter)
-        req.session.count =  (req.session.categoriesFilter).length
-        req.session.save()
-        res.status(200).send({success:true})
+        if(req.params.id == 'allPrice' ){
+            price[0] = null
+            price[1] = null
+        }
 
+       
+
+            req.session.gte = price[0]
+            req.session.lte = price[1]
+
+            
+            req.session.save()
+            res.status(200).send({success:true})
+   
+
+        
     }catch(err){
-        console.log(`Error from price Filter ${err}`)
+
+        console.log(`Error from  priceFilter ${err}`)
+
     }
+  
 }
 
 
@@ -419,29 +479,71 @@ const priceFilter = async (req,res)=>{
 
 const categoriesFilter = async (req,res)=>{
 
+
+
     try{
 
-        let limit = 12
-        if(req.query.categoriesName == "all"){
-            req.session.count = await product.find({isListed:true}).estimatedDocumentCount()
-            req.session.categoriesFilter = await product.find({isListed:true}).limit(limit)
-            req.session.save()
-            return res.redirect("/categories")
+        const filter = req.query.categoriesName
 
+        
+
+        if(filter == "all"){
+
+            req.session.categorie = null
+            
+            res.status(401).redirect("/categories")     //* 401 is redirect code
         }
-        req.session.categoriesFilter = await product.find({isListed:true,parentCategory:req.query.categoriesName})
-        req.session.count =  (req.session.categoriesFilter).length 
-        req.query.page = 1
-       
-        req.session.save()
-     
 
-        res.redirect("/categories")
 
-    }catch(err){
+        const categoriesCollection = await categories.aggregate([{$match:{isAvailable:true}},{$project:{_id:0,categoryName:1}}])                // for access the categories 
 
-        console.log(`Error from categories filter page ${err}`)
+            let i=0
+            while(i<categoriesCollection.length){
+                
+                if(categoriesCollection[i].categoryName === filter ){
+                    
+                    req.session.categorie= categoriesCollection[i].categoryName
+                    
+                    break;
+                }
+               
+                i++
+
+            }
+
+            
+          const producMax =   await product. aggregate([
+                                                    {$match:{parentCategory:req.session.categorie}},
+                                                    { $group: { _id: null, maxField: { $max: "$productPrice" } } }
+                                                    ,
+                                                    {$project:{_id:0,maxField:1}}
+                                                    
+                                                ])
+            const producMin =   await product. aggregate([
+                                                    {$match:{parentCategory:req.session.categorie}},
+                                                    { $group: { _id: null, minField: { $min: "$productPrice" } } }
+                                                    ,
+                                                    {$project:{_id:0,minField:1}}
+                                                    
+                                                ])
+
+            req.session.gte = req.session?.gte || producMin[0]?.minField 
+            req.session.lte = req.session?.lte || producMax[0]?.maxField
+            req.session.save()
+
+           
+           
+         
+            res.status(401).redirect("/categories?page=1")
+
+        
+
+    }catch (err){
+
+        console.log(`Error from categoriesFilter ${err} `)
     }
+
+
 }
 
 
@@ -449,60 +551,95 @@ const categoriesFilter = async (req,res)=>{
 const categoriesProduct = async (req,res)=>{
 
     try{
-        let limit= 12
-        let page = Number(req.query.page) || 1
-        let count;
-        let skip;
-        let productDetail;
-        skip = (page-1)*limit
-        req.session.categoriesFilter
-        req.session.count
-        req.session.save()
-
-         productDetail = await product.find({isListed : true}).skip(skip).limit(limit)
-
-        console.log(`document length \n ${productDetail.length}`)
-
-         // if admin unlisted the product while user adctive in website
-         if(req.session.categoriesFilter){
-
-            let data = req.session.categoriesFilter
-
-            let i=0
-
-            let listData = []
-            while(i<data.length){
-
-                filterData = await product.findOne({_id:data[i]._id,isListed : true})
-                
-                if(filterData){
-
-                    listData.push(filterData)  
-                }
-                
-                i++
-
-            }
-            
-            req.session.categoriesFilter = listData 
-         }
-
-         productDetail = await  req.session.categoriesFilter ?   req.session.categoriesFilter: productDetail;
-
-         req.session.categoriesFilter = productDetail
-
-         req.session.save()
 
         
-         count  = productDetail.length
-         const categorie = await categories.find({})
-         
-        req.session.userIsthere;
-        res.render("shop/categories",{productDetail,isAlive:req.session.userIsthere,count,limit,categorie})
-        // req.session.categoriesFilter = null
-    }catch(err){
-        console.log(`Error from categoriesProduct Page\n ${err}`)
+
+        let page = Number(req.query.page) || 1
+        let limit = 4
+        let count 
+        let productDetail;
+        let skip;
+      
+        
+        const minPrice = await product.aggregate([{$group:{_id:null,minPrice:{$min:"$productPrice"}}},{$project:{_id:0,minPrice:1}}])           //* for first render the page using for min and max value
+        const maxPrice = await product.aggregate([{$group:{_id:null,maxPrice:{$max:"$productPrice"}}},{$project:{_id:0,maxPrice:1}}])           //* for first render the Page using for min and max value
+
+       
+      
+
+       const  lte =  Number(req.session?.lte)  || Number(maxPrice[0]?.maxPrice)       //* maximum amout
+       const  gte =  Number(req.session?.gte) || Number(minPrice[0]?.minPrice)        //* minmum amount 
+
+        
+
+        skip =  (page-1)*limit
+        const categorie = await categories.find({isAvailable:true})
+
+        if(req.session.categorie){
+
+            //** min and max value  accoding the categorie*/ 
+
+
+
+            let maxField = await product.aggregate([
+                                                {$match:{parentCategory:req.session.categorie}},                    // categorie wise max value
+                                                {$group:{_id:null,maxPrice:{$max:"$productPrice"}}},
+                                                {$project:{_id:0,maxPrice:1}}
+                                            ])
+            let minField = await product.aggregate([
+                                                {$match:{parentCategory:"Mechanical"}},                             // categorie wise min value
+                                                {$group:{_id:null,minPrice:{$min:"$productPrice"}}},
+                                                {$project:{_id:0,minPrice:1}}
+                                            ])
+
+            const lte =  Number(req.session?.lte)  || Number(maxField[0]?.maxPrice) 
+            const gte =  Number(req.session?.gte) || Number(minField[0]?.minPrice) 
+
+
+            req.session.gteSelectPrice = `${gte}-${lte}`
+
+            // productPrice:{$gte:price[0],$lte:price[1]}
+            let categorWiseProduct = req.session.categorie
+            productDetail = await product.find({isListed : true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
+
+            count = await product.find({isListed : true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
+            
+            if(req.session.sortPrice){
+
+                productDetail = await sortCategory(req,productDetail,gte,lte,skip,limit)
+            }
+          
+            req.session.sortPrice
+           
+            res.render("shop/categories",{productDetail,isAlive:req.session.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:req.session.categorie,sort:req.session.sortPrice,page})
+             
+        }else{
+            
+                    productDetail = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
+            
+                    count = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
+                  
+                    req.session.gteSelectPrice = `${gte}-${lte}`
+
+
+                    if(req.session.sortPrice){
+
+                        productDetail = await sort(req,productDetail,gte,lte,skip,limit)           //* sorting the product
+                    }
+
+
+                    req.session.sortPrice       //* for show to user, if user choose or not the sort 
+                    res.render("shop/categories",{productDetail,isAlive:req.session?.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:"all",sort:req.session.sortPrice,page:req.query.page})
+
+                    console.log(`rendered`)
+        }
+
+
+    }catch (err){
+
+        console.log(`Error from categoriesProduct ${err}`)
     }
+
 }
 
 
@@ -522,6 +659,7 @@ module.exports = {
     orderReceivedPage, // orderReceivedPage rendered
 
     // order received page
+    genOrder,             // rezorpay genredor order
     orderReceived,         // check out to orderReceivedPage
     // checkout Page
 

@@ -488,7 +488,7 @@ async function addCart(id){
     
                 if(dataRes.success)
                 {
-                        Swal.fire({
+                  await      Swal.fire({
                         icon: 'success',
                         title: 'Item Added to Cart',
                         showConfirmButton: false,

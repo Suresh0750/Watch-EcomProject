@@ -3,7 +3,7 @@ const orderCollection = require("../models/orderModel")
 
 
 
-// orderStatu update
+// orderStatuS update
 
 
 const updateOrderStatus = async (req,res)=>{

@@ -44,6 +44,9 @@
                     <div class="card-body">
                         <form id="addProForm" action="/admin/addProductData" method="post" enctype="multipart/form-data">
                             <div class="modal-body">
+                                <%if(existProduct){%>
+                                    <h2 class="error">Product Exist</h2>
+                                <%}%>
                                 <div class="input-group mb-3">
                                     <div>
 

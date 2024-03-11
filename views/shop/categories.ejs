@@ -40,25 +40,29 @@
                         	<div class="filters-toolbar-wrapper">
                             	<div class="row">
                                 	<div class="col-4 col-md-4 col-lg-4 filters-toolbar__item collection-view-as d-flex justify-content-start align-items-center">
-                                    	<a href="shop-left-sidebar.html" title="Grid View" class="change-view change-view--active">
+                                    	<a  title="Grid View" class="change-view change-view--active">
                                         	<img src="assets/images/grid.jpg" alt="Grid" />
                                         </a>
-                                        <a href="shop-listview.html" title="List View" class="change-view">
+                                        <a  title="List View" class="change-view">
                                         	<img src="assets/images/list.jpg" alt="List" />
                                         </a>
                                     </div>
                                     <div class="col-4 col-md-4 col-lg-4 text-center filters-toolbar__item filters-toolbar__item--count d-flex justify-content-center align-items-center">
-                                    	<!-- <span class="filters-toolbar__product-count">Showing: 22</span> -->
+
+                                    	<span class="filters-toolbar__product-count">Showing: <%=count%></span>
+
                                     </div>
                                     <div class="col-4 col-md-4 col-lg-4 text-right">
                                     	<div class="filters-toolbar__item">
                                       		<label for="SortBy" class="hidden">Sort</label>
-                                      		<select name="SortBy" id="SortBy" onchange="sortDdbtn()" class="filters-toolbar__input filters-toolbar__input--sort">
-                                                <option value="title-ascending" selected="selected">Sort</option>
+                                        <form id="selectPrice">
+                                            <select name="SortBy" id="SortBy" onchange="sortDdbtn()" class="filters-toolbar__input filters-toolbar__input--sort">
+                                              <option value="clearSort" selected="selected" >Sort</option>
 
-                                                <option id="pricLowtoHeigh" value="lowToHigh">Price, low to high</option>
-                                                <option id="priceHighToLow" value="highToLow">Price, high to low</option>
-                                      		</select>
+                                              <option id="lowToHigh" value="lowToHigh" >Price, low to high</option>
+                                              <option id="highToLow" value="highToLow" >Price, high to low</option>
+                                            </select>
+                                        </form>
                                       		<input class="collection-header__default-sort" type="hidden" value="manual">
                                         </div>
                                     </div>
@@ -99,7 +103,15 @@
                                   <ul class="pagination">
                                     <% for( let i = 0; i < count/limit; i++ ) { %>
                                         <li class="page-item" >
-                                          <a class="page-link" href="/categories?page=<%=i+1 %>"><%= i+1 %></a>
+                                            <% console.log("rtyui"+page)%>
+                                            <% console.log(i+1) %>
+                                            <%if(page == i+1){%>
+                                                <% console.log("endered"+page)%>
+                                                <a class="page-link" ><%= i+1 %></a>
+                                            <%}else{%>
+
+                                                <a class="page-link" href="/categories?page=<%=i+1 %>"><%= i+1 %></a>
+                                            <%}%>
                                         </li>
                                     <% } %>
                                    
@@ -123,9 +135,9 @@
                             <div class="widget-title"><h2>Categories</h2></div>
                             <div class="widget-content">
                                 <ul class="sidebar_categories">
-                                    <li> <a href="/categories/filter?categoriesName=all">All</a></li>
+                                    <li > <a href="/categories/filter?categoriesName=all"><span id="all">All</span></a></li>
                                     <% categorie.forEach((data)=>{%>
-                                        <li class="lvl-1"><a href="/categories/filter?categoriesName=<%=data.categoryName%>" class="site-nav"><%=data.categoryName%></a></li>
+                                        <li class="lvl-1"><a href="/categories/filter?categoriesName=<%=data.categoryName%>" class="site-nav" id="<%=data.categoryName%>"><%=data.categoryName%></a></li>
                                     <%})%>
                                     
                                 </ul>
@@ -140,27 +152,48 @@
                         <div class="sidebar_widget filterBox filter-widget">
                             <div class="widget-title"><h2>Brands</h2></div>
                             <ul>
+
+                               
+                               
+                               
+                                
                             
                             <form id="priceProduct">
+                                <li id="allPrice" style="display: none;">
+                                    <input type="radio" value="allPrice" id="price0" name="price" >
+                                    <label for="price1">
+                                     All Price
+                                    </span></label>
+                                </li>
                                 <li>
                                   <input type="radio" value="300-400" id="price1" name="price">
-                                  <label for="price1"><span><span></span></span>$300-$400</label>
+                                  <label for="price1">
+                                    ₹300-₹400
+                                  </span></label>
                                 </li>
                                 <li>
                                   <input type="radio" value="400-600" id="price2" name="price">
-                                  <label for="price2"><span><span></span></span>$400-$600</label>
+                                  <label for="price2">
+                                    ₹400-₹600
+                                  </span></label>
                                 </li>
                                 <li>
                                   <input type="radio" value="600-800" id="price3" name="price">
-                                  <label for="price3"><span><span></span></span>$600-$800</label>
+                                  <label for="price3">
+                                    ₹600-₹800
+                                  </span></label>
                                 </li>
                                 <li>
                                   <input type="radio" value="800-1000" id="price4" name="price">
-                                  <label for="price4"><span><span></span></span>$800-$1000</label>
+                                  <label for="price4">
+                                    ₹800-₹1000
+                                  </span></label>
                                 </li>
                                 <li>
                                   <input type="radio" value="1000-1400" id="price5" name="price">
-                                  <label for="price5"><span><span></span></span>$1000-$1400</label>
+                                  <label for="price5">
+                                    ₹1000-₹1400
+                                  </span></label>
                                 </li>
                             </form>
                             </ul>
@@ -416,18 +449,76 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
 <script>
 
+//------------------------------------------------------------------
+
+
+    //* for selection sort
+
+    const sort = "<%=sort%>"  || false              
+
+    //* for sort the product and chose low to high or high to low
+    if(sort){
+
+        const selectPrice = document.getElementById("selectPrice")
+
+        for(let i=0;i<selectPrice[0].length;i++){
+
+                // alert(selectPrice[0][i].value)
+
+                if(selectPrice[0][i].value === sort){
+
+                    // alert(selectPrice[0][i].value)
+
+                    selectPrice[0][i].setAttribute("selected","selected")
+
+                }
+        }
+
+
+    }
+
+
+
+
+//------------------------------------------------------------------
+    const knowCategorie = "<%=knowCategorie%>"
+
+    document.getElementById(knowCategorie).style.color = "blue"
+
+    let price = "<%=selectPrice%>" || false
+
+
+    let priceName = document.getElementsByName("price")             //* get value from Objec we have to convert arry
+
+    const allPrice = document.getElementById("allPrice")            //* all price for the Produce
+    let priceVal = Object.values(priceName)
+
+
+    for(let i=0; i<priceVal.length;i++){
+
+
+        if(priceVal[i].value == price ){
+
+            priceVal[i].setAttribute("checked", "checked")           //
+            allPrice.style.display = "inline-block"
+        }
+
+        
+    }
+
+</script>
+<script>
+
+//clearSort
 
 async function sortDdbtn(){
 
     console.log("wertyuio"+SortBy.value)
 
-    if(SortBy.value=="title-ascending")
-    {
-        console.log(SortBy.value)
-        return 
-    }
+    // alert(SortBy.value)
 
     const value = SortBy.value
     const data = await fetch(`/sortPrice${value}`,{
@@ -447,12 +538,7 @@ async function sortDdbtn(){
 
 
 }
-//    const pricLowtoHeigh = document.getElementById("pricLowtoHeigh")
 
-//    pricLowtoHeigh.addEventListener("click", async function(){
-
-//         
-//    })
 
 async function addCart(id){
             
@@ -477,29 +563,7 @@ async function addCart(id){
                     });
                 }
             }
-    // async function addCart(id){
-            
-    //         console.log(id)
-    
-    //         const data = await fetch(`/addCart${id}`,{
-    //                                 method:"POST",
-    //                                 headers:{
-    //                                     "Content-Type":"application/json"
-    //                                 }
-    //                     })
-    
-    //             const dataRes = await data.json()
-    
-    //             if(dataRes.success)
-    //             {
-    //                     Swal.fire({
-    //                     icon: 'success',
-    //                     title: 'Item Added to Cart',
-    //                     showConfirmButton: false,
-    //                     timer: 1500
-    //                 });
-    //             }
-    //         }
+ 
 </script>
 
 <script>
@@ -526,12 +590,17 @@ async function addCart(id){
                 headers:{
                     "Content-Type":"application/json"
                 }
+               
             })
 
             const res = await data.json()
             if(res.success){
 
-                window.location.href = "/categories"
+                // await alert('fetch success')
+
+                // window.location.reload()
+                
+                window.location.href = "/categories?page=1"
             }
         }else{
 

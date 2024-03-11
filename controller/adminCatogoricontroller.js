@@ -31,7 +31,9 @@ const listCategories = async (req, res) => {
     try {
         const id = req.params.id
 
-        const data = await categories.findByIdAndUpdate({ _id: req.params.id }, { $set: { isAvailable: true } })
+        const data = await categories.findByIdAndUpdate({ _id: req.params.id }, { $set: { isAvailable: true } })    // category list 
+
+        const product = await productDetail.updateMany({parentCategory:data.categoryName},{$set:{isListed:true}})    // same category list of all product 
 
         res.status(200).send({ success: true })
 
@@ -45,7 +47,11 @@ const unListCategories = async (req, res) => {
 
     try {
         let id = req.params.id
-        await categories.findByIdAndUpdate({ _id: req.params.id }, { $set: { isAvailable: false } })
+        const category = await categories.findByIdAndUpdate({ _id: req.params.id }, { $set: { isAvailable: false } })
+
+        const product = await productDetail.updateMany({parentCategory:category.categoryName},{$set:{isListed:false}})
+
+
         res.status(200).send({ success: true })
     } catch (err) {
         res.status(500).send({ success: false })

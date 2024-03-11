@@ -281,6 +281,8 @@
      <script src="assets/js/main.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </div>
 <script>
 
@@ -318,7 +320,31 @@ const grandTotal = document.getElementById("grandTotal")
         })
         value.selectAdd = selectAdd
 
+
+      
+
         value.grandTotal =grandTotalValue.replace(/\\s+/g, '').match(/\d+/g);
+
+
+        const paymentMethod = value.paymentMethod
+
+       if(paymentMethod === "Razorpay"){
+
+            const genOrder = await fetch('/genOrder',{
+
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(value)
+            })
+
+            const order = await genOrder.json()
+            
+            alert(order)
+
+       }
+       
       const data = await fetch(`/orderReceived`,{
         method:"post",
         headers:{

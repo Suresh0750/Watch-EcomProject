@@ -18,7 +18,7 @@ const deletIngProduct = async (req,res)=>{
     console.log(req.params.id)
     await productController.findByIdAndDelete({_id:id})
     res.status(200).send({success:true})
-    res.redirect("/admin/productPage")
+    // res.status(401).redirect("/admin/productPage")
   }catch(err){
     console.log(`Error form deletIngProduct \n ${err} `)
   }
@@ -144,21 +144,29 @@ const addProductData = async (req, res) => {
         console.log(req.body)
         console.log(req.files)
         console.log(`req entry addProductPage`)
-        const productData = {
-            productName: req.body.productName,
-            parentCategory: req.body.parentCategory,
-            productImage1: req.files[0].filename,
-            productImage2: req.files[1].filename,
-            productImage3: req.files[2].filename,
-            productPrice: req.body.productPrice,
-            productStock: req.body.productStock,
-        };
-    
-        await productController.insertMany([productData])
-        
-        console.log(`data save server`)
 
-        res.redirect("/admin/productPage")
+        const existProduct = await productController.findOne({productName:req.body.productName})
+        if(!existProduct){
+
+          const productData = {
+              productName: req.body.productName,
+              parentCategory: req.body.parentCategory,
+              productImage1: req.files[0].filename,
+              productImage2: req.files[1].filename,
+              productImage3: req.files[2].filename,
+              productPrice: req.body.productPrice,
+              productStock: req.body.productStock,
+          };
+      
+          await productController.insertMany([productData])
+          
+          console.log(`data save server`)
+  
+          res.redirect("/admin/productPage")
+        }else{
+          req.session.existAddProduct = true
+          res.redirect("/admin/addProduct")
+        }
 
     }catch (err) {
     console.log(`Error from addProductData router`)
@@ -173,8 +181,9 @@ const addProduct = async (req, res) => {
       console.log(`req reached addProduct router`)
       const categoryDetail = await categories.find({})
 
-
-        res.render("Admin/addProduct",{categoryDetail})
+      req.session.existAddProduct
+        res.render("Admin/addProduct",{categoryDetail,existProduct:req.session.existAddProduct})
+        req.session.existAddProduct = false
     } catch (err) {
         console.log(`Error from addProduct router`)
     }

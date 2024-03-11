@@ -35,6 +35,7 @@ shopRouter.get("/Checkout",isUser,isBlock,shopControler.checkout)
 // shop receive page
 shopRouter.get("/orderReceivedPage",isUser,isBlock,shopControler.orderReceivedPage)
 shopRouter.post("/orderReceived",isUser,isBlock,shopControler.orderReceived)
+shopRouter.post("/genOrder",isBlock,shopControler.genOrder)
 
 // userIncrease product
 
