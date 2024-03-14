@@ -4,7 +4,7 @@ const {AddressModel} = require("../models/addressModel")
 const {emailOtp} = require("./authController")
 const orderData = require("../models/orderModel")
 const bcrypt = require("bcrypt")
-
+const walletModel = require("../models/WalletModel")
 
 
 //returnOrder
@@ -16,9 +16,56 @@ const returnOrder = async (req,res)=>{
         console.log(req.body)
 
         const id = req.body.orderId
+        const price = req.body.price
+        const orderRetrun =  await orderData.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
 
-        await orderData.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
 
+        const userId = req.session.userIsthere.userId
+        console.log(userId)
+        const userWallet = await walletModel.findOne({userId:userId})
+
+        console.log("userWallet\n",userWallet)
+
+        if(userWallet){
+            console.log(`==========`)
+            const transactionAmount = orderRetrun.grandTotalCost
+            const transactionType = orderRetrun.paymentType
+
+            const returnAmount ={
+                transactionAmount:transactionAmount,
+                transactionType,transactionType
+            }
+
+           const pushOrder = await walletModel.findByIdAndUpdate({_id:userWallet._id},{$push:{walletTransaction:returnAmount}})
+
+            const walletBalance = await walletModel.findById({_id:pushOrder._id})
+
+            let balance =0
+            walletBalance.walletTransaction.forEach((val)=>{
+                
+                balance+=val.transactionAmount
+               
+            })
+
+            await walletModel.findByIdAndUpdate({_id:userWallet._id},{walletBalance:balance})
+            res.status(200).send({success:true})
+
+        }else{
+
+            const userWallet = {
+                userId:userId,
+                walletBalance:price,
+                walletTransaction:[
+                    {       
+                        transactionAmount:price,
+                    }
+                ]
+            }
+
+        await new  walletModel(userWallet).save()
+
+        }
+        
         res.status(200).send({success:true})
 
     }catch(err){

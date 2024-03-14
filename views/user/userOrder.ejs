@@ -189,7 +189,7 @@
                             <li><a href="/register">Create Account</a></li>
                             <%}%>
 
-                            <li><a href="/wishlist">Wishlist</a></li>
+                            <li><a href="/user/wishlist">Wishlist</a></li>
                             <li>
 
                                 <%if(isAlive){%>
@@ -505,10 +505,10 @@
                 
               <a class='btn btn-default' href="/user/myAddress"><i class="fas fa-map-marker-alt" aria-hidden="true"></i>My
                 Address</a>
-                <a class='btn btn-default' href='/user/changePassword'><i class="fa fa-cog" aria-hidden="true"></i>Change Password</a>
+                <!-- <a class='btn btn-default' href='/user/changePassword'><i class="fa fa-cog" aria-hidden="true"></i>Change Password</a> -->
               <a href="javascript:void(0)" class="btn btn-default active"><i class="fa fa-list"
                   aria-hidden="true"></i>All Orders</a>
-              <a class='btn btn-default' href='/wishlist'><i class="fa fa-gift" aria-hidden="true"></i>Wishlist</a>
+              <a class='btn btn-default' href='/user/wishlist'><i class="fa fa-gift" aria-hidden="true"></i>Wishlist</a>
               
             </div>
           </div>
@@ -602,7 +602,7 @@
                               <%if(item.orderStatus=="Delivered" ){%>
                                 <td>
                                   <a  id="returnorder"
-                                    onclick="returnorderConfirmation('<%= item._id%>')"><button
+                                    onclick="returnorderConfirmation('<%= item._id%>','<%=item.grandTotalCost%>')"><button
                                       class="btn btn-warning return" style="background-color: skyblue; color: black;" >RETURN</button></a>
                                 </td>
                                 <%} else if (item.orderStatus=="Cancelled" || item.orderStatus=="Return"  ) {%>
@@ -973,7 +973,7 @@
     // });
   }
 
-  function returnorderConfirmation(orderId) {
+  function returnorderConfirmation(orderId,price) {
     Swal.fire({
       title: "Return Order?",
       text: "Are you sure you want to return this order?",
@@ -991,7 +991,7 @@
           headers:{
             "Content-Type":"application/json"
           },
-          body:JSON.stringify({orderId})
+          body:JSON.stringify({orderId,price})
 
         })
 
@@ -1000,7 +1000,7 @@
         if(res.success){
 
           await     Swal.fire({
-                        title: "order cancel",
+                        title: "order return",
                         text: "Your file has been list.",
                         icon: "success",
                         timer:1000

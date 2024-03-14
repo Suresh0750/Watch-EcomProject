@@ -190,7 +190,7 @@
                             <li><a href="/register">Create Account</a></li>
                             <%}%>
 
-                            <li><a href="/wishlist">Wishlist</a></li>
+                            <li><a href="/user/wishlist">Wishlist</a></li>
                             <li>
 
                                 <%if(isAlive){%>
@@ -259,7 +259,7 @@
                     </div>
                     <!--Mobile Logo-->
                     <div class="col-4 col-sm-3 col-md-3 col-lg-2">
-                        <div class="site-cart">
+                        <div class="site-cart" onclick="viewCart()">
                             <a href="#;" class="site-header__cart" title="Cart">
                                 <i class="icon anm anm-bag-l"></i>
                                 <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">2</span>
@@ -571,7 +571,7 @@
           <a class='btn btn-default' href='/user/myAddress'><i class="fas fa-map-marker-alt" aria-hidden="true"></i>My Address</a>
           <a class='btn btn-default' href='/user/changePassword'><i class="fa fa-cog" aria-hidden="true"></i>Change Password</a>
           <a class='btn btn-default' href='/user/orders'><i class="fa fa-list" aria-hidden="true"></i>All Orders</a>
-          <a class='btn btn-default' href='account-wishlist.html'><i class="fa fa-gift" aria-hidden="true"></i>Wishlist</a>
+          <a class='btn btn-default' href='/user/wishlist'><i class="fa fa-gift" aria-hidden="true"></i>Wishlist</a>
         </div>
       </div>
     </div>
@@ -751,7 +751,13 @@
 
 
 
+<script>
 
+  async function viewCart(){
+    window.location.href = "/viewCart"
+   
+  }
+</script>
 
 
 

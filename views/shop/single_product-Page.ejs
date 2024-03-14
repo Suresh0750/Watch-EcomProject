@@ -98,6 +98,7 @@
                                     </form>
                                    
                                     <input type="button" value="Add to cart" style="cursor: pointer;" onclick="addCart('<%=product._id%>')" >
+                                    <input type="button" value="whishlist" style="cursor: pointer;   margin-top: 20px;" onclick="whishlist('<%=product._id%>')" >
                                     <%}else{%>
 
                                         <h2 style="color: red
@@ -461,6 +462,48 @@
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+<script>
+    async function whishlist(id){
+
+        alert('ghj')
+        const data = await fetch(`/user/addWhishlist`,{
+
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({id})
+        })
+
+
+        const res = await data.json()
+
+        if(res.success && res.existProduct){
+
+            await      Swal.fire({
+                        icon: 'warning',
+                        title: 'whishlist already added',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+        }else if(res.success){
+
+            await      Swal.fire({
+                        icon: 'success',
+                        title: 'whishlist is added',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+        }
+
+
+
+    }
+</script>
 <script>
     
     let cartQuantity = "<%=productQuantity%>"       // user cartcollection user cartQuantity

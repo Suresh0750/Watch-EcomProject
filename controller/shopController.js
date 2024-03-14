@@ -5,6 +5,7 @@ const cartCollection = require("../models/cartModel")
 const {AddressModel} = require("../models/addressModel")
 const orderModel = require("../models/orderModel")
 const razorPay = require("razorpay")
+const walletModel = require("../models/WalletModel")
 
 const {KeyId,KeySecret} = process.env
 
@@ -12,7 +13,82 @@ let instance = new razorPay({
     key_id: KeyId,
     key_secret: KeySecret, 
   });
+
+
+
+
+ 
+
+  //* after order decrease the product quenty
+
+async function afterOrderProductdecreas(products){
+
+    console.log(JSON.stringify(products))
+
+    await products.forEach(async(val)=>{
+
+        id = val.productId._id
+        dec = val.productQuantity
+
+       let one = await product.findByIdAndUpdate({_id:id},{$inc:{"productStock":-dec}})
+
+    })
+ 
+}
+
   
+
+
+  //orderPlaced
+
+
+  const orderPlaced = async (req,res)=>{
+
+    try{
+
+        if(req.body.razorpay_payment_id){
+
+            const userId =req.session.userIsthere.userId
+         
+    
+            const userCartdelete = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
+      
+            const userOrder = req.session.orderDetail
+    
+          
+
+            const orderUser = {}
+
+            orderUser.userId= userId,
+            orderUser.orderNumber=(await orderModel.countDocuments()) + 1,
+            orderUser.paymentType=userOrder.paymentMethod,
+            orderUser.addressChosen=userOrder.selectAdd,
+            orderUser.cartData=userCartdelete,
+            orderUser.grandTotalCost=userOrder.grandTotal[0],
+            orderUser. paymentId=req.body.razorpay_payment_id
+    
+            req.session.orderNumber = orderUser.orderNumber          //* user order No
+                            
+            afterOrderProductdecreas(userCartdelete)                //* after order decrease product quentity
+          
+            await orderModel(orderUser).save()
+    
+            await  userCartdelete.map(async(data)=>{
+                    await cartCollection.findByIdAndDelete({_id:data._id})
+                })
+
+            res.status(401).redirect("/orderReceivedPage")
+        
+            // res.status(200).send({success:true})
+
+        }
+
+       
+    }catch(err){
+
+        console.log(err)
+    }
+  }
 
 // order received page
 
@@ -30,33 +106,66 @@ const orderReceived = async (req,res)=>{
     try{
        
         const userId = req.session.userIsthere.userId
+        if(req.body.paymentMethod === "Wallet"){
 
+                const userWallet =   await walletModel.findOne({userId:userId})
+                
+                const wallectBalance = userWallet.walletBalance-req.body.grandTotal[0]
+                const transation = {
+                    transactionAmount:req.body.grandTotal[0],
+                    transactionType:req.body.paymentMethod
+                }
 
-        console.log(`peyment\n${req.body}`)
+                //* user order the produnct throught wallect so that information we save in datatbase
+
+                await    walletModel.updateOne(
+                        {
+                            userId:userId
+                        },
+                        {
+                            $set: {
+                                walletBalance: wallectBalance
+                            },
+                            $push: {
+                                "NewTransaction":transation
+                            }
+                        }
+                    );
         
-        const userCortdelet = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
-  
-        console.log("req.body.paymentMethod\n"+req.body.paymentMethod)
-  
 
-        const orderUser = {
-            userId: userId,
-            orderNumber:(await orderModel.countDocuments()) + 1,
-            paymentType:req.body.paymentMethod,
-            addressChosen:req.body.selectAdd,
-            grandTotalCost:req.body.grandTotal[0],
-            cartData:userCortdelet
+
         }
 
- 
-        req.session.orderNumber = orderUser.orderNumber          // user order No
-                        
 
-        await orderModel(orderUser).save()
 
-        await  userCortdelet.map(async(data)=>{
-                await cartCollection.findByIdAndDelete({_id:data._id})
-            })
+            
+            const userCartdelete = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
+      
+
+      
+    
+            const orderUser = {
+                userId: userId,
+                orderNumber:(await orderModel.countDocuments()) + 1,
+                paymentType:req.body.paymentMethod,
+                addressChosen:req.body.selectAdd,
+                grandTotalCost:req.body.grandTotal[0],
+                cartData:userCartdelete
+            }
+
+
+
+            afterOrderProductdecreas(userCartdelete)                 //* after order decrease product quentity
+     
+            req.session.orderNumber = orderUser.orderNumber          //* user order No
+                            
+    
+            await orderModel(orderUser).save()
+    
+            await  userCartdelete.map(async(data)=>{
+                    await cartCollection.findByIdAndDelete({_id:data._id})
+                })
+      
     
         res.status(200).send({success:true})
         // res.render("shop/orderReceived")
@@ -75,11 +184,12 @@ const genOrder = async (req,res)=>{
 
         console.log("genOrder\n"+JSON.stringify(req.body))
 
+        req.session.orderDetail = req.body
+
+        req.session.save()
+
         const payMentValue = req.body
 
-        console.log(payMentValue.grandTotal[0])
-        console.log(process.env.KeyId)
-        console.log(process.env.KeySecret)
     
         instance.orders
           .create({
@@ -120,6 +230,7 @@ const checkout = async(req,res)=>{
 
     try{
         
+        console.log(`checkout req reached`)
         const userId =req.session.userIsthere.userId
 
         let userAddressDetails = await AddressModel.find({user_id:userId})
@@ -130,8 +241,15 @@ const checkout = async(req,res)=>{
         let userCartData = await grandTotal(req);
 
         userCartData = userCartData.length==0 ? 0 : userCartData;
+
+
+        const wallet = await walletModel.findOne({userId:userId}) 
+
+        const userWalletBalance = wallet?.walletBalance ?? 0
+
+        console.log(userWalletBalance)
     
-        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails})
+        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance})
     }catch(err){
         console.log(`Error from checkout Page ${err}`)
     }
@@ -504,6 +622,7 @@ const categoriesFilter = async (req,res)=>{
                     
                     req.session.categorie= categoriesCollection[i].categoryName
                     
+                    
                     break;
                 }
                
@@ -587,7 +706,7 @@ const categoriesProduct = async (req,res)=>{
                                                 {$project:{_id:0,maxPrice:1}}
                                             ])
             let minField = await product.aggregate([
-                                                {$match:{parentCategory:"Mechanical"}},                             // categorie wise min value
+                                                {$match:{parentCategory:req.session.categorie}},                             // categorie wise min value
                                                 {$group:{_id:null,minPrice:{$min:"$productPrice"}}},
                                                 {$project:{_id:0,minPrice:1}}
                                             ])
@@ -595,6 +714,7 @@ const categoriesProduct = async (req,res)=>{
             const lte =  Number(req.session?.lte)  || Number(maxField[0]?.maxPrice) 
             const gte =  Number(req.session?.gte) || Number(minField[0]?.minPrice) 
 
+            
 
             req.session.gteSelectPrice = `${gte}-${lte}`
 
@@ -656,6 +776,8 @@ const logOut = async(req,res)=>{
     
 }
 module.exports = {
+    
+    orderPlaced,        //orderPlaced
     orderReceivedPage, // orderReceivedPage rendered
 
     // order received page

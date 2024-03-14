@@ -6,6 +6,8 @@ const userRouter = express.Router()
 const {isUser,isBlock} = require("../middlewares/userMiddleware.js")
 
 const userControll = require("../controller/userControll.js")
+const {wishlist,addWhishlist,addToCart,deleteDataWhishlist} = require("../controller/whilistController.js")
+
 
 
 userRouter.get("/profile",isUser,isBlock,userControll.profile)
@@ -36,5 +38,14 @@ userRouter.get("/orders",isUser,isBlock,userControll.allOrders)
 userRouter.get("/orderDetails:id",isUser,isBlock,userControll.orderDetails)
 userRouter.patch("/cancelorder",userControll.cancelorder)
 userRouter.patch("/returnOrder",userControll.returnOrder)
+
+
+//  wishlist
+
+userRouter.get("/wishlist",isUser,isBlock,wishlist)
+userRouter.post("/addWhishlist",isBlock,addWhishlist)
+userRouter.post("/addToCart",isBlock,addToCart)
+userRouter.post("/wishList/delete",isBlock,deleteDataWhishlist)
+
 
 module.exports = userRouter

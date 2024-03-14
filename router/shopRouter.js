@@ -36,10 +36,13 @@ shopRouter.get("/Checkout",isUser,isBlock,shopControler.checkout)
 shopRouter.get("/orderReceivedPage",isUser,isBlock,shopControler.orderReceivedPage)
 shopRouter.post("/orderReceived",isUser,isBlock,shopControler.orderReceived)
 shopRouter.post("/genOrder",isBlock,shopControler.genOrder)
+shopRouter.all("/checkout/orderPlaced",isBlock,shopControler.orderPlaced)
 
 // userIncrease product
 
 shopRouter.put("/cart/inCrease",isUser,isBlock,shopControler.incQty)
 shopRouter.put("/cart/deCrease",isUser,isBlock,shopControler.decQty)
+
+
 
 module.exports = shopRouter

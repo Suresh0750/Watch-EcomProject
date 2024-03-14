@@ -286,6 +286,8 @@
 </div>
 <script>
 
+const userWalletBalance = "<%=userWalletBalance%>"
+
 const grandTotal = document.getElementById("grandTotal")
      const grandTotalValue = grandTotal.textContent
 
@@ -328,10 +330,12 @@ const grandTotal = document.getElementById("grandTotal")
 
         const paymentMethod = value.paymentMethod
 
+        console.log(paymentMethod)
+        alert(paymentMethod)
+
        if(paymentMethod === "Razorpay"){
 
             const genOrder = await fetch('/genOrder',{
-
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
@@ -341,26 +345,70 @@ const grandTotal = document.getElementById("grandTotal")
 
             const order = await genOrder.json()
             
-            alert(order)
+            
+            await openRazorpay(value.grandTotal,order.id)
+
+       }else if(paymentMethod==="Cash on Delivery"){
+
+     
+                const data = await fetch(`/orderReceived`,{
+                    method:"post",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify(value)
+                })
+
+                const resData = await data.json()
+
+                if(resData.success)
+                {
+                    window.location.href = "/orderReceivedPage"
+                }else(
+                    alert("server error")
+                )
+       
+
+       }else if(paymentMethod==="Wallet"){
+
+        let check = userWalletBalance-value.grandTotal
+
+            if(check>=0){
+
+                const data = await fetch(`/orderReceived`,{
+                    method:"post",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify(value)
+                })
+
+                const resData = await data.json()
+
+                if(resData.success)
+                {
+                    window.location.href = "/orderReceivedPage"
+                }else(
+                    alert("server error")
+                )
+
+
+            }else{
+
+            await    Swal.fire({
+                        icon: 'error',
+                        title: 'wallet amount is not enough',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+            }
 
        }
        
-      const data = await fetch(`/orderReceived`,{
-        method:"post",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify(value)
-      })
-
-      const resData = await data.json()
-
-      if(resData.success)
-      {
-        window.location.href = "/orderReceivedPage"
-      }else(
-        alert("server error")
-      )
+      
+    
+   
 
     }
 
@@ -442,8 +490,38 @@ async function  deletData(id){
 }
 </script>
 
+<script>
+     // Function to open Razorpay
+     async function openRazorpay(amount, creditId) {
+        try {
+            // console.log('1');
+            
+            var options = {
+                key: "rzp_test_LSVsVjKJgjMK1G",
+                amount: "" + amount*100,
+                currency: "INR",
+                name: "Titen Watches",
+                description: "Test Transaction",
+                callback_url: "/checkout/orderPlaced",
+                image: "assets1/images1/slidesshow-banners/smart-watch.png",
+                credit_id: creditId,
+                theme: {
+                    color: "#3399cc",
+                },
+            };
+          
 
+            var razorpay = new Razorpay(options);
+        
+         
+            await   razorpay.open();
+            
+        } catch (error) {
+            console.error(error);
+        }
+    }
 </script>
+<!-- </script> -->
 </body>
 
 <!-- belle/cart.html   11 Nov 2019 12:47:01 GMT -->
