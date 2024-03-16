@@ -9,7 +9,9 @@ const adminController = require("../controller/adminController")
 const adCatagoriescontrol = require("../controller/adminCatogoricontroller")
 const adminProduct = require("../controller/productController")
 const orderManagement = require("../controller/orderManagment")
-
+const {Coupons,addCoupon,editCoupon,deleteCoupon} = require("../controller/couponManagement")
+const {salesReport} = require("../controller/salesReportController")
+const {productOfferManagement} = require("../controller/offerControl")
 
 
 // adminMiddler 
@@ -54,9 +56,25 @@ adminRouter.get("/adminlogut",isAdmin,adminController.logOut)
 
 adminRouter.get("/orderManagment",isAdmin,orderManagement.orderManagement)
 adminRouter.get("/adminOrder/orderStatus:id",isAdmin,orderManagement.orderStatus)
+adminRouter.get("/orderManagement/status:id",isAdmin,orderManagement.updateOrderStatus)     //*product status 
 
 
-//product status 
+//* Coupons Mangement
 
-adminRouter.get("/orderManagement/status:id",isAdmin,orderManagement.updateOrderStatus)
+adminRouter.get("/Coupons",isAdmin,Coupons)
+adminRouter.post("/couponManagement/addCoupon",isAdmin,addCoupon)
+adminRouter.put("/couponManagement/editCoupon/:id",isAdmin,editCoupon)
+adminRouter.delete("/couponManagement/deleteCoupon/:id",isAdmin,deleteCoupon)
+
+
+
+//* salesReport
+adminRouter.get("/salesReport",isAdmin,salesReport)
+
+
+
+
+//* productOfferManagement
+adminRouter.get("/productOfferManagement",isAdmin,productOfferManagement)
+
 module.exports = adminRouter

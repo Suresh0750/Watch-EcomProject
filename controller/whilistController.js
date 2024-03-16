@@ -13,10 +13,28 @@ const deleteDataWhishlist = async (req,res)=>{
 
   try{
 
-    console.log(req.body)
-    await whishlistModel.deleteOne({"whishlist._id":req.body.id})
+    const userId = req.session?.userIsthere?.userId
 
-    req.status(200).send({success:true})
+    // console.log(req.body)
+    // await whishlistModel.findByIdAndUpdate({"whishlist._id":req.body.id})
+
+    const userWhishlist = await whishlistModel.findOne({userId})
+
+    userWhishlist.whishlist.forEach(async(val)=>{
+
+
+    
+      if(val._id == req.body.id){
+
+      const userWhishList= await whishlistModel.updateOne({userId:userId},{$pull:{whishlist:{_id:req.body?.id}}})
+
+
+      }
+     
+   })
+
+
+    res.status(200).send({success:true})
 
   }catch(err){
 
@@ -92,7 +110,8 @@ const addWhishlist = async (req,res)=>{
 
     const whishlistIsthere = await whishlistModel.findOne({userId:userId})
 
-    
+    console.log(`-------------`)
+    console.log(whishlistIsthere)
 
     if(whishlistIsthere){
 
@@ -119,7 +138,7 @@ const addWhishlist = async (req,res)=>{
       const userWhishlist = {
                           userId,
                         whishlist:[
-                          productId
+                        {productId}
                         ]
                     
                         }

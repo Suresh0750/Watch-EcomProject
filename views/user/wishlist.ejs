@@ -383,6 +383,14 @@
                         </tr>
                       </thead>
                       <tbody>
+                        <%if(!userWhishlist?.whishlist){%>
+
+
+
+
+                        <%}else{%>
+
+                         
                         <% userWhishlist.whishlist.forEach((item, index)=>{%>
 
                           <tr class="CartProduct" id="cartProduct<%=index.productName%>">
@@ -410,7 +418,7 @@
                                     style="font-weight: 800;" class="glyphicon glyphicon-trash fa-2x"></i></button></td>
                               </tr>
                             <%});%>
-
+                      <%}%>
                       </tbody>
                     </table>
                   </div>
@@ -468,7 +476,6 @@
 
           }
 
-
         }
       </script>
 
@@ -486,17 +493,8 @@
           cancelButtonColor: "#d33",
           confirmButtonText: "Yes, delete it!"
         }).then(async(result) => {
-          if (result.isConfirmed) {
-            // let cartProductElement = document.getElementById('cartProduct' + index)
-            // cartProductElement.style.display = "none"
-            // fetch('/wishList/delete/' + id, { method: 'DELETE' }).then(data => console.log(data))
-            // Swal.fire({
-            //   title: "Deleted!",
-            //   text: "Your file has been deleted.",
-            //   icon: "success"
-  
-            // }).then(() => location.reload());
 
+          if (result.isConfirmed) {
 
             const data = await fetch('/user/wishList/delete',{
 
@@ -516,6 +514,8 @@
                         text: "Your file has been deleted.",
                         icon: "success"
                         })
+
+              window.location.reload()
             }
           }
         });
