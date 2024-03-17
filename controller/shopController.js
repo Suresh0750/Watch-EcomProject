@@ -1,4 +1,4 @@
-const product = require("../models/productModule")
+const product = require("../models/productModel")
 const categories = require('../models/categoriesModel')
 const userId = require("../models/userModel") 
 const cartCollection = require("../models/cartModel")

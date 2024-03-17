@@ -1,7 +1,7 @@
 
 
 const whishlistModel = require("../models/whislistModel")
-const productModel = require("../models/productModule")
+const productModel = require("../models/productModel")
 const cartModel = require("../models/cartModel")
 
 

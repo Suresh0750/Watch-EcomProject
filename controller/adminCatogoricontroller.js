@@ -1,6 +1,6 @@
 
 const categories = require("../models/categoriesModel")
-const productDetail = require("../models/productModule")
+const productDetail = require("../models/productModel")
 
 
 

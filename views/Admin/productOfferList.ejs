@@ -1,4 +1,5 @@
-<%- include('../layouts/adminHeader.ejs') %>
+
+<%- include("../layouts/adminHeader.ejs") %>
 
 <main class="main-wrap">
     <header class="main-header navbar">
@@ -18,7 +19,7 @@
             </form>
         </div>
         <div>
-            <a href="/admin/logout" class="btn btn-primary">Logout</a>
+            <a href="/Admin/logout" class="btn btn-primary">Logout</a>
           </div>
     </header>
     <br>
@@ -161,7 +162,7 @@
                           <div class="offerPercentageInput p-2">
                               <label for="productOfferPercentage" class="mb-2">Product Offer Percentage: </label>
                               <div class="input-group">
-                                  <input id="productOfferPercentage<%= index %>" name="productOfferPercentage" class="form-control" placeholder="Enter the offer percentage" value="<%= product.productOfferPercentage %>">
+                                  <input id="productOfferPercentage<%= index %>" name="productOfferPercentage" min="5" class="form-control" placeholder="Enter the offer percentage" value="<%= product.productOfferPercentage %>">
                               </div>
                               <div class="form-text">Choose a percentage to be discounted. Between 5% and 90%.</div>
                           </div>
@@ -214,7 +215,9 @@
  <script>
     $(document).ready(function () {
         $("#editProductOfferForm<%= index %>").submit(async function (event) {
-            event.preventDefault();
+            try {
+
+                event.preventDefault();
             let formData = {
             
                 productName: $("#productName<%= index %>").val(),
@@ -237,7 +240,7 @@
                     title: "Your offer has been updated",
                     showConfirmButton: false,
                     timer: 3500
-                }).then(() => location.reload());
+                }).then(() => window.location.href = "/admin/productOfferManagement");
             } else if (result.success) {
                 Swal.fire({
                     icon: "error",
@@ -245,6 +248,12 @@
                     text: "Coupon code must be unique"
                 });
             }
+                
+            } catch (err) {
+                
+                console.log(err)
+            }
+          
         });
     });
 </script>
@@ -254,7 +263,14 @@
 
       
   <% }); %>
-  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+<!-- <script src="path/to/jquery.validate.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="path/to/jquery.validate.min.js"></script>
+
 
   <script>
     var today = new Date().toISOString().split('T')[0];
@@ -277,7 +293,15 @@
         });
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
 <script>
+    jQuery.noConflict();
+    (function($) {
+    // Your jQuery code here
+
   $(document).ready(function () {
       $("#addProductOfferForm").validate({
           rules: {
@@ -329,6 +353,7 @@
           }
       });
   });
+})(jQuery);
 </script>
 
 

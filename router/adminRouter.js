@@ -11,7 +11,7 @@ const adminProduct = require("../controller/productController")
 const orderManagement = require("../controller/orderManagment")
 const {Coupons,addCoupon,editCoupon,deleteCoupon} = require("../controller/couponManagement")
 const {salesReport} = require("../controller/salesReportController")
-const {productOfferManagement} = require("../controller/offerControl")
+const {productOfferManagement,addOffer,editOffer,getCategoryOffer,addCategoryOffer,editCategoryOffer,editCategoryOfferStatus} = require("../controller/offerControl")
 
 
 // adminMiddler 
@@ -76,5 +76,16 @@ adminRouter.get("/salesReport",isAdmin,salesReport)
 
 //* productOfferManagement
 adminRouter.get("/productOfferManagement",isAdmin,productOfferManagement)
+adminRouter.post("/productOfferManagement/addOffer",isAdmin,addOffer)
+adminRouter.put("/productOfferManagement/editOffer/:id",isAdmin,editOffer)
+
+
+
+//* category offerManagement
+
+adminRouter.get("/category-offer-list",isAdmin,getCategoryOffer)
+adminRouter.post("/add-category-offer",isAdmin,addCategoryOffer)
+adminRouter.put("/edit-category-offer",isAdmin,editCategoryOffer)
+adminRouter.get("/categoryoffer-status/:id",isAdmin,editCategoryOfferStatus)
 
 module.exports = adminRouter

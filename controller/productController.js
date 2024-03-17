@@ -1,4 +1,4 @@
-const productController = require("../models/productModule")
+const productController = require("../models/productModel")
 const categories = require("../models/categoriesModel")
 
 
