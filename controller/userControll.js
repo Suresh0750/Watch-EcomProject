@@ -7,6 +7,30 @@ const bcrypt = require("bcrypt")
 const walletModel = require("../models/WalletModel")
 
 
+
+//* wallet
+
+const wallet =  async (req,res)=>{
+    try{
+
+        console.log(`req reached wllet`)
+
+        const userId = req.session.userIsthere.userId
+
+        const userDetail = await userCollection.findById({_id:userId})
+
+        const userWallet = await walletModel.findOne({userId:userId}) 
+        console.log(userDetail)
+        console.log(userWallet)
+        const walletBalance = userWallet?.walletBalance ?? 0
+        res.render("user/wallet",{isAlive:req.session.userIsthere,userDetail,walletBalance})
+
+    }catch(err){
+
+        console.log(`Error from wallet page`)
+    }
+}
+
 //returnOrder
 
 const returnOrder = async (req,res)=>{
@@ -427,6 +451,7 @@ const profile = async (req,res)=>{
 
 
 module.exports = {
+    wallet,                     //wallet
     returnOrder,                // returnOrder 
     cancelorder,                //
     orderDetails,               // orderDetails view order for user

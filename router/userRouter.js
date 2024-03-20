@@ -48,4 +48,9 @@ userRouter.post("/addToCart",isBlock,addToCart)
 userRouter.post("/wishList/delete",isBlock,deleteDataWhishlist)
 
 
+//*wallet
+
+userRouter.get("/wallet",isUser,isBlock,userControll.wallet)
+
+
 module.exports = userRouter

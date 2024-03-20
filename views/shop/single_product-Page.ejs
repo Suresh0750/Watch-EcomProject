@@ -75,6 +75,18 @@
                                         </ul>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
                                     </div>
+
+                                    <%if(priceNew){%>
+                                        <p>Product Price:<strike><%=productDetails[0].productPrice%></strike></p>
+                                        
+
+                                        <p>New Price: <span id="newPrice"><%=priceNew%></span></p>
+
+                                    <%}else{%>
+                                        <p>Product Price:<%=productDetails[0].productPrice%></p>
+                                    <% }%>
+
+
                                     <%if(productDetails[0].productStock != 0){%>
                                     <div id="quantity_message">Hurry! Only  <span class="items" id="productStock"><%=productDetails[0].productStock%></span>  left in stock.</div>
 
@@ -505,6 +517,8 @@
     }
 </script>
 <script>
+
+    let  priceNew ="<%=priceNew%>"
     
     let cartQuantity = "<%=productQuantity%>"       // user cartcollection user cartQuantity
     const productStock = "<%=productDetails[0].productStock%>"
@@ -517,6 +531,11 @@ async function addCart(id){
         })
         console.log(qty)
         let addQuantity = Number(cartQuantity)+Number(qty.Qty)
+
+        qty.priceNew = priceNew
+
+        
+        // document.getElementById("newPrice")
         if(addQuantity<=productStock){
 
             const data = await fetch(`/addCart${id}`,{

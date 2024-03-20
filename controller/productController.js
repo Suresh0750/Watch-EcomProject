@@ -178,6 +178,7 @@ const addProductData = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
+      
       console.log(`req reached addProduct router`)
       const categoryDetail = await categories.find({})
 

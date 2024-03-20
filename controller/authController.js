@@ -1,6 +1,7 @@
 const userdata = require("../models/userModel")
 const bcrypt = require("bcrypt")
 //nodemailer
+const wallet = require('../models/WalletModel')
 
 const nodemailer = require("nodemailer");
 
@@ -274,12 +275,80 @@ const resendOtp = async(req,res)=>{
 }
 
 
+async function referralCodeUserCreate (){
+
+
+  try{
+    console.log( `req reached referralCodeUserCreate`)
+
+        // program to generate random strings
+      
+       const result = Math.random().toString(36).substring(2,7);
+      
+      
+        const isCheck = await userdata.findOne({referralCode:result})
+        console.log(`isCheck`,isCheck)
+      
+        if(isCheck){
+          referralCodeUserCreate()
+        }
+      
+        return result
+      // console.log(result);
+  }catch (err){
+
+    console.log(`Error from referralCodeUserCreate function ${err}`)
+  }
+
+}
+
+
+async function referralCodeUser(referralCodeId,req){
+
+
+  try{
+    
+    console.log(`req reached referralCodeUser`)
+
+    console.log(referralCodeId)
+  
+    const userCReferralCode = await userdata.findOne({referralCode:(referralCodeId).toLowerCase()})
+    console.log(userCReferralCode)
+
+    if(userCReferralCode){
+      
+      const userWallet = await wallet.findOne({userId:userCReferralCode._id})
+
+      if(userWallet){
+
+        const userIncwallet = await wallet.updateOne({userId:userCReferralCode._id},{$inc:{walletBalance:500}})
+        console.log(`userIncwallet\n`,userIncwallet)
+      }else{
+
+        const walletUpdateFiels = {
+          userId:userCReferralCode?._id,
+          walletBalance:500
+        }
+
+        await wallet(walletUpdateFiels).save()
+      }
+  
+    }
+  
+    return "success"
+  }catch(err){
+    console.log(`Error from  referralCodeUser function ${err}`)
+  }
+
+}
+
 
 //OtpValue
 
 const otpvalue = async (req,res)=>{
 
   try{
+    console.log(`req reached otpvalue`)
     const otp = Number(req.params.id)
     const genOtp = Number(req.session.otp) 
   
@@ -289,9 +358,15 @@ const otpvalue = async (req,res)=>{
     if(otp === genOtp)
     {
       req.session.otp = null
-      const {firstName,lastName,userMobile,userEmail,userPassword} = req.session.userData
-     
-      await userdata({firstName,lastName,userMobile,userEmail,userPassword}).save()
+
+      const {firstName,lastName,userMobile,userEmail,userPassword,userCReferralCode} = req.session.userData
+
+      console.log(userCReferralCode)
+     const referralWallet =  await referralCodeUser(userCReferralCode,req)
+
+     const referralCode  = await referralCodeUserCreate()
+     console.log('newRefferal code ',referralCode)
+      await userdata({firstName,lastName,userMobile,userEmail,userPassword,referralCode}).save()
   
       req.session.userData = null
       const userDetail = await userdata.findOne({userEmail:userEmail})
@@ -386,12 +461,14 @@ const signUp = async(req,res)=>{
 
             const pass = await bcrypt.hash(req.body.userPassword,10)
 
+            console.log(req.body.userCReferralCode)
             const userData = {
                        firstName : req.body.firstName,
                        lastName : req.body.lastName,
                        userMobile : req.body.userMobile,
                        userEmail : req.body.userEmail,
-                       userPassword : pass
+                       userPassword : pass,
+                       userCReferralCode : req.body.userCReferralCode
             }
             const otp = await emailOtp(req.body.userEmail)
             console.log(`otp value ${otp}`)

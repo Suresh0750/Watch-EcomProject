@@ -5,6 +5,7 @@ const shopRouter = express.Router()
 const shopControler = require("../controller/shopController.js")
 
 const {isUser,isBlock} = require("../middlewares/userMiddleware.js")
+const {allProductCoupen} = require("../controller/userShopCoupen.js")
 
 shopRouter.get("/",shopControler.landingPage)
 shopRouter.get("/categories",shopControler.categoriesProduct)
@@ -44,5 +45,8 @@ shopRouter.put("/cart/inCrease",isUser,isBlock,shopControler.incQty)
 shopRouter.put("/cart/deCrease",isUser,isBlock,shopControler.decQty)
 
 
+
+// userCoupen 
+shopRouter.post("/shopCoupen",isBlock,allProductCoupen)
 
 module.exports = shopRouter

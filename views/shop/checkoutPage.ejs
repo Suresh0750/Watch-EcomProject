@@ -1,4 +1,42 @@
 <%-include("../layouts/userHeader.ejs")%>
+<style>
+    #applyCoupen{
+        display: flex;
+    }
+    #coupenBtn{
+        display: flex;
+        width: 7em;
+        background-color: green;
+        font-size: 1em;
+        font-weight: 800;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #coupon-container{
+    width: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    position: relative;
+    }
+    .coupon-card{
+        display: inline-block;
+        width: 200px;
+        margin-right: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        transition: box-shadow 0.3s;
+        cursor: pointer;
+        background-color: #5cb85c;
+    }
+
+
+</style>
     
     <!--Body Content-->
     <div id="page-content", style="margin-top: 6em ">
@@ -133,8 +171,25 @@
                                 <div style="display: flex;flex-direction: row; justify-content: space-between; ">
                                     <p class="text">Grand Total</p>
                                     <span id="grandTotal" >
+                                        <% console.log('grandTotal',cartTotal)%>
                                         ₹<%=cartTotal%>  
                                     </span>
+                                </div>
+                                <div id="applyCoupen">
+                                    <input type="text"  id="coupenValue" name="applayCoupen" placeholder="Apply coupen">
+                                    <buttonn id="coupenBtn">Apply!</button>
+                                </div>
+                                <div id="coupon-container">
+
+                                    <%if(coupenData){%>
+                                        <%coupenData.forEach((coupen)=>{%>
+                                            <div class="coupon-card">
+                                                <h3><%=coupen.couponCode%></h3>
+                                                <p>Discount:<%=coupen.discountPercentage%>%</p>
+                                                <p>Minimum Purchase:<%=coupen.minimumPurchase%></p>
+                                            </div>
+                                        <%})%>
+                                    <%}%>
                                 </div>
                             </div>
 
@@ -284,6 +339,80 @@
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </div>
+
+<script>
+
+ document.getElementById("coupenBtn").addEventListener("click",function(){
+
+
+    const userCoupen = coupenValue.value
+
+        if(userCoupen){
+                
+                // Get all elements with class "coupon-card"
+            const couponCards = document.querySelectorAll('.coupon-card');
+
+            // Loop through each coupon card
+            couponCards.forEach(async card => {
+                // Access the h3 element inside each card
+                const h3Element = card.querySelector('h3');
+                
+                // Access the text content of the h3 element
+                const couponCode = h3Element.textContent;
+
+
+                if(couponCode === userCoupen){
+                   
+                    const data = await fetch("/shopCoupen",{
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body:JSON.stringify({userCoupen})
+                    })
+
+                 
+
+                    const res = await data.json()
+
+                    if(res.success){
+
+                    await    Swal.fire({
+                        icon: 'success',
+                        title: 'coupen is apply',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    window.location.href = "/Checkout"
+                    }else if(res.coupenExist){
+
+                      
+                    await    Swal.fire({
+                        icon: 'error',
+                        title: 'coupen already exist',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+
+                    }
+
+
+                }
+
+
+                
+                // Do something with the coupon code
+                console.log('Coupon Code:', couponCode);
+            });
+        }
+
+    
+
+ })
+
+</script>
 <script>
 
 const userWalletBalance = "<%=userWalletBalance%>"
@@ -298,7 +427,6 @@ const grandTotal = document.getElementById("grandTotal")
 
         let selectAdd = document.getElementById("selectAdd").value
 
-        console.log(selectAdd)
 
         if(selectAdd =="Select Address")
         {
@@ -312,26 +440,18 @@ const grandTotal = document.getElementById("grandTotal")
         }
 
         const value={}
-        console.log(`hi hello`)
-
-   
+ 
         new FormData(paymentMethodForm).forEach((payentMethod,key)=>{
 
             value[key]= payentMethod
             console.log(value)
         })
-        value.selectAdd = selectAdd
-
-
-      
+        value.selectAdd = selectAdd  
 
         value.grandTotal =grandTotalValue.replace(/\\s+/g, '').match(/\d+/g);
 
 
         const paymentMethod = value.paymentMethod
-
-        console.log(paymentMethod)
-        alert(paymentMethod)
 
        if(paymentMethod === "Razorpay"){
 

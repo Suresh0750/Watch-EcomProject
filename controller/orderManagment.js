@@ -93,6 +93,9 @@ const orderManagement = async (req,res)=>{
 
          count = await orderCollection.find({}).countDocuments()
         console.log(OrderDetails)
+        console.log(`*******************`)
+        console.log(JSON.stringify(OrderDetails))
+        console.log(`*******************`)
         res.render("admin/orderManagment",{OrderDetails,count,limit})
 
     }catch(err){

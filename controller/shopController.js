@@ -6,6 +6,8 @@ const {AddressModel} = require("../models/addressModel")
 const orderModel = require("../models/orderModel")
 const razorPay = require("razorpay")
 const walletModel = require("../models/WalletModel")
+const coupen = require("../models/couponModel")
+const productOffer = require("../models/productOfferModel")
 
 const {KeyId,KeySecret} = process.env
 
@@ -248,8 +250,17 @@ const checkout = async(req,res)=>{
         const userWalletBalance = wallet?.walletBalance ?? 0
 
         console.log(userWalletBalance)
+
+        console.log(req.session.grandTotal)
+        if(req.session.coupen){
+            req.session.grandTotal =  req.session?.coupen
+            req.session.save()
+        }
+
+        const coupenData = await coupen.find({})
     
-        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance})
+        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance,coupenData})
+        req.session.coupen = null
     }catch(err){
         console.log(`Error from checkout Page ${err}`)
     }
@@ -398,7 +409,7 @@ const addCart = async (req,res)=>{
 
     try{
 
-      
+      console.log(`req reached addCart`)
         const id = req.params.id
         const userId =  req.session.userIsthere.userId
         const exitCart = await cartCollection.findOne({userId:userId, productId:id})
@@ -411,14 +422,21 @@ const addCart = async (req,res)=>{
             res.status(200).send({success:true})
         }else{
 
-           
+           console.log(`*************`)
+           console.log(req.body)
+
+            console.log(typeof(req.body.priceNew))
+         
             const productDatail = await product.findOne({_id:id})
+            let price = req.body?.priceNew ||  productDatail.productPrice
+
+            console.log(price)
             
             const cart ={
                 userId : userId,
                 productId : productDatail._id,
                 productQuantity : req.body.Qty,
-                totalCastPerproduct : productDatail.productPrice
+                totalCastPerproduct :Math.round(Number(price))
             }
             
     
@@ -443,6 +461,18 @@ const singleProduct = async (req,res)=>{
         console.log(req.params.id)
         const id = req.params.id
         const productDetails = await product.find({_id:id})
+        const productPercentage =  await productOffer.findOne({productId:id})
+
+        console.log(productPercentage)
+        let priceNew;
+
+        console.log(productDetails[0].productName)
+
+        if(productPercentage){
+             priceNew = (Number(productPercentage.productOfferPercentage))/100*Number(productDetails[0].productPrice)
+
+             req.session.newPrice = priceNew
+        }
         const categoriesDetail = await categories.find({_id:id})
         let productQuantity = await cartCollection.findOne({productId:id,userId:req.session.userIsthere.userId})
 
@@ -452,9 +482,9 @@ const singleProduct = async (req,res)=>{
 
 
         req.session.userIsthere;
-        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session.userIsthere,productQuantity})
+        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session.userIsthere,productQuantity,priceNew})
     }catch(err){
-        console.log(`Error from singleProduct`)
+        console.log(`Error from singleProduct ${err}`)
     }
 }
 
@@ -747,7 +777,7 @@ const categoriesProduct = async (req,res)=>{
                         productDetail = await sort(req,productDetail,gte,lte,skip,limit)           //* sorting the product
                     }
 
-
+                   
                     req.session.sortPrice       //* for show to user, if user choose or not the sort 
                     res.render("shop/categories",{productDetail,isAlive:req.session?.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:"all",sort:req.session.sortPrice,page:req.query.page})
 

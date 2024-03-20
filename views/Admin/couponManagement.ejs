@@ -270,7 +270,9 @@
             </div>
         </div>
  
-
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Include jQuery Validation -->
+        <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 // Get today's date
@@ -312,7 +314,7 @@
 
                 $("#editCouponForm<%= index%>").submit(async function (event) {
                     event.preventDefault();
-                    alert('io')
+               
                     console.log('1');
                     let formData = {
                         couponCode: $("#couponCodeEdit<%= index%>").val(),
@@ -362,7 +364,7 @@
                 couponCode: {
                     required: true,
                     noWhitespace: true, // Apply custom validation rule
-                    // pattern: /^[a-zA-Z]+$/,
+                    pattern:/^\d+(-\d+)*$/,
                     minlength: 2,
                     maxlength: 20,
                 },
@@ -376,25 +378,18 @@
                     pattern: "can only contain letters",
                   
                 },
-              
-
             },
         });
-
         </script>
         <%});%>
 
-
-
-            <div>
-
-                <br /><br /> <br><br><br>
-            </div>
-
+        <div>
+            <br/><br/><br><br><br>
+        </div>
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            
 <allScripts>
 
 
@@ -436,45 +431,60 @@
                             maximumDiscount: $("#maximumDiscount").val()
                         };
 
-                        let response = await fetch('/admin/couponManagement/addCoupon', {
-                            method: 'POST',
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(formData)
-                        });
+                        let leng = Object.values(formData)
+                        
 
-                        let result = await response.json();
+                        // jquer some time does not work this for validation safety
+                        for(let i=0;i<leng.length;i++){
 
-                        if (result.couponAdded) {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Your new coupon has been added",
-                                showConfirmButton: false,
-                                timer: 3500
-                            }).then(() => location.reload())
-                        } else if (result.couponCodeExists) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Coupon code already exists",
-                                text: "Failed to add"
-                            });
+                            if(((String(leng[i])).trim()).length>0){
+                           
+                                continue;
+                            }else{
+                          
+                                return
+                            }
                         }
+                       
+
+                            let response = await fetch('/admin/couponManagement/addCoupon', {
+                                method: 'POST',
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(formData)
+                            });
+    
+                            let result = await response.json();
+    
+                            if (result.couponAdded) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Your new coupon has been added",
+                                    showConfirmButton: false,
+                                    timer: 3500
+                                }).then(() => location.reload())
+                            } else if (result.couponCodeExists) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Coupon code already exists",
+                                    text: "Failed to add"
+                                });
+                            }
+                        
                     } catch (error) {
                         console.log(error);
                     }
                 }
 
-                $(document).ready(function () {
-                    $("#addCouponForm").submit(function (e) {
-                        e.preventDefault();
-                        addCoupon();
-                    });
-                });
+             
             </script>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script> --> -->
     <script>
 
 
@@ -487,12 +497,21 @@
                 couponCode: {
                     required: true,
                     noWhitespace: true, // Apply custom validation rule
-                    // pattern: /^[a-zA-Z]+$/,
                     minlength: 2,
                     maxlength: 20,
                 },
-               
-
+                discountPercentage:{
+                    required:true,
+                    pattern:/^\d+(-\d+)*$/,
+                },
+                minimumPurchase:{
+                    required:true,
+                    pattern:/^\d+(-\d+)*$/,
+                },
+                maximumDiscount:{
+                    required:true,
+                    pattern:/^\d+(-\d+)*$/,
+                }               
             },
             messages: {
                 productName: {
@@ -507,7 +526,12 @@
         });
 
 
-
+        $(document).ready(function () {
+                    $("#addCouponForm").submit(function (e) {
+                        e.preventDefault();
+                        addCoupon();
+                    });
+                });
 
 
 
