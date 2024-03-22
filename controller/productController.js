@@ -182,6 +182,8 @@ const addProduct = async (req, res) => {
       console.log(`req reached addProduct router`)
       const categoryDetail = await categories.find({})
 
+      console.log(`---------categoryDetail------------`)
+      console.log(JSON.stringify(categoryDetail))
       req.session.existAddProduct
         res.render("Admin/addProduct",{categoryDetail,existProduct:req.session.existAddProduct})
         req.session.existAddProduct = false

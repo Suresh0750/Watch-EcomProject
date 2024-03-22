@@ -115,7 +115,7 @@
                     <select name="select" aria-placeholder="Selelect Address" id="selectAdd" value="Selelect Address"  required style="display: block;width: 12em;">
                     <option disabled selected value="Select Address">Select Address</option>
                     <%userAddressDetails.forEach((data)=>{%>
-                        <option value="<%=data._id%>"><%=data.houseNo%></option>
+                        <option value="<%=data._id%>"><%=data.name%></option>
                     <%})%>
                     </select>
                 </div>
@@ -183,11 +183,13 @@
 
                                     <%if(coupenData){%>
                                         <%coupenData.forEach((coupen)=>{%>
-                                            <div class="coupon-card">
-                                                <h3><%=coupen.couponCode%></h3>
-                                                <p>Discount:<%=coupen.discountPercentage%>%</p>
-                                                <p>Minimum Purchase:<%=coupen.minimumPurchase%></p>
-                                            </div>
+                                            <% if(!coupen.userId.includes(userId)){%>
+                                                <div class="coupon-card">
+                                                    <h3><%=coupen.couponCode%></h3>
+                                                    <p>Discount:<%=coupen.discountPercentage%>%</p>
+                                                    <p>Minimum Purchase:<span><%=coupen.minimumPurchase%></span></p>
+                                                </div>
+                                            <%}%>
                                         <%})%>
                                     <%}%>
                                 </div>
@@ -271,7 +273,7 @@
                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
                         	<h4 class="h4">Customer Services</h4>
                             <ul>
-                            	<li><a href="#">Request Personal Data</a></li>
+ ++-                           	<li><a href="#">Request Personal Data</a></li>
                                 <li><a href="#">FAQ's</a></li>
                                 <li><a href="#">Contact Us</a></li>
                                 <li><a href="#">Orders and Returns</a></li>
@@ -341,6 +343,12 @@
 </div>
 
 <script>
++
+</script>
+
+<script>
+
+
 
  document.getElementById("coupenBtn").addEventListener("click",function(){
 
@@ -360,9 +368,14 @@
                 // Access the text content of the h3 element
                 const couponCode = h3Element.textContent;
 
-
-                if(couponCode === userCoupen){
+                const minimumParchase =  card.querySelector('span').textContent
+                
+                if(couponCode === userCoupen){                                      // check the coupon for user enter coupen is right or wrong 
                    
+                   const gT =  grandTotalValue.replace(/\\s+/g, '').match(/\d+/g);
+
+                   if(Number(gT[0])>=Number(minimumParchase)){                         // purchase amout shoud be greater than or euelto, I check for that also here
+
                     const data = await fetch("/shopCoupen",{
                         method:"POST",
                         headers:{
@@ -397,6 +410,18 @@
 
 
                     }
+                   }else{
+
+                    await    Swal.fire({
+                        icon: 'error',
+                        title: `The Amount should be greater than or equalto ${minimumParchase}`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                   }
+
+                  
 
 
                 }
@@ -465,7 +490,7 @@ const grandTotal = document.getElementById("grandTotal")
 
             const order = await genOrder.json()
             
-            
+          
             await openRazorpay(value.grandTotal,order.id)
 
        }else if(paymentMethod==="Cash on Delivery"){
@@ -615,6 +640,8 @@ async function  deletData(id){
      async function openRazorpay(amount, creditId) {
         try {
             // console.log('1');
+
+           
             
             var options = {
                 key: "rzp_test_LSVsVjKJgjMK1G",

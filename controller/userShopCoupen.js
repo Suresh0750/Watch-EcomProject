@@ -18,7 +18,7 @@ const allProductCoupen = async (req,res)=>{
            console.log('**********')
            console.log(applyCoupen)
            console.log(req.session?.grandTotal)
-           const grandTotal  = await (Number(applyCoupen.discountPercentage)/100)*Number(req.session?.grandTotal)
+           const grandTotal  =   Math.round(Number(req.session?.grandTotal)-((Number(applyCoupen?.discountPercentage)/100)*Number(req.session?.grandTotal)))
            req.session.coupen = grandTotal
            req.session.save()
            console.log(req.session?.grandTotal)

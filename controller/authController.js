@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt")
 const wallet = require('../models/WalletModel')
 
 const nodemailer = require("nodemailer");
-
+const productCollection = require("../models/productModel")
 
 
 
@@ -41,11 +41,17 @@ const admin = async(req,res)=>{
   try{
     if(req.session.isAdmin)
     {
+      const productData = await productCollection.find({isListed:true})
+
+      console.log(JSON.stringify(productData))
       console.log("entry admin")
-      res.render("Admin/adminIndex")
+      res.render("Admin/adminIndex",{productData})
     }else{
       console.log("req reached admin router")
       req.session.isnotCorrect;
+
+
+    
       res.render("auth/adminLogin",{isnotCorrect:req.session.isnotCorrect})
       req.session.isnotCorrect = false;
       req.session.save()
@@ -275,32 +281,32 @@ const resendOtp = async(req,res)=>{
 }
 
 
-async function referralCodeUserCreate (){
+// async function referralCodeUserCreate (){
 
 
-  try{
-    console.log( `req reached referralCodeUserCreate`)
+//   try{
+//     console.log( `req reached referralCodeUserCreate`)
 
-        // program to generate random strings
+//         // program to generate random strings
       
-       const result = Math.random().toString(36).substring(2,7);
+//        const result = Math.random().toString(36).substring(2,7);
       
+//         const isCheck = await userdata.findOne({referralCode:result})
+//         console.log(`isCheck`,isCheck)
       
-        const isCheck = await userdata.findOne({referralCode:result})
-        console.log(`isCheck`,isCheck)
+//         if(isCheck){
+//           console.log('check null')
+//           referralCodeUserCreate()
+//         }
       
-        if(isCheck){
-          referralCodeUserCreate()
-        }
-      
-        return result
-      // console.log(result);
-  }catch (err){
+//         return result
+//       // console.log(result);
+//   }catch (err){
 
-    console.log(`Error from referralCodeUserCreate function ${err}`)
-  }
+//     console.log(`Error from referralCodeUserCreate function ${err}`)
+//   }
 
-}
+// }
 
 
 async function referralCodeUser(referralCodeId,req){
@@ -310,9 +316,10 @@ async function referralCodeUser(referralCodeId,req){
     
     console.log(`req reached referralCodeUser`)
 
-    console.log(referralCodeId)
+    let userReferal = referralCodeId.toLowerCase()
   
-    const userCReferralCode = await userdata.findOne({referralCode:(referralCodeId).toLowerCase()})
+    
+    const userCReferralCode = await userdata.findOne({referralCode:userReferal})
     console.log(userCReferralCode)
 
     if(userCReferralCode){
@@ -359,24 +366,74 @@ const otpvalue = async (req,res)=>{
     {
       req.session.otp = null
 
-      const {firstName,lastName,userMobile,userEmail,userPassword,userCReferralCode} = req.session.userData
+      const {firstName,lastName,userMobile,userEmail,userPassword} = req.session.userData
 
-      console.log(userCReferralCode)
-     const referralWallet =  await referralCodeUser(userCReferralCode,req)
+ 
 
-     const referralCode  = await referralCodeUserCreate()
-     console.log('newRefferal code ',referralCode)
-      await userdata({firstName,lastName,userMobile,userEmail,userPassword,referralCode}).save()
+
+     const referralCode  =  Math.random().toString(36).substring(2,7);  // generate random number
+
+     const userExist = await userdata.findOne({userEmail})
+
+     console.log(`-------------------`)
+     console.log(req.session?.referralCode)
+     console.log(`-------------------`)
+
+      //* referalcode add 500 rupees 
+
+      if(req.session?.referralCode){
+
+        console.log('referralCode')
+        console.log(req.session?.referralCode)
+        const userReferal = req.session?.referralCode
+        const userCReferralCode = await userdata.findOne({referralCode:userReferal})
+        console.log(userCReferralCode)
+
+          
+          const userWallet = await wallet.findOne({userId:userCReferralCode._id})
+
+          console.log(userWallet)
+          if(userWallet){
+
+            console.log(userCReferralCode._id)
+            const userIncwallet = await wallet.updateOne({userId:userCReferralCode._id},{$inc:{walletBalance:500}})
+
+            console.log(`userIncwallet\n`,userIncwallet)
+          }else{
+
+            const walletUpdateFiels = {
+              userId:userCReferralCode?._id,
+              walletBalance:500
+            }
+
+            await wallet(walletUpdateFiels).save()
+          }
+
   
-      req.session.userData = null
-      const userDetail = await userdata.findOne({userEmail:userEmail})
-      console.log("database stored")
-      req.session.userIsthere ={
-        isAlive:true,
-        userName:firstName,
-        userId :userDetail._id
+
+      // const referralWallet =  await referralCodeUser(req.session?.referralCode,req)
+
+      req.session.referralCode = null
+      
+    }
+
+    const userDetail = await userdata.findOne({userEmail:userEmail})
+
+      if(!userDetail){
+        await userdata({firstName,lastName,userMobile,userEmail,userPassword,referralCode}).save()
+     
+         req.session.userData = null
+         console.log("database stored")
+         req.session.userIsthere ={
+           isAlive:true,
+           userName:firstName,
+           userId :userDetail?._id
+         }
+         req.session.save()
       }
-      req.session.save()
+    
+
+     
       res.status(200).send({ success: true });
   
     }else{
@@ -384,6 +441,7 @@ const otpvalue = async (req,res)=>{
       req.session.isWrongOtp = true;
       isWrongOtp = req.session.isWrongOtp
       res.status(500).send({ success: false, isWrongOtp});
+
     } 
   
   }catch(err){
@@ -468,7 +526,7 @@ const signUp = async(req,res)=>{
                        userMobile : req.body.userMobile,
                        userEmail : req.body.userEmail,
                        userPassword : pass,
-                       userCReferralCode : req.body.userCReferralCode
+                      
             }
             const otp = await emailOtp(req.body.userEmail)
             console.log(`otp value ${otp}`)
@@ -494,7 +552,10 @@ const signUp = async(req,res)=>{
 // render registerPage
 const registerPage = async (req, res) => {
   try {
+    req.session.referralCode = req.query?.referralCode
+console.log(req.session.referralCode)
     req.session.emailExcisting;
+    req.session.save()
     res.render("auth/register",{emailExcisting:req.session.emailExcisting});
     req.session.emailExcisting = false;
     req.session.save()

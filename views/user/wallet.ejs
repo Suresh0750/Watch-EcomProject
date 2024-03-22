@@ -584,7 +584,14 @@
               <div class="col-md-8 col-lg-9 col-xl-10 col-12">
              
                <h3>Wallet : <%=walletBalance%> </h3>
-               <h3>Referral code : <%=(userDetail.referralCode).toLowerCase()%></h3>
+               <h3>Referral code :</h3>
+               <!-- <%=(userDetail.referralCode).toLowerCase()%> -->
+               <div style="display: flex;">
+                <input type="text" id="copyText" value="http://localhost:9001/register?referralCode=<%=(userDetail.referralCode).toLowerCase()%> " disabled style="width: 29em;">
+                <button style="width: 5em;
+                font-size: 1em;
+                font-weight: 800;" id="copyReferralCode">Copy</button>
+               </div>
               </div>
             </div>
           </div>
@@ -714,6 +721,7 @@
   <script src="assets/plugins/simplebar/simplebar.min.js"></script>
   
   
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   
   <script>
@@ -724,7 +732,25 @@
     }
   </script>
   
-  
+  <script>
+    const copyReferralCode = document.getElementById("copyReferralCode")
+
+    const copyText = document.getElementById("copyText")
+
+    copyReferralCode.addEventListener("click",()=>{
+        // Select the text field
+    copyText.select();
+ 
+    copyText.setSelectionRange(0, 99999); //For mobile devices
+
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(copyText.value);
+
+
+    Swal.fire("Copied your referral code");
+
+    })
+  </script>
   
   
   

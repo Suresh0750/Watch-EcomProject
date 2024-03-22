@@ -438,6 +438,7 @@ const profile = async (req,res)=>{
 
     try{
         const profileDetails = await userCollection.findOne({_id:req.session.userIsthere.userId})
+        console.log(profileDetails)
 
         res.render("user/profile",{isAlive:req.session.userIsthere,profileDetails})
     }catch(err){
@@ -463,7 +464,7 @@ module.exports = {
     updateUserPass,   // userPassword change
     changePassword,     // changPassword page render
     editUserData,
-    editAddress, // edite Address page render
+    editAddress,        // edite Address page render
     daleteAdd,
     myAddress,
     addAddressData,

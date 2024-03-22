@@ -138,14 +138,9 @@ const orderReceived = async (req,res)=>{
 
         }
 
-
-
-            
+         
             const userCartdelete = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
-      
-
-      
-    
+   
             const orderUser = {
                 userId: userId,
                 orderNumber:(await orderModel.countDocuments()) + 1,
@@ -233,23 +228,23 @@ const checkout = async(req,res)=>{
     try{
         
         console.log(`checkout req reached`)
+
         const userId =req.session.userIsthere.userId
 
         let userAddressDetails = await AddressModel.find({user_id:userId})
         if(userAddressDetails.length==0){
 
             res.redirect("/user/addAddress")
+
         }
         let userCartData = await grandTotal(req);
 
         userCartData = userCartData.length==0 ? 0 : userCartData;
 
-
         const wallet = await walletModel.findOne({userId:userId}) 
 
         const userWalletBalance = wallet?.walletBalance ?? 0
 
-        console.log(userWalletBalance)
 
         console.log(req.session.grandTotal)
         if(req.session.coupen){
@@ -258,8 +253,22 @@ const checkout = async(req,res)=>{
         }
 
         const coupenData = await coupen.find({})
+        console.log(`=======================`)
+        console.log(JSON.stringify(coupenData))
+        console.log(`=======================`)
+
+        
     
-        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance,coupenData})
+    let checkMinumamAmout = {}
+
+    // validating the minumum amount for applaying coupon
+    coupenData.forEach((val)=>{
+        checkMinumamAmout[val.couponCode] =  val.minimumPurchase
+    })
+
+console.log(typeof(checkMinumamAmout))
+
+        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance,coupenData,userId,checkMinumamAmout})
         req.session.coupen = null
     }catch(err){
         console.log(`Error from checkout Page ${err}`)
