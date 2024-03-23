@@ -1,13 +1,47 @@
 const userdata = require("../models/userModel")
+const dashboard = require("../service/dashboardChart")
 
 
 
-
-
-
-
-
-
+const dashboardData = async (req, res) => {
+    try {
+      const [
+        productsCount,
+        categoryCount,
+        pendingOrdersCount,
+        completedOrdersCount,
+        currentDayRevenue,
+        MonthlyRevenue,
+        categoryWiseRevenue,
+        shipping,
+      ] = await Promise.all([
+        dashboard.productsCount(),
+        dashboard.categoryCount(),
+        dashboard.pendingOrdersCount(),
+        dashboard.completedOrdersCount(),
+        dashboard.currentDayRevenue(),
+        dashboard.MonthlyRevenue(),
+        dashboard.categoryWiseRevenue(),
+        dashboard.shipping(),
+      ]);
+  
+      const data = {
+        productsCount,
+        categoryCount,
+        pendingOrdersCount,
+        completedOrdersCount,
+        currentDayRevenue,
+        MonthlyRevenue,
+        categoryWiseRevenue,
+        shipping,
+      };
+  
+      console.log(data)
+      res.json(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
 
@@ -83,6 +117,7 @@ const logOut = async(req,res)=>{
 
 
 module.exports = {
+    dashboardData,
     isBlock, //userBlock 
     logOut,
     pageList

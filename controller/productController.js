@@ -8,6 +8,7 @@ const categories = require("../models/categoriesModel")
 
 
 
+
 // deleteProducte
 
 const deletIngProduct = async (req,res)=>{

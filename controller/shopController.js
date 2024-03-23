@@ -253,9 +253,7 @@ const checkout = async(req,res)=>{
         }
 
         const coupenData = await coupen.find({})
-        console.log(`=======================`)
-        console.log(JSON.stringify(coupenData))
-        console.log(`=======================`)
+     
 
         
     
@@ -265,8 +263,6 @@ const checkout = async(req,res)=>{
     coupenData.forEach((val)=>{
         checkMinumamAmout[val.couponCode] =  val.minimumPurchase
     })
-
-console.log(typeof(checkMinumamAmout))
 
         res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance,coupenData,userId,checkMinumamAmout})
         req.session.coupen = null
@@ -310,23 +306,43 @@ const grandTotal = async (req)=>{
         const userId = req.session.userIsthere.userId
 
         let userCartData = await cartCollection.find({userId : userId}).populate("productId")
-        
+      
         if(userCartData.length==0)
         {
             req.session.grandTotal = 0
             return userCartData
         }
         let grandTotal =0
+
+        
+
         for(var s of userCartData)
         {
-            grandTotal += s.productId.productPrice * s.productQuantity
-    
-            await cartCollection.updateOne({_id:s._id},{$set:{totalCastPerproduct: s.productId.productPrice * s.productQuantity}})
+
+
+            let productPriceOffer = await product.findOne({_id:s.productId})
+
+            
+            if(!productPriceOffer?.productOfferPercentage || productPriceOffer?.productOfferPercentage<=0){
+                
+                grandTotal += s.productId.productPrice * s.productQuantity
+                await cartCollection.updateOne({_id:s._id},{$set:{totalCastPerproduct: s.productId.productPrice * s.productQuantity}})
+
+            }else{
+
+                //* for product offer calculate produc offerPercentage
+                let price =Number(s.productId.productPrice)-(Number(s.productId.productOfferPercentage)/100)*Number(s.productId.productPrice)
+         
+                grandTotal +=  price * s.productQuantity
+                await cartCollection.updateOne({_id:s._id},{$set:{totalCastPerproduct:price * s.productQuantity}})
+
+            }
         }
-    
+       
         userCartData = await cartCollection.find({userId:userId}).populate("productId")
         
         req.session.grandTotal =  grandTotal
+       
         req.session.save()
         return userCartData
 
@@ -450,7 +466,8 @@ const addCart = async (req,res)=>{
             
     
             const cartDetail = await new cartCollection(cart).save( )
-            
+            console.log(`=====cartDetail=======`)
+            console.log(cartDetail)
             res.status(200).send({success:true})
         }
     }catch{
@@ -476,9 +493,10 @@ const singleProduct = async (req,res)=>{
         let priceNew;
 
         console.log(productDetails[0].productName)
-
+        console.log(`======single product offer page=======`)
+        console.log(productDetails[0])
         if(productPercentage){
-             priceNew = (Number(productPercentage.productOfferPercentage))/100*Number(productDetails[0].productPrice)
+             priceNew =Number(productDetails[0].productPrice)-(Number(productPercentage.productOfferPercentage))/100*Number(productDetails[0].productPrice)
 
              req.session.newPrice = priceNew
         }

@@ -31,7 +31,12 @@ const productSchema = new mongoose.Schema({
     isListed: {
         type: Boolean,
         default: true
-    }
+    },
+
+  productOfferId: { type: mongoose.Types.ObjectId, default: null },
+  productOfferPercentage: { type: Number, default: null },
+  priceBeforeOffer: { type: Number, default: null },
+  productafterOfferPrice: { type: Number, default: null },
 })
 
 const productCollection= mongoose.model('products',productSchema)

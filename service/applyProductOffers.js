@@ -50,6 +50,9 @@ async function offerExistsAndActiveFn(v, offerExists, from) {
 
   try{
     let { productOfferPercentage } = offerExists;
+
+    let productPrice = await productCollection.findOne({_id:v})
+    let productafterOfferPrice =Number(productPrice.productPrice)-(Number(productOfferPercentage)/100)*Number(productPrice.productPrice)
     if (from == "addOffer") {
       let productPrice = Math.round(
         v.productPrice * (1 - productOfferPercentage * 0.01)
@@ -62,6 +65,7 @@ async function offerExistsAndActiveFn(v, offerExists, from) {
             productOfferId: offerExists._id,
             productOfferPercentage,
             priceBeforeOffer: v.productPrice,
+            productafterOfferPrice
           },
         }
       );

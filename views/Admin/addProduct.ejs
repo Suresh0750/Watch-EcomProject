@@ -199,7 +199,8 @@
                     productName:{
                         required:true,
                         minlength:3,
-                        pattern:/^[a-zA-Z]/
+                        // pattern:/^[a-zA-Z]/
+                        pattern:/^[a-zA-Z]+( [a-zA-Z]+)*$/
                     },
                     parentCategory:{
                         required:true,

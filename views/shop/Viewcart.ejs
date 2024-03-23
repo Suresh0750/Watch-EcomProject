@@ -37,7 +37,7 @@
                                     </td>
                                     <input type="hidden" id="productId" value="<%=cart.productId._id%>">
                                     <td class="cart__price-wrapper cart-flex-item">
-                                        <span id="price<%=cart._id%>"><%=cart.productId.productPrice%></span>
+                                        <span id="price<%=cart._id%>"><%=Number(cart.totalCastPerproduct)/cart.productQuantity%></span>
                                     </td>
                                     <td class="cart__update-wrapper cart-flex-item text-right">
                                         <div class="cart__qty text-center">
@@ -289,7 +289,6 @@ async  function incrMent(id,stack){
 
         // console.log(productId)
         
-
 
         // price 
 

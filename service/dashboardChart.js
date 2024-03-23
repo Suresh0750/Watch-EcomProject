@@ -62,4 +62,70 @@ const productsCount = async () => {
     }
   };
   
-  module.exports ={productsCount,categoryCount,pendingOrdersCount,shipping,completedOrdersCount,currentDayRevenue}
+
+  const MonthlyRevenue = async () => {
+    try {
+      const result = await orderCollection.aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } },
+            dailyRevenue: { $sum: "$grandTotalCost" },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+        {
+          $limit: 30,
+        },
+      ]);
+     
+      return {
+        date: result.map((v) => v._id),
+        revenue: result.map((v) => v.dailyRevenue),
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const categoryWiseRevenue = async () => {
+    try {
+      const result = await orderCollection.aggregate([
+        { $unwind: "$cartData" },
+        {
+          $group: {
+            _id: "$cartData.productId.parentCategory",
+            revenuePerCategory: { $sum: "$cartData.totalCastPerproduct" },
+          },
+        },
+      ]);
+  
+      let categoryData = await categoryCollection.find();
+  
+      if (!categoryData || categoryData.length === 0) {
+        throw new Error("No category data found");
+      }
+  
+      let finalData = {
+        categoryName : categoryData.map((v)=>{
+        return  v.categoryName 
+        }),
+
+        
+        // categoryName: result.map((v) => {
+        //   // let match = categoryData.find((catVal) => catVal._id == v._id);
+        //   return match ? match.categoryName : "Unknown Category";}),
+        revenuePerCategory: result.map((v) => v.revenuePerCategory),
+      };
+  
+      console.log(`========finalData==========`)
+      console.log(JSON.stringify(finalData))
+      return finalData;
+    } catch (error) {
+      console.error(error);
+      throw error; // rethrow the error to be handled by the caller
+    }
+  };
+  
+  
+  module.exports ={productsCount,categoryCount,pendingOrdersCount,shipping,completedOrdersCount,currentDayRevenue,MonthlyRevenue,categoryWiseRevenue}

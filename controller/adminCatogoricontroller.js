@@ -123,7 +123,8 @@ const addCotegories = async (req, res) => {
 
         const isCheckExist = await categories.find({categoryName:req.body.categoryName})
 
-       
+       console.log(`-----isCheckExist--------`)
+       console.log(isCheckExist)
         if(isCheckExist){
             req.session.isCatagoriesExist = true
            

@@ -88,4 +88,7 @@ adminRouter.post("/add-category-offer",isAdmin,addCategoryOffer)
 adminRouter.put("/edit-category-offer",isAdmin,editCategoryOffer)
 adminRouter.get("/categoryoffer-status/:id",isAdmin,editCategoryOfferStatus)
 
+
+// admin. dashboardData
+adminRouter.get("/dashboardData",isAdmin,adminController.dashboardData)
 module.exports = adminRouter

@@ -49,9 +49,6 @@ const admin = async(req,res)=>{
     }else{
       console.log("req reached admin router")
       req.session.isnotCorrect;
-
-
-    
       res.render("auth/adminLogin",{isnotCorrect:req.session.isnotCorrect})
       req.session.isnotCorrect = false;
       req.session.save()
