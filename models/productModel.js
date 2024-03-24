@@ -32,7 +32,10 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-
+    productSold:{
+        type: Number,
+        default:0
+    },
   productOfferId: { type: mongoose.Types.ObjectId, default: null },
   productOfferPercentage: { type: Number, default: null },
   priceBeforeOffer: { type: Number, default: null },

@@ -610,5 +610,49 @@ async function addCart(id){
    
 
 </script>
+
+
+<script>
+  
+
+    const productSearch = document.getElementById("productSearch")
+
+    const productSearchBtn = document.getElementById("productSearchBtn")
+
+    productSearchBtn.addEventListener("click", async (event)=>{
+
+        event.preventDefault()
+    
+       console.log(productSearch.value)
+
+       let value =productSearch.value
+
+     
+       if(value){
+        
+        alert(value)
+        alert(typeof(value))
+
+           const search = await fetch("/search",{
+     
+             method:"POST",
+             headers:{
+                 "Content-Type":"application/json"
+             },
+             body:JSON.stringify({value})
+           })
+
+           const res = await search.json()
+
+           if(res.success){
+
+            window.location.href = "/categories"
+           }
+
+       }
+
+
+    })
+</script>
 <!-- belle/shop-right-sidebar.html   11 Nov 2019 12:39:02 GMT -->
 </html>

@@ -5,7 +5,35 @@ const {emailOtp} = require("./authController")
 const orderData = require("../models/orderModel")
 const bcrypt = require("bcrypt")
 const walletModel = require("../models/WalletModel")
+const productCollection = require("../models/productModel")
+const { generatevoice } = require("../service/genertePDF.js");
 
+
+//*downloadInvoice
+
+const downloadInvoice = async (req, res) => {
+    try {
+        console.log(`req reached downloadInvoice`)
+        console.log(req.params.id)
+      let orderDatails = await orderData
+        .findOne({ _id: req.params.id })
+        .populate("addressChosen");
+      console.log(JSON.stringify(orderDatails));
+      const stream = res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "attachment;filename=invoice.pdf",
+      });
+      console.log("verind");
+      generatevoice(
+        (chunk) => stream.write(chunk),
+        () => stream.end(),
+        orderDatails
+      );
+      console.log(generatevoice);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 
 //* wallet
@@ -31,6 +59,30 @@ const wallet =  async (req,res)=>{
     }
 }
 
+
+
+async function returnProductIncproductStock(productReturn){
+
+
+
+    console.log(`enter that function returnProductIncproductStock`)
+    console.log(productReturn)
+
+    console.log(JSON.stringify(productReturn))
+
+    //* after user want to return any product I Increase product stock and decrease productSold out 
+
+ const updateAfterReturnProduct =   await productReturn.cartData.forEach(async(data)=>{
+        
+                                    await productCollection.findByIdAndUpdate({_id:data.productId._id},{$inc:{productStock:data.productQuantity,productSold:-data.productQuantity}})
+                           
+                                })
+
+
+            console.log(JSON.stringify(updateAfterReturnProduct))
+
+}
+
 //returnOrder
 
 const returnOrder = async (req,res)=>{
@@ -42,6 +94,12 @@ const returnOrder = async (req,res)=>{
         const id = req.body.orderId
         const price = req.body.price
         const orderRetrun =  await orderData.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
+
+        console.log(`----------After returning the product we want increase quenty----------------`)
+        console.log(orderRetrun)
+
+
+        returnProductIncproductStock(orderRetrun)              // return product 
 
 
         const userId = req.session.userIsthere.userId
@@ -178,7 +236,6 @@ const userOtpValue = async (req,res)=>{
 
             const userChange = req.session.forGetEmail
             await userCollection.findByIdAndUpdate({_id:isUser.userId},{$set:{firstName:userChange.firstName,lastName:userChange.lastName,userMobile:userChange.userMobile,userEmail:userChange.userEmail}})
-           
             res.status(200).send({success:true})
 
         }
@@ -452,6 +509,7 @@ const profile = async (req,res)=>{
 
 
 module.exports = {
+    downloadInvoice,
     wallet,                     //wallet
     returnOrder,                // returnOrder 
     cancelorder,                //

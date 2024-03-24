@@ -38,7 +38,7 @@ userRouter.get("/orders",isUser,isBlock,userControll.allOrders)
 userRouter.get("/orderDetails:id",isUser,isBlock,userControll.orderDetails)
 userRouter.patch("/cancelorder",userControll.cancelorder)
 userRouter.patch("/returnOrder",userControll.returnOrder)
-
+userRouter.get("/downloadInvoice:id",isUser,isBlock,userControll.downloadInvoice)
 
 //  wishlist
 

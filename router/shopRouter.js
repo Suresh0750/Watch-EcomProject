@@ -20,6 +20,10 @@ shopRouter.post("/priceWiseFilter:id",shopControler.priceFilter)
 shopRouter.post("/sortPrice:id",shopControler.sortPrice)
 
 
+// search
+
+shopRouter.post("/search",shopControler.search)
+
 
 
 //veiw cart

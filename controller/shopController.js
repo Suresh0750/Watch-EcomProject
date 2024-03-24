@@ -19,12 +19,15 @@ let instance = new razorPay({
 
 
 
+
+
  
 
   //* after order decrease the product quenty
 
 async function afterOrderProductdecreas(products){
 
+    console.log(`---------------afterOrderProductdecreas--------------------`)
     console.log(JSON.stringify(products))
 
     await products.forEach(async(val)=>{
@@ -32,7 +35,7 @@ async function afterOrderProductdecreas(products){
         id = val.productId._id
         dec = val.productQuantity
 
-       let one = await product.findByIdAndUpdate({_id:id},{$inc:{"productStock":-dec}})
+       let one = await product.findByIdAndUpdate({_id:id},{$inc:{"productStock":-dec,productSold:1}})
 
     })
  
@@ -96,8 +99,9 @@ async function afterOrderProductdecreas(products){
 
 const orderReceivedPage = async(req,res)=>{
     try{
-      
-        res.render("shop/orderReceived",{isAlive:req.session.userIsthere,userOrderNo:req.session.orderNumber})
+        const orderId = await orderModel.findOne({orderNumber:req.session.orderNumber})
+
+        res.render("shop/orderReceived",{isAlive:req.session.userIsthere,userOrderNo:req.session.orderNumber,orderId:orderId._id})
     }catch(err){
         console.log(`Error from orderReceiedPage ${err}`)
     }
@@ -530,6 +534,28 @@ const landingPage = async (req,res)=>{
 }
 
 
+
+// search
+
+const search = async (req,res)=>{
+    try{
+
+        console.log(`req reached search`)
+
+        console.log(req.body.value)
+
+        req.session.search = req.body.value
+
+        req.session.save()
+
+        res.status(200).send({success:true})
+        
+    }catch(err){
+
+        console.log(`Error from search`)
+    }
+}
+
 // sortCategory 
 
 async function sortCategory (req,products,gte,lte,skip,limit,){
@@ -728,8 +754,10 @@ const categoriesProduct = async (req,res)=>{
 
     try{
 
-        
+        console.log(`req reached categoriesProduct`)
 
+        console.log(`search ${req.session.search}`)
+        
         let page = Number(req.query.page) || 1
         let limit = 4
         let count 
@@ -777,9 +805,22 @@ const categoriesProduct = async (req,res)=>{
 
             // productPrice:{$gte:price[0],$lte:price[1]}
             let categorWiseProduct = req.session.categorie
-            productDetail = await product.find({isListed : true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
 
-            count = await product.find({isListed : true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
+            if(req.session.search){
+                
+                productDetail = await product.find({$or: [{ productName: { $regex:req.session?.search , $options: "i" },isListed:true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte} }]}).skip(skip).limit(limit)
+                count = await product.find({$or: [{ productName: { $regex:req.session?.search , $options: "i" },isListed:true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte} }]}).countDocuments()
+                // productDetail = await product.find({isListed : true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
+                // count = await product.find({$or: [{ productName: { $regex:req.session?.search , $options: "i" },isListed:true,productPrice:{$gte:gte,$lte:lte} }]}).countDocuments()
+
+                req.session.search = null
+
+            }else{
+
+                productDetail = await product.find({isListed : true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
+    
+                count = await product.find({isListed : true,parentCategory:categorWiseProduct,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
+            }
             
             if(req.session.sortPrice){
 
@@ -792,9 +833,28 @@ const categoriesProduct = async (req,res)=>{
              
         }else{
             
-                    productDetail = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
+
+
+            if(req.session?.search){
+
+                console.log(`sucess`)
+
+                productDetail = await product.find({$or: [{ productName: { $regex:req.session?.search , $options: "i" },isListed:true,productPrice:{$gte:gte,$lte:lte} }]}).skip(skip).limit(limit)
+                count = await product.find({$or: [{ productName: { $regex:req.session?.search , $options: "i" },isListed:true,productPrice:{$gte:gte,$lte:lte} }]}).countDocuments()
+
+                req.session.search = null
+                console.log(productDetail)
+                console.log(count)
+
+            }else{
+
+                console.log(`enter else part`)
+                productDetail = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
+                count = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
+                console.log(productDetail)
+
+            }
             
-                    count = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
                   
                     req.session.gteSelectPrice = `${gte}-${lte}`
 
@@ -850,6 +910,7 @@ module.exports = {
     decQty, // decreament cart userQuenty
 
     //--------------
+    search ,       // shop product search user
     sortPrice, // lowToHeigh 
     priceFilter, // price wise filter
     categoriesFilter,
