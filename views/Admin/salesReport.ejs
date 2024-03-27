@@ -255,27 +255,81 @@
   });
     </script>
 
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.20/fetch.js"></script>
+      <!-- Include Axios using a CDN link -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
   let filterBtnCustom = document.getElementById('filterBtnCustom')
   filterBtnCustom.addEventListener('click', async (e) => {
+
+
+    try{
+
       e.preventDefault()
+
+      alert("hi")
       let startDate = document.getElementById('startDate').value
       let endDate = document.getElementById('endDate').value
       let formData = { startDate, endDate }
+alert(startDate)
+alert(startDate.length)
+alert(endDate)
+alert(endDate.length)
+alert(formData)
 
-      let response = await fetch('/admin/salesReport/filterCustom',
-          {
-              method: 'POST',
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(formData)
-          })
-      let result = await response.json()
 
-      if (result.success) {
-          location.reload()
-      }
+     
+
+// var xhr = new XMLHttpRequest();
+// xhr.open('POST', '/admin/salesReport/filterCustom', true);
+
+
+        if(startDate.length !=0 && endDate.length !=0 ){
+
+          
+          let response =   await fetch("/admin/salesReport/filterCustom",{
+                            method:"POST",
+                            headers:{
+                              "Content-Type":"application/json"
+                            },
+                            body:JSON.stringify(formData)
+                          })
+
+
+          let result = await response.json()
+          
+          if (result.success) {
+            
+            alert(result.success)
+
+            window.location.reload()
+          }
+
+        }else{
+
+          alert ("chose the date")
+        }
+
+    
+
+
+                // let response = await fetch('/admin/salesReport/filterCustom',
+      //     {
+      //         method: 'POST',
+      //         headers: { "Content-Type": "application/json" },
+      //         body: JSON.stringify(formData)
+      //     })
+      // let result = await response.json()
+
+      // if (result.success) {
+        
+      // }
+
+      
+    }catch(err){
+      console.log(`Error from ejs axios filter salesReport ${err}`)
+    }
   })
 </script>
 

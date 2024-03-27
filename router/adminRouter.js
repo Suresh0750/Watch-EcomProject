@@ -3,14 +3,17 @@ const express = require("express")
 
 const adminRouter = express.Router()
 
+const axios =  require("axios")
+
 const  uploadImage = require("../helper/multer")
+
 
 const adminController = require("../controller/adminController")
 const adCatagoriescontrol = require("../controller/adminCatogoricontroller")
 const adminProduct = require("../controller/productController")
 const orderManagement = require("../controller/orderManagment")
 const {Coupons,addCoupon,editCoupon,deleteCoupon} = require("../controller/couponManagement")
-const {salesReport} = require("../controller/salesReportController")
+const {salesReport,salesReportDownload,salesReportFilterCustom,salesReportDownloadPDF,salesReportFilter} = require("../controller/salesReportController")
 const {productOfferManagement,addOffer,editOffer,getCategoryOffer,addCategoryOffer,editCategoryOffer,editCategoryOfferStatus} = require("../controller/offerControl")
 
 
@@ -68,6 +71,13 @@ adminRouter.delete("/couponManagement/deleteCoupon/:id",isAdmin,deleteCoupon)
 
 
 
+
+//*salesReport download/xlsx
+
+adminRouter.get("/salesReport/download/xlsx",isAdmin,salesReportDownload);
+adminRouter.post("/salesReport/filterCustom",salesReportFilterCustom)
+adminRouter.get("/salesReport/download/pdf",isAdmin,salesReportDownloadPDF)
+adminRouter.post("/salesReport/filter",salesReportFilter)
 //* salesReport
 adminRouter.get("/salesReport",isAdmin,salesReport)
 

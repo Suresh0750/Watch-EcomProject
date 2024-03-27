@@ -53,4 +53,7 @@ shopRouter.put("/cart/deCrease",isUser,isBlock,shopControler.decQty)
 // userCoupen 
 shopRouter.post("/shopCoupen",isBlock,allProductCoupen)
 
+
+// 404 page
+shopRouter.all("*/",shopControler.NoContentPage)
 module.exports = shopRouter

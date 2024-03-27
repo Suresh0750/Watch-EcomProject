@@ -10,7 +10,7 @@ const allProductCoupen = async (req,res)=>{
         console.log(req.session)
         const coupenCheck = await coupenModel.findOne({couponCode:(req.body?.userCoupen).trim()})
         console.log(coupenCheck)
-        console.log(JSON.stringify(coupenCheck))
+        
         const coupenUserexist = coupenCheck?.userId?.includes(userId)
         console.log(coupenUserexist)
         if(!coupenUserexist){

@@ -18,7 +18,7 @@ const downloadInvoice = async (req, res) => {
       let orderDatails = await orderData
         .findOne({ _id: req.params.id })
         .populate("addressChosen");
-      console.log(JSON.stringify(orderDatails));
+    
       const stream = res.writeHead(200, {
         "Content-Type": "application/pdf",
         "Content-Disposition": "attachment;filename=invoice.pdf",
@@ -79,7 +79,6 @@ async function returnProductIncproductStock(productReturn){
                                 })
 
 
-            console.log(JSON.stringify(updateAfterReturnProduct))
 
 }
 

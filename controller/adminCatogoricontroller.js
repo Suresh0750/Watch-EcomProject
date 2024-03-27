@@ -121,7 +121,7 @@ const addCotegories = async (req, res) => {
     try {
 
 
-        const isCheckExist = await categories.find({categoryName:req.body.categoryName})
+        const isCheckExist = await categories.findOne({categoryName:req.body.categoryName})
 
        console.log(`-----isCheckExist--------`)
        console.log(isCheckExist)

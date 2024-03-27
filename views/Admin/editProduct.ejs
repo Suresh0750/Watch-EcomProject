@@ -107,12 +107,13 @@
                                     <% let parentCategory = productData.parentCategory%>
                                     <% console.log(`parentCategory : ${parentCategory}`)%>
                                     <%category.forEach((value)=>{%>
-                                        <option value="<%=value.categoryName%>">
                                         <%if(parentCategory == value.categoryName){%>
                                             <% return; %>
+                                            <%}else{%>
+                                                <option value="<%=value.categoryName%>">
+                                                    <%=value.categoryName%>
+                                                </option>
                                         <%}%>
-                                            <%=value.categoryName%>
-                                        </option>
                                     <%})%>
 
                                 </select>

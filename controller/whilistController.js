@@ -72,8 +72,6 @@ const addToCart = async (req,res)=>{
 
     }else{
 
-      console.log(JSON.stringify(productDetails))
-
       if(productDetails.productStock>0){
 
         const cartData = {

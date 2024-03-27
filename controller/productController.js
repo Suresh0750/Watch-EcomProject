@@ -77,6 +77,7 @@ const editProduct = async (req, res) => {
 
     try {
       console.log(`editProduct entered`)
+      console.log(req.body)
       let existingProduct = await productController.findOne({_id:req.params.id} );
       let  checkProduct = await productController.find({productName:req.body.productName})
      console.log(`checkProduct : ${checkProduct}`)
@@ -100,7 +101,7 @@ const editProduct = async (req, res) => {
         const updateFields = {
           $set: {
             productName: req.body.productName,
-            parentCategory: req.body.parentCategory,
+            parentCategory: req.body.category,
             productPrice: req.body.productPrice,
             productStock: req.body.productStock,
           },
@@ -183,8 +184,6 @@ const addProduct = async (req, res) => {
       console.log(`req reached addProduct router`)
       const categoryDetail = await categories.find({})
 
-      console.log(`---------categoryDetail------------`)
-      console.log(JSON.stringify(categoryDetail))
       req.session.existAddProduct
         res.render("Admin/addProduct",{categoryDetail,existProduct:req.session.existAddProduct})
         req.session.existAddProduct = false

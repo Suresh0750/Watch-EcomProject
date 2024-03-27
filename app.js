@@ -8,8 +8,8 @@ const session = require("express-session")
 //dotenv for MONGO_URL
 require("dotenv").config()
 
-// flash 
 
+// flash 
 const flash = require("connect-flash")
 
 app.use(flash())
@@ -51,10 +51,10 @@ app.use((req, res, next) => {
   });
   
 
-app.use(shopRouter)  // shop and user cart it there
-app.use(authRouter)
-app.use("/admin",adminRouter)
-app.use("/user",userRouter)
+  app.use(authRouter)
+  app.use("/admin",adminRouter)
+  app.use("/user",userRouter)
+  app.use(shopRouter)  // shop and user cart it there
 
 
 const PORT = process.env.PORT || 9001

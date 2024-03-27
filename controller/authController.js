@@ -43,7 +43,7 @@ const admin = async(req,res)=>{
     {
       const productData = await productCollection.find({isListed:true})
 
-      console.log(JSON.stringify(productData))
+     
       console.log("entry admin")
       res.render("Admin/adminIndex",{productData})
     }else{

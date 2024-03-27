@@ -28,7 +28,7 @@ let instance = new razorPay({
 async function afterOrderProductdecreas(products){
 
     console.log(`---------------afterOrderProductdecreas--------------------`)
-    console.log(JSON.stringify(products))
+
 
     await products.forEach(async(val)=>{
 
@@ -183,7 +183,8 @@ const genOrder = async (req,res)=>{
 
     try{
 
-        console.log("genOrder\n"+JSON.stringify(req.body))
+        console.log(`req reached genorder`)
+        
 
         req.session.orderDetail = req.body
 
@@ -307,10 +308,11 @@ const deletCart = async(req,res)=>{
 const grandTotal = async (req)=>{
 
     try{
+        console.log(`req reached grandTotal`)
         const userId = req.session.userIsthere.userId
 
         let userCartData = await cartCollection.find({userId : userId}).populate("productId")
-      
+      console.log(userCartData)
         if(userCartData.length==0)
         {
             req.session.grandTotal = 0
@@ -318,6 +320,9 @@ const grandTotal = async (req)=>{
         }
         let grandTotal =0
 
+        console.log(`stpe 1`)
+       
+        console.log(JSON.stringify(userCartData))
         
 
         for(var s of userCartData)
@@ -328,11 +333,14 @@ const grandTotal = async (req)=>{
 
             
             if(!productPriceOffer?.productOfferPercentage || productPriceOffer?.productOfferPercentage<=0){
-                
+                console.log(`enter into if`)
+                console.log(s.productId)
                 grandTotal += s.productId.productPrice * s.productQuantity
                 await cartCollection.updateOne({_id:s._id},{$set:{totalCastPerproduct: s.productId.productPrice * s.productQuantity}})
 
             }else{
+
+                console.log(`enter into else part`)
 
                 //* for product offer calculate produc offerPercentage
                 let price =Number(s.productId.productPrice)-(Number(s.productId.productOfferPercentage)/100)*Number(s.productId.productPrice)
@@ -342,11 +350,11 @@ const grandTotal = async (req)=>{
 
             }
         }
-       
+        console.log(`stpe 2`)       
         userCartData = await cartCollection.find({userId:userId}).populate("productId")
-        
+        console.log(userCartData)
         req.session.grandTotal =  grandTotal
-       
+        console.log(`stpe 3`)
         req.session.save()
         return userCartData
 
@@ -417,9 +425,11 @@ const incQty = async(req,res)=>{
 const userCartPage = async (req,res)=>{
 
     try{
+        console.log(`req reached userCartPage`)
 
         let userCartData = await grandTotal(req);
-        
+
+        console.log(userCartData)
         res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData})
 
     }catch(err){
@@ -442,6 +452,7 @@ const addCart = async (req,res)=>{
         const id = req.params.id
         const userId =  req.session.userIsthere.userId
         const exitCart = await cartCollection.findOne({userId:userId, productId:id})
+
 
         
         if(exitCart){
@@ -467,9 +478,9 @@ const addCart = async (req,res)=>{
                 productQuantity : req.body.Qty,
                 totalCastPerproduct :Math.round(Number(price))
             }
-            
+            console.log(cart)
     
-            const cartDetail = await new cartCollection(cart).save( )
+            const cartDetail = await new cartCollection(cart).save()
             console.log(`=====cartDetail=======`)
             console.log(cartDetail)
             res.status(200).send({success:true})
@@ -683,6 +694,7 @@ const categoriesFilter = async (req,res)=>{
 
 
     try{
+        console.log(`req entered categoriesFilter`)
 
         const filter = req.query.categoriesName
 
@@ -691,7 +703,9 @@ const categoriesFilter = async (req,res)=>{
         if(filter == "all"){
 
             req.session.categorie = null
-            
+            req.session.gte = null
+            req.session.lte = null
+            req.session.save()
             res.status(401).redirect("/categories")     //* 401 is redirect code
         }
 
@@ -713,29 +727,38 @@ const categoriesFilter = async (req,res)=>{
 
             }
 
-            
-          const producMax =   await product. aggregate([
-                                                    {$match:{parentCategory:req.session.categorie}},
-                                                    { $group: { _id: null, maxField: { $max: "$productPrice" } } }
-                                                    ,
-                                                    {$project:{_id:0,maxField:1}}
-                                                    
-                                                ])
-            const producMin =   await product. aggregate([
-                                                    {$match:{parentCategory:req.session.categorie}},
-                                                    { $group: { _id: null, minField: { $min: "$productPrice" } } }
-                                                    ,
-                                                    {$project:{_id:0,minField:1}}
-                                                    
-                                                ])
 
-            req.session.gte = req.session?.gte || producMin[0]?.minField 
-            req.session.lte = req.session?.lte || producMax[0]?.maxField
+            
+        //   const producMax =   await product. aggregate([
+        //                                             {$match:{parentCategory:req.session.categorie}},
+        //                                             { $group: { _id: null, maxField: { $max: "$productPrice" } } }
+        //                                             ,
+        //                                             {$project:{_id:0,maxField:1}}
+                                                    
+        //                                         ])
+        //     const producMin =   await product. aggregate([
+        //                                             {$match:{parentCategory:req.session.categorie}},
+        //                                             { $group: { _id: null, minField: { $min: "$productPrice" } } }
+        //                                             ,
+        //                                             {$project:{_id:0,minField:1}}
+                                                    
+        //                                         ])
+
+
+            // console.log(`=== category sort price====`)
+            // console.log(req.session.categorie)
+            // console.log(producMax)
+            // console.log(producMin)
+
+            // req.session.gte = req.session?.gte || producMin[0]?.minField 
+            // req.session.lte = req.session?.lte || producMax[0]?.maxField
+
+            // console.log(req.session.gte)
+            // console.log(req.session.lte)
+
             req.session.save()
 
            
-           
-         
             res.status(401).redirect("/categories?page=1")
 
         
@@ -759,7 +782,7 @@ const categoriesProduct = async (req,res)=>{
         console.log(`search ${req.session.search}`)
         
         let page = Number(req.query.page) || 1
-        let limit = 4
+        let limit = 8
         let count 
         let productDetail;
         let skip;
@@ -788,7 +811,7 @@ const categoriesProduct = async (req,res)=>{
             let maxField = await product.aggregate([
                                                 {$match:{parentCategory:req.session.categorie}},                    // categorie wise max value
                                                 {$group:{_id:null,maxPrice:{$max:"$productPrice"}}},
-                                                {$project:{_id:0,maxPrice:1}}
+                                                {$project:{_id:0,maxPrice:1}} 
                                             ])
             let minField = await product.aggregate([
                                                 {$match:{parentCategory:req.session.categorie}},                             // categorie wise min value
@@ -796,9 +819,18 @@ const categoriesProduct = async (req,res)=>{
                                                 {$project:{_id:0,minPrice:1}}
                                             ])
 
+            console.log(maxField.length)   
+            console.log(minField.length)   
+            if(maxField.length==0 || minField.length ==0){
+
+                maxField = maxField.length==0 ? [{maxPrice:'0'}] : maxField;
+                minField = minField.length==0 ? [{minPrice:'0'}] : minField;
+
+            }
             const lte =  Number(req.session?.lte)  || Number(maxField[0]?.maxPrice) 
             const gte =  Number(req.session?.gte) || Number(minField[0]?.minPrice) 
-
+            console.log(`gte`,gte)
+            console.log(`lte`,lte)
             
 
             req.session.gteSelectPrice = `${gte}-${lte}`
@@ -848,8 +880,12 @@ const categoriesProduct = async (req,res)=>{
 
             }else{
 
+
                 console.log(`enter else part`)
+                console.log(gte)
+                console.log(lte)
                 productDetail = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
+                console.log(productDetail)
                 count = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
                 console.log(productDetail)
 
@@ -892,8 +928,18 @@ const logOut = async(req,res)=>{
     }
     
 }
+
+
+const NoContentPage =  async(req,res)=>{
+    try{
+
+        res.render("shop/404Page")
+    }catch(err){
+        console.log(`Error from NoContentPage`)
+    }
+}
 module.exports = {
-    
+    NoContentPage ,      // 404 Page
     orderPlaced,        //orderPlaced
     orderReceivedPage, // orderReceivedPage rendered
 

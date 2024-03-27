@@ -20,6 +20,7 @@ const isBlock = async (req,res,next)=>{
 
     if(req.session.isUserBlock)
     {
+      
         console.log(req.session.isUserBlock)
         res.redirect("/login")
     }else{
