@@ -38,8 +38,8 @@
                             <div class="text-center"><p class="top-header_middle-text"> Worldwide Express Shipping</p></div>
                         </div>
                         <div class="col-2 col-sm-4 col-md-3 col-lg-4 text-right">
-                            <span class="user-menu d-block d-lg-none"><i class="anm anm-user-al" aria-hidden="true"></i></span>
-                            <ul class="customer-links list-inline">
+                            <span onclick="openWhislistprofile()" class="user-menu d-block d-lg-none"><i class="anm anm-user-al" aria-hidden="true"></i></span>
+                            <ul class="customer-links list-inline" id="openWhislistprofile" style="display: none;">
                                 <li><a href="login.html">Login</a></li>
                                 <li><a href="register.html">Create Account</a></li>
                                 <li><a href="wishlist.html">Wishlist</a></li>
@@ -167,7 +167,28 @@
                 </div>
             </div>
             <!--End Header-->
-    
+     <!--Mobile Menu-->
+     <div class="mobile-nav-wrapper" id="open-nav" role="navigation">
+        <div class="closemobileMenu" id="closeBar"><i class="icon anm anm-times-l pull-right"></i> Close Menu</div>
+        <ul id="MobileNav" class="mobile-nav">
+            <li class="lvl1 parent megamenu"><a href="/">Home</a>
+        
+        </li>
+          
+            <li class="lvl1 parent megamenu"><a href="/categories">Product </a>
+        
+        </li>
+            <li class="lvl1 parent megamenu"><a href="/faq">FAQ </a>
+         
+        </li>
+            <li class="lvl1 parent megamenu"><a href="/about">About </a>
+          
+        </li>
+            <li class="lvl1"><a><b>Buy Now!</b></a>
+        </li>
+      </ul>
+    </div>
+    <!--End Mobile Menu-->
             <!--Body Content-->
             <div id="page-content" style="background-color: white; padding-top: 7em; ">
                 <!--Page Title-->
@@ -316,6 +337,22 @@
             <script src="assets/js/main.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+            <script>
+                function openWhislistprofile(){
+                 
+              
+                  let openUl = document.getElementById("openWhislistprofile")
+              
+                  if(openUl.style.display == 'none'){
+              
+                    openUl.style.display = "block"
+                  }else{
+                    openUl.style.display = "none"
+                  }
+              
+                }
+              </script>
+              
             <script>
             
                 

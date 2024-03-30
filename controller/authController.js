@@ -220,6 +220,8 @@ const userLogin = async (req, res) => {
           userName:userDetail.firstName,
           userId :userDetail._id
         }
+        console.log(req.session.userIsthere)
+        req.session.save()
         res.status(200).send({ success: true });
       }else{
          req.session.isLoginFail= true
@@ -343,47 +345,45 @@ const otpvalue = async (req,res)=>{
 
 
 
-      //* referalcode add 500 rupees 
-
-      if(req.session?.referralCode){
-
-       
-        const userReferal = req.session?.referralCode
-        const userCReferralCode = await userdata.findOne({referralCode:userReferal})
-      
-
-          
-          const userWallet = await wallet.findOne({userId:userCReferralCode._id})
-
-          
-          if(userWallet){
-
-        
-            const userIncwallet = await wallet.updateOne({userId:userCReferralCode._id},{$inc:{walletBalance:500}})
-
-
-          }else{
-
-            const walletUpdateFiels = {
-              userId:userCReferralCode?._id,
-              walletBalance:500
-            }
-
-            await wallet(walletUpdateFiels).save()
-          }
-
-  
-
-
-
-      req.session.referralCode = null
-      
-    }
-
     const userDetail = await userdata.findOne({userEmail:userEmail})
 
-      if(!userDetail){
-        await userdata({firstName,lastName,userMobile,userEmail,userPassword,referralCode}).save()
+
+
+            //* referalcode add 500 rupees 
+
+            if(req.session?.referralCode){
+    
+              const userReferal = req.session?.referralCode
+              const userCReferralCode = await userdata.findOne({referralCode:userReferal})
+                            
+                const userWallet = await wallet.findOne({userId:userCReferralCode._id})
+
+                
+                if(userWallet){
+
+              
+                  const userIncwallet = await wallet.updateOne({userId:userCReferralCode._id},{$inc:{walletBalance:500}})
+
+
+                }else{
+
+                  const walletUpdateFiels = {
+                    userId:userCReferralCode?._id,
+                    walletBalance:500
+                  }
+
+                  await wallet(walletUpdateFiels).save()
+                }
+
+        
+
+
+
+            req.session.referralCode = null
+            
+          }
+
+          await userdata({firstName,lastName,userMobile,userEmail,userPassword,referralCode}).save()
      
          req.session.userData = null
         
@@ -392,13 +392,11 @@ const otpvalue = async (req,res)=>{
            userName:firstName,
            userId :userDetail?._id
          }
-         req.session.save()
-      }
-    
 
-     
-      res.status(200).send({ success: true });
-  
+         req.session.save()
+
+      return   res.status(200).send({ success: true });
+      
     }else{
   
       req.session.isWrongOtp = true;

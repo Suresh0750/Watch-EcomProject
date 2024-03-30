@@ -9,16 +9,59 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Watchs Store</title>
+    <title>Watches Store</title>
     <meta name="description" content="description">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      td {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-            </style>
+  
+     th {
+      background-color: #141414 !important;
+    }
+    .btn-default:hover , .btn:hover{
+      background-color: #141414 !important;
+    }
+
+    thead{
+      background-color: #141414;
+    }
+    td:hover{
+      background-color: #141414;
+    }
+  </style>
+  <style>
+    .backColor{
+      background-color: #141414;
+    }
+    .btn-group a:hover {
+    /* Add your desired styles for the hover effect here */
+    background-color:  #141414 !important; /* Example background color change */
+    /* color: #333;  */
+    /* Example text color change */
+    /* border: 1px solid #ccc; */
+     /* Example border change */
+  }
+  
+    div.a:hover{
+      background-color: #141414;
+    }
+    div.a:active{
+      background-color: #141414;
+    }
+    .icon.hidden {
+      display: none;
+  }
+  
+  
+  </style>
+  <style>
+
+    td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+  </style>
+  
   <!-- Favicon -->
 <link rel="shortcut icon" href="../../assets1/images1/slidesshow-banners/smart-watch.png" />
 <!-- Plugins CSS -->
@@ -186,8 +229,8 @@
                         <div class="text-center"><p class="top-header_middle-text"> Worldwide Express Shipping</p></div>
                     </div>
                     <div class="col-2 col-sm-4 col-md-3 col-lg-4 text-right">
-                        <span class="user-menu d-block d-lg-none"><i class="anm anm-user-al" aria-hidden="true"></i></span>
-                        <ul class="customer-links list-inline">
+                        <span onclick="openWhislistprofile()" class="user-menu d-block d-lg-none"><i class="anm anm-user-al" aria-hidden="true"></i></span>
+                        <ul class="customer-links list-inline" id="openWhislistprofile" style="display: none;">
 
 
                             <%if(isAlive){%>
@@ -258,15 +301,15 @@
                     <!--Mobile Logo-->
                     <div class="col-6 col-sm-6 col-md-6 col-lg-2 d-block d-lg-none mobile-logo">
                         <div class="logo">
-                            <a href="index.html">
+                            <a href="/">
                                 <!-- <img src="assets/images/logo.svg" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" /> -->
-                                <h2 style="color:#7F4A49"> Whatch</h2>
+                                <h2 style="color:#7F4A49"> watches</h2>
                             </a>
                         </div>
                     </div>
                     <!--Mobile Logo-->
                     <div class="col-4 col-sm-3 col-md-3 col-lg-2">
-                        <div class="site-cart">
+                        <div class="site-cart" style="cursor: pointer; " onclick="viewCart()">
                             <a href="#;" class="site-header__cart" title="Cart">
                                 <i class="icon anm anm-bag-l"></i>
                                 <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">2</span>
@@ -343,131 +386,44 @@
             </div>
         </div>
         <!--End Header-->
-        <!--Mobile Menu-->
-        <div class="mobile-nav-wrapper" role="navigation">
-            <div class="closemobileMenu"><i class="icon anm anm-times-l pull-right"></i> Close Menu</div>
-            <ul id="MobileNav" class="mobile-nav">
-                <li class="lvl1 parent megamenu"><a href="index.html">Home <i class="anm anm-plus-l"></i></a>
+         <!--Mobile Menu-->
+         <div class="mobile-nav-wrapper" id="open-nav" role="navigation">
+          <div class="closemobileMenu" id="closeBar"><i class="icon anm anm-times-l pull-right"></i> Close Menu</div>
+          <ul id="MobileNav" class="mobile-nav">
+              <li class="lvl1 parent megamenu"><a href="/">Home</a>
+          
+          </li>
             
-            </li>
-                <li class="lvl1 parent megamenu"><a href="#">Shop <i class="anm anm-plus-l"></i></a>
-              <ul>
-                <li><a href="#" class="site-nav">Shop Pages<i class="anm anm-plus-l"></i></a>
-                  <ul>
-                    <li><a href="shop-left-sidebar.html" class="site-nav">Left Sidebar</a></li>
-                    <li><a href="shop-right-sidebar.html" class="site-nav">Right Sidebar</a></li>
-                    <li><a href="shop-fullwidth.html" class="site-nav">Fullwidth</a></li>
-                    <li><a href="shop-grid-3.html" class="site-nav">3 items per row</a></li>
-                    <li><a href="shop-grid-4.html" class="site-nav">4 items per row</a></li>
-                    <li><a href="shop-grid-5.html" class="site-nav">5 items per row</a></li>
-                    <li><a href="shop-grid-6.html" class="site-nav">6 items per row</a></li>
-                    <li><a href="shop-grid-7.html" class="site-nav">7 items per row</a></li>
-                    <li><a href="shop-listview.html" class="site-nav last">Product Listview</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="site-nav">Shop Features<i class="anm anm-plus-l"></i></a>
-                  <ul>
-                    <li><a href="shop-left-sidebar.html" class="site-nav">Product Countdown </a></li>
-                    <li><a href="shop-right-sidebar.html" class="site-nav">Infinite Scrolling</a></li>
-                    <li><a href="shop-grid-3.html" class="site-nav">Pagination - Classic</a></li>
-                    <li><a href="shop-grid-6.html" class="site-nav">Pagination - Load More</a></li>
-                    <li><a href="product-labels.html" class="site-nav">Dynamic Product Labels</a></li>
-                    <li><a href="product-swatches-style.html" class="site-nav">Product Swatches </a></li>
-                    <li><a href="product-hover-info.html" class="site-nav">Product Hover Info</a></li>
-                    <li><a href="shop-grid-3.html" class="site-nav">Product Reviews</a></li>
-                    <li><a href="shop-left-sidebar.html" class="site-nav last">Discount Label </a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-                <li class="lvl1 parent megamenu"><a href="product-layout-1.html">Product <i class="anm anm-plus-l"></i></a>
-              <ul>
-                <li><a href="product-layout-1.html" class="site-nav">Product Page<i class="anm anm-plus-l"></i></a>
-                  <ul>
-                    <li><a href="product-layout-1.html" class="site-nav">Product Layout 1</a></li>
-                    <li><a href="product-layout-2.html" class="site-nav">Product Layout 2</a></li>
-                    <li><a href="product-layout-3.html" class="site-nav">Product Layout 3</a></li>
-                    <li><a href="product-with-left-thumbs.html" class="site-nav">Product With Left Thumbs</a></li>
-                    <li><a href="product-with-right-thumbs.html" class="site-nav">Product With Right Thumbs</a></li>
-                    <li><a href="product-with-bottom-thumbs.html" class="site-nav last">Product With Bottom Thumbs</a></li>
-                  </ul>
-                </li>
-                <li><a href="short-description.html" class="site-nav">Product Features<i class="anm anm-plus-l"></i></a>
-                  <ul>
-                    <li><a href="short-description.html" class="site-nav">Short Description</a></li>
-                    <li><a href="product-countdown.html" class="site-nav">Product Countdown</a></li>
-                    <li><a href="product-video.html" class="site-nav">Product Video</a></li>
-                    <li><a href="product-quantity-message.html" class="site-nav">Product Quantity Message</a></li>
-                    <li><a href="product-visitor-sold-count.html" class="site-nav">Product Visitor/Sold Count </a></li>
-                    <li><a href="product-zoom-lightbox.html" class="site-nav last">Product Zoom/Lightbox </a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="site-nav">Product Features<i class="anm anm-plus-l"></i></a>
-                  <ul>
-                    <li><a href="product-with-variant-image.html" class="site-nav">Product with Variant Image</a></li>
-                    <li><a href="product-with-color-swatch.html" class="site-nav">Product with Color Swatch</a></li>
-                    <li><a href="product-with-image-swatch.html" class="site-nav">Product with Image Swatch</a></li>
-                    <li><a href="product-with-dropdown.html" class="site-nav">Product with Dropdown</a></li>
-                    <li><a href="product-with-rounded-square.html" class="site-nav">Product with Rounded Square</a></li>
-                    <li><a href="swatches-style.html" class="site-nav last">Product Swatches All Style</a></li>
-                  </ul>
-                </li>
-                <li><a href="#" class="site-nav">Product Features<i class="anm anm-plus-l"></i></a>
-                  <ul>
-                    <li><a href="product-accordion.html" class="site-nav">Product Accordion</a></li>
-                    <li><a href="product-pre-orders.html" class="site-nav">Product Pre-orders </a></li>
-                    <li><a href="product-labels-detail.html" class="site-nav">Product Labels</a></li>
-                    <li><a href="product-discount.html" class="site-nav">Product Discount In %</a></li>
-                    <li><a href="product-shipping-message.html" class="site-nav">Product Shipping Message</a></li>
-                    <li><a href="product-shipping-message.html" class="site-nav last">Size Guide </a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-                <li class="lvl1 parent megamenu"><a href="about-us.html">Pages <i class="anm anm-plus-l"></i></a>
-              <ul>
-                  <li><a href="cart-variant1.html" class="site-nav">Cart Page <i class="anm anm-plus-l"></i></a>
-                    <ul class="dropdown">
-                        <li><a href="cart-variant1.html" class="site-nav">Cart Variant1</a></li>
-                        <li><a href="cart-variant2.html" class="site-nav">Cart Variant2</a></li>
-                    </ul>
-                </li>
-                <li><a href="compare-variant1.html" class="site-nav">Compare Product <i class="anm anm-plus-l"></i></a>
-                    <ul class="dropdown">
-                        <li><a href="compare-variant1.html" class="site-nav">Compare Variant1</a></li>
-                        <li><a href="compare-variant2.html" class="site-nav">Compare Variant2</a></li>
-                    </ul>
-                </li>
-                <li><a href="checkout.html" class="site-nav">Checkout</a></li>
-                <li><a href="checkout.html" class="site-nav">Checkout</a></li>
-                <li><a href="about-us.html" class="site-nav">About Us<span class="lbl nm_label1">New</span></a></li>
-                <li><a href="contact-us.html" class="site-nav">Contact Us</a></li>
-                <li><a href="faqs.html" class="site-nav">FAQs</a></li>
-                <li><a href="lookbook1.html" class="site-nav">Lookbook<i class="anm anm-plus-l"></i></a>
-                  <ul>
-                    <li><a href="lookbook1.html" class="site-nav">Style 1</a></li>
-                    <li><a href="lookbook2.html" class="site-nav last">Style 2</a></li>
-                  </ul>
-                </li>
-                <li><a href="404.html" class="site-nav">404</a></li>
-                <li><a href="coming-soon.html" class="site-nav">Coming soon<span class="lbl nm_label1">New</span></a></li>
-              </ul>
-            </li>
-                <li class="lvl1 parent megamenu"><a href="blog-left-sidebar.html">Blog <i class="anm anm-plus-l"></i></a>
-              <ul>
-                <li><a href="blog-left-sidebar.html" class="site-nav">Left Sidebar</a></li>
-                <li><a href="blog-right-sidebar.html" class="site-nav">Right Sidebar</a></li>
-                <li><a href="blog-fullwidth.html" class="site-nav">Fullwidth</a></li>
-                <li><a href="blog-grid-view.html" class="site-nav">Gridview</a></li>
-                <li><a href="blog-article.html" class="site-nav">Article</a></li>
-              </ul>
-            </li>
-                <li class="lvl1"><a href="#"><b>Buy Now!</b></a>
-            </li>
-          </ul>
-        </div>
-        <!--End Mobile Menu-->
-
+              <li class="lvl1 parent megamenu"><a href="/categories">Product </a>
+          
+          </li>
+              <li class="lvl1 parent megamenu"><a href="/faq">FAQ </a>
+           
+          </li>
+              <li class="lvl1 parent megamenu"><a href="/about">About </a>
+            
+          </li>
+              <li class="lvl1"><a><b>Buy Now!</b></a>
+          </li>
+        </ul>
+      </div>
+      <!--End Mobile Menu-->
+      <script>
+        function openWhislistprofile(){
+         
+      
+          let openUl = document.getElementById("openWhislistprofile")
+      
+          if(openUl.style.display == 'none'){
+      
+            openUl.style.display = "block"
+          }else{
+            openUl.style.display = "none"
+          }
+      
+        }
+      </script>
+      
 
         <script>
 
@@ -512,9 +468,9 @@
             <a class='btn btn-default' href="/user/myAddress"><i class="fas fa-map-marker-alt" aria-hidden="true"></i>My
               Address</a>
               <a class='btn btn-default' href='/user/changePassword'><i class="fa fa-cog" aria-hidden="true"></i>Change Password</a>
-            <a href="javascript:void(0)" class="btn btn-default active"><i class="fa fa-list"
+            <a href="javascript:void(0)" class="btn btn-default bg-secondary"><i class="fa fa-list"
                 aria-hidden="true"></i>All Orders</a>
-            <a class='btn btn-default' href='/wishlist'><i class="fa fa-gift" aria-hidden="true"></i>Wishlist</a>
+            <a class='btn btn-default' href='/user/wishlist'><i class="fa fa-gift" aria-hidden="true"></i>Wishlist</a>
             
           </div>
           </div>
@@ -846,7 +802,13 @@
 </footer>
     
   </div>
+  <script>
 
+    async function viewCart(){
+      window.location.href = "/viewCart"
+     
+    }
+  </script>
   <script>
     var d = new Date();
     var year = d.getFullYear();

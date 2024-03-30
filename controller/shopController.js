@@ -17,12 +17,6 @@ let instance = new razorPay({
   });
 
 
-
-
-
-
- 
-
   //* after order decrease the product quenty
 
 async function afterOrderProductdecreas(products){
@@ -540,7 +534,6 @@ const landingPage = async (req,res)=>{
     }catch(err){
         console.log(`Error from landingPage ${err}`)
     }
-
  
 }
 
@@ -933,7 +926,8 @@ const logOut = async(req,res)=>{
 const NoContentPage =  async(req,res)=>{
     try{
 
-        res.render("shop/404Page")
+
+        res.render("shop/404Page",{isAlive:req.session?.userIsthere})
     }catch(err){
         console.log(`Error from NoContentPage`)
     }

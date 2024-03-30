@@ -52,18 +52,24 @@ const addToCart = async (req,res)=>{
 
     console.log(`req reached addToCart`)
     const userId = req.session?.userIsthere?.userId
-
+console.log(req.body.id)
+console.log(userId)
     const cartDetails = await cartModel.findOne({userId:userId,productId:req.body.id})
     const productDetails = await productModel.findOne({_id:req.body.id})
-
+    console.log(cartDetails)
+    console.log(productDetails)
     if(cartDetails){
 
       if(Number(cartDetails.productQuantity)<Number(productDetails.productStock)){
+
+        console.log('step1')
 
         await cartModel.findByIdAndUpdate({_id:cartDetails._id},{$inc:{productQuantity:1}})
 
         res.status(200).send({success:true,message:'product added'})
       }else{
+
+        console.log(`step 2`)
 
         res.status(501).send({success:false,message:"cart stack exist"})
 
@@ -72,7 +78,7 @@ const addToCart = async (req,res)=>{
 
     }else{
 
-      if(productDetails.productStock>0){
+      if(Number(productDetails.productStock)>0){
 
         const cartData = {
           userId,
@@ -84,7 +90,10 @@ const addToCart = async (req,res)=>{
 
         await cartModel(cartData).save()
 
+        console.log(`step 3`)
         res.status(200).send({success:true,message:"cartAdd"})
+      }else{
+        res.status(200).send({success:true,message:"nostock"})
       }
 
     }

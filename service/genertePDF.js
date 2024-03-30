@@ -64,11 +64,11 @@ function generateBody(doc, orderData) {
 
   doc.moveDown();
   generateHr(doc, 260);
-
+ 
   orderData.cartData.forEach((v, i) => {
     doc.fontSize(10).text(v.productId.productName, 50, 260 + (i + 1) * 20);
     doc.text(v.productQuantity.toString(), 250, 260 + (i + 1) * 20);
-    doc.text('Rs.'+v.totalCostPerProduct, 350, 260 + (i + 1) * 20, {
+    doc.text('Rs.'+v.totalCastPerproduct, 350, 260 + (i + 1) * 20, {
       width: 100,
       align: "right",
     });

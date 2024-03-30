@@ -267,6 +267,11 @@ const userOTPpage = async (req,res)=>{
 const editAndUpdateProfile = async(req,res)=>{
     try{
 
+        console.log(`req reached editAndUpdateProfile`)
+
+        console.log(req.body)
+        console.log(req.body.userEmail)
+
         const {userId,userEmail,lastName,firstName:userMobile} = req.body
 
     
@@ -274,34 +279,14 @@ const editAndUpdateProfile = async(req,res)=>{
         req.session.save()
         const userDetail = await userCollection.findById({_id:userId})
 
-        if(userEmail === userDetail.userEmail){
+       
+
            
-            await userCollection.findByIdAndUpdate({_id:userId},{firstName:req.body.firstName,lastName:req.body.lastName,userMobile:req.body.userMobile,userEmail:req.body.userEmail})
+        let userData =     await userCollection.findByIdAndUpdate({_id:userId},{firstName:req.body.firstName,lastName:req.body.lastName,userMobile:req.body.userMobile,userEmail:userDetail.userEmail})
     
+        console.log(userData)
             res.status(200).send({success:true,otp:false})
-        }else{
-
-           const emailIsthere = await userCollection.findOne({userEmail:req.body.userEmail})
-
-        
-
-           if(!emailIsthere){
-
-          
-            const profileEditOTP = await emailOtp(req.body.userEmail)
-
-            // req.session.forGetEmail = req.body.userEmail
-            req.session.forGetEmail = req.body
-            req.session.otp = profileEditOTP
-
-            req.session.save()
-            res.status(200).send({success:true,otp:true})
-             
-           }
-
-           res.status(501).send({sucess:false})
-        }
-
+       
         
 
 
@@ -493,7 +478,10 @@ const addAddress = async (req,res)=>{
 const profile = async (req,res)=>{
 
     try{
-        const profileDetails = await userCollection.findOne({_id:req.session.userIsthere.userId})
+        console.log(`req reached profile controller`)
+        console.log(req.session)
+        console.log(req.session.userIsthere)
+        const profileDetails = await userCollection.findOne({_id:req.session?.userIsthere?.userId})
         console.log(profileDetails)
 
         res.render("user/profile",{isAlive:req.session.userIsthere,profileDetails})
