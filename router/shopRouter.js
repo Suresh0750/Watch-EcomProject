@@ -9,7 +9,7 @@ const {allProductCoupen} = require("../controller/userShopCoupen.js")
 
 shopRouter.get("/",shopControler.landingPage)
 shopRouter.get("/categories",shopControler.categoriesProduct)
-shopRouter.get("/singleProduct:id",isBlock,shopControler.singleProduct)
+shopRouter.get("/singleProduct:id",isUser,isBlock,shopControler.singleProduct)
 shopRouter.post("/logOut",isUser,isBlock,shopControler.logOut)
 shopRouter.post("/addCart:id",isUser,isBlock,shopControler.addCart)
 

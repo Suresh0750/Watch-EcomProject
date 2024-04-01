@@ -510,15 +510,15 @@ const singleProduct = async (req,res)=>{
              req.session.newPrice = priceNew
         }
         const categoriesDetail = await categories.find({_id:id})
-        let productQuantity = await cartCollection.findOne({productId:id,userId:req.session.userIsthere.userId})
+        let productQuantity = await cartCollection.findOne({productId:id,userId:req.session?.userIsthere.userId})
 
         productQuantity = productQuantity?.productQuantity || 0
 
       
 
 
-        req.session.userIsthere;
-        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session.userIsthere,productQuantity,priceNew})
+        req.session?.userIsthere;
+        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session?.userIsthere,productQuantity,priceNew})
     }catch(err){
         console.log(`Error from singleProduct ${err}`)
     }
