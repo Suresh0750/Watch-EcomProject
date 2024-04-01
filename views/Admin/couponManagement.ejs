@@ -289,7 +289,7 @@
                 // Disable the submit button if expiry date is before start date
                 if (expiryDate < startDate) {
                     document.getElementById('submitBtn<%= index%>').disabled = true;
-                    alert('Expiry date must be after start date.');
+                    // alert('Expiry date must be after start date.');
                 } else {
                     document.getElementById('submitBtn<%= index%>').disabled = false;
                 }

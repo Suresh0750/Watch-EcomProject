@@ -286,11 +286,12 @@
                     const json = await res.json()
                     
                     if(json.success){
-                 
-                        window.location.replace("http://localhost:9001/")
+                        window.location.href = "/"
+                        
                     }else{
                         isLoginFail = true;
-                        window.location.replace("http://localhost:9001/login")
+                        window.location.href = "/login"
+                        
                     }
                    }
                 })

@@ -527,7 +527,6 @@ const singleProduct = async (req,res)=>{
 const landingPage = async (req,res)=>{
 
     try{
-
         const allCatagory =  await categories.find({})
         req.session.userIsthere;
         res.render("shop/index",{isAlive:req.session.userIsthere,allCatagory})

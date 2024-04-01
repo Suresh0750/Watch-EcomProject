@@ -88,9 +88,6 @@ const addCoupon = async (req,res)=>{
 const Coupons = async (req,res)=>{
     try{
 
-        console.log(`req reached couponManagement`)
-
-
         let couponData = await couponCollection.find({})
 
         couponData = couponData.map((v) => {

@@ -42,12 +42,10 @@ const admin = async(req,res)=>{
     if(req.session.isAdmin)
     {
       const productData = await productCollection.find({isListed:true})
-
-     
-      console.log("entry admin")
+      
       res.render("Admin/adminIndex",{productData})
     }else{
-      console.log("req reached admin router")
+      
       req.session.isnotCorrect;
       res.render("auth/adminLogin",{isnotCorrect:req.session.isnotCorrect})
       req.session.isnotCorrect = false;
@@ -65,11 +63,10 @@ const admin = async(req,res)=>{
 // update for forgot Password
 
 const updatePass = async(req,res)=>{
-  
-  console.log(`req reched updatePass router`)
+
   try{
     const  _id= req.session.userId 
-    console.log(req.params.id)
+ 
     const changPass = await bcrypt.hash(req.params.id,10)
     await userdata.findByIdAndUpdate({_id},{$set:{userPassword:changPass}});
     res.status(200).send({success:true})
@@ -104,13 +101,13 @@ const fOP=async(req,res)=>{
 
   try{
 
-    console.log(`req reched fOP router`)
+    
 
     const fPO= Number(req.params.id)
 
     const genOtp =Number(req.session.otp)
     
-    console.log(`${fPO} : ${genOtp}`)
+
      if(fPO === genOtp)
      {
       req.session.isSuccessOtp = true
@@ -138,7 +135,6 @@ const forgetOtp = async(req,res)=>{
   try{
     if( req.session.forGetEmail){
 
-      console.log(`req from forgetOtp`)
       req.session.isWrongOtp;
       isWrongOtp = req.session.isWrongOtp                
       req.session.save()
@@ -162,12 +158,12 @@ const forgetOtp = async(req,res)=>{
 const isEmailThere = async (req,res)=>{
 
   try{
-        console.log('req entered  isEmailThere  routered')
+        
         const chechEmail = req.params.id
         const isDetail = await userdata.findOne({userEmail:chechEmail})
 
       if(isDetail){
-        console.log(`${isDetail._id}`)
+        
         
         req.session.forGetEmail = chechEmail
         req.session.userId = isDetail._id
@@ -195,17 +191,17 @@ const isEmailThere = async (req,res)=>{
 const userLogin = async (req, res) => {
   
   try{
-    console.log(`userLogin router reched`)
+   console.log(`req reached userLogin`)
     const {userEmail, userPassword} = req.body
 
     const userDetail = await userdata.findOne({userEmail:userEmail})
-    console.log(userDetail)
+  
 
     if(userDetail){
 
-      console.log(`userLogin ${userDetail}`)
+   
       const passCompare = await bcrypt.compare(userPassword,userDetail.userPassword)
-      console.log(`passCompar ${passCompare}`)
+     
 
       if(userDetail.isBlocked==true)
       {
@@ -220,7 +216,7 @@ const userLogin = async (req, res) => {
           userName:userDetail.firstName,
           userId :userDetail._id
         }
-        console.log(req.session.userIsthere)
+        
         req.session.save()
         res.status(200).send({ success: true });
       }else{
@@ -265,11 +261,11 @@ const resendOtp = async(req,res)=>{
 
     const userEmail = req.session.forGetEmail
 
-    console.log(userEmail)
+ 
    
     const resendOtp = await emailOtp(userEmail)
   
-    console.log(`resend otp ${resendOtp}`)
+   
     req.session.otp = resendOtp
     req.session.save()
 
@@ -286,7 +282,7 @@ async function referralCodeUser(referralCodeId,req){
 
   try{
     
-    console.log(`req reached referralCodeUser`)
+   
 
     let userReferal = referralCodeId.toLowerCase()
     const userCReferralCode = await userdata.findOne({referralCode:userReferal})
@@ -323,7 +319,7 @@ async function referralCodeUser(referralCodeId,req){
 const otpvalue = async (req,res)=>{
 
   try{
-    console.log(`req reached otpvalue`)
+
     const otp = Number(req.params.id)
     const genOtp = Number(req.session.otp) 
   
@@ -417,7 +413,7 @@ const emailOtp = async (email) => {
 
 
   try {
-    console.log(email)
+   
     const emailID = email;
 
     const transport = nodemailer.createTransport({
@@ -427,7 +423,7 @@ const emailOtp = async (email) => {
         pass: "kmim xnpj piul qyto",
       },
     });
-    console.log(`transPort ${transport}`)
+  
     const otp = Math.floor(100000 + Math.random() * 900000);
 
     const mailOptions = {
@@ -437,8 +433,7 @@ const emailOtp = async (email) => {
       text: `Your OTP IS:${otp}`,
     };
 
-    console.log(`from email gentrate`)
-    console.log(otp)
+   
     //Send the email
 
 
@@ -475,12 +470,12 @@ const signUp = async(req,res)=>{
   try{
           const emailExcisting = await userdata.findOne({userEmail:req.body.userEmail})
 
-          console.log(`emailExcisting \n${emailExcisting}`)
+          
           if(!emailExcisting){
 
             const pass = await bcrypt.hash(req.body.userPassword,10)
 
-            console.log(req.body.userCReferralCode)
+          
             const userData = {
                        firstName : req.body.firstName,
                        lastName : req.body.lastName,
@@ -490,7 +485,7 @@ const signUp = async(req,res)=>{
                       
             }
             const otp = await emailOtp(req.body.userEmail)
-            console.log(`otp value ${otp}`)
+          
             req.session.otp = otp
             req.session.userData = userData
             req.session.otpPageGet = true
@@ -514,7 +509,7 @@ const signUp = async(req,res)=>{
 const registerPage = async (req, res) => {
   try {
     req.session.referralCode = req.query?.referralCode
-console.log(req.session.referralCode)
+
     req.session.emailExcisting;
     req.session.save()
     res.render("auth/register",{emailExcisting:req.session.emailExcisting});

@@ -240,7 +240,7 @@ async   function loadFile(event) {
       const files = event.target.files;
       if (files.length > maxImages) {
         
-        alert(`Please select only up to ${maxImages} images.`);
+        // alert(`Please select only up to ${maxImages} images.`);
         document.getElementById("image").value = ""; // Clear the file input
         return;
       }
