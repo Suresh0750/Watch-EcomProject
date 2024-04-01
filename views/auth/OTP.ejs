@@ -167,7 +167,28 @@
             </div>
         </div>
         <!--End Header-->
-
+  <!--Mobile Menu-->
+  <div class="mobile-nav-wrapper" id="open-nav" role="navigation">
+    <div class="closemobileMenu" id="closeBar"><i class="icon anm anm-times-l pull-right"></i> Close Menu</div>
+    <ul id="MobileNav" class="mobile-nav">
+        <li class="lvl1 parent megamenu"><a href="/">Home</a>
+    
+    </li>
+      
+        <li class="lvl1 parent megamenu"><a href="/categories">Product </a>
+    
+    </li>
+        <li class="lvl1 parent megamenu"><a href="/faq">FAQ </a>
+     
+    </li>
+        <li class="lvl1 parent megamenu"><a href="/about">About </a>
+      
+    </li>
+        <li class="lvl1"><a><b>Buy Now!</b></a>
+    </li>
+  </ul>
+</div>
+<!--End Mobile Menu-->
         <!--Body Content-->
         <div id="page-content" style="background-color: white; padding-top: 7em; ">
             <!--Page Title-->
@@ -416,6 +437,7 @@
                                     showConfirmButton: false,
                                     timer:5000
                                     })
+
                                     window.location.href = "/"
                                     
                             }else{
@@ -423,6 +445,7 @@
                                     icon: 'error',
                                     title: 'Passward wrong',
                                     showConfirmButton: false,
+                                    timer:4000
                                     })
                                 // isWrongOtp= true
                                 

@@ -419,9 +419,11 @@ const emailOtp = async (email) => {
     const transport = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        // user: "skgullfy0718@gmail.com",
-        user: "suresh007inr@gmail.com",
-        pass: "kmim xnpj piul qyto",
+        // user: "skgullfy0718@gmail.com",      
+        // pass: "kmim xnpj piul qyto",
+        user: "suresh007inr@gmail.com",      
+        pass: "mgkq zeeq trdv dysn",
+
       },
     });
   
@@ -434,6 +436,7 @@ const emailOtp = async (email) => {
       text: `Your OTP IS:${otp}`,
     };
 
+    console.log(otp)
    
     //Send the email
 
