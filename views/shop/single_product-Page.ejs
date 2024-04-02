@@ -483,7 +483,12 @@
 
 
 <script>
+    let isAliveUser = "<%=isAlive%>"
     async function whishlist(id){
+
+        if(!isAliveUser){
+            window.location.href = "/login"               // not account user redirect to login page
+        }
 
         // alert('ghj')
         const data = await fetch(`/user/addWhishlist`,{
@@ -527,6 +532,12 @@
     let cartQuantity = "<%=productQuantity%>"       // user cartcollection user cartQuantity
     const productStock = "<%=productDetails[0].productStock%>"
 async function addCart(id){
+
+
+    
+    if(!isAliveUser){                                   // not account user redirect to login page
+            window.location.href = "/login"
+        }
             
       const qty ={}
 

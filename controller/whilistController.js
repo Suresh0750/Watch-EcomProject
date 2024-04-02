@@ -8,7 +8,6 @@ const cartModel = require("../models/cartModel")
 
 //* delete data from whishlist 
 
-
 const deleteDataWhishlist = async (req,res)=>{
 
   try{
@@ -171,7 +170,20 @@ const addWhishlist = async (req,res)=>{
 
       const userWhishlist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId}).populate('whishlist.productId')
 
-      res.render("user/wishlist",{isAlive:req.session.userIsthere,userWhishlist})
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId})
+
+       NofWhilist = (NofWhilist.whishlist).length
+      }else{
+
+         NofWhilist = 0
+         
+      }
+
+      res.render("user/wishlist",{isAlive:req.session.userIsthere,userWhishlist,NofWhilist})
 
     }catch(err){
 

@@ -7,7 +7,8 @@ const bcrypt = require("bcrypt")
 const walletModel = require("../models/WalletModel")
 const productCollection = require("../models/productModel")
 const { generatevoice } = require("../service/genertePDF.js");
-
+const whishlistCollection = require("../models/whislistModel")
+const cartCollection = require("../models/cartModel")
 
 //*downloadInvoice
 
@@ -48,10 +49,24 @@ const wallet =  async (req,res)=>{
         const userDetail = await userCollection.findById({_id:userId})
 
         const userWallet = await walletModel.findOne({userId:userId}) 
+
+        
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
         console.log(userDetail)
         console.log(userWallet)
         const walletBalance = userWallet?.walletBalance ?? 0
-        res.render("user/wallet",{isAlive:req.session.userIsthere,userDetail,walletBalance})
+        res.render("user/wallet",{isAlive:req.session.userIsthere,userDetail,walletBalance,NofWhilist})
 
     }catch(err){
 
@@ -185,7 +200,20 @@ const orderDetails = async (req,res)=>{
    
         const user = await userCollection.findById({_id:orderDetail.userId})
         
-        res.render("user/single-order",{isAlive:req.session.userIsthere,order:orderDetail,user})
+        
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        res.render("user/single-order",{isAlive:req.session.userIsthere,order:orderDetail,user,NofWhilist})
     }catch(err){
         console.log(`Error from orderDetails ${err}`)
     }
@@ -211,8 +239,20 @@ const allOrders = async(req,res)=>{
         count = await orderData.find({userId:userId}).countDocuments()
 
 
+        let NofWhilist 
 
-        res.render("user/userOrder",{isAlive:req.session.userIsthere,orderDetails,count,limit,page})
+        if(req.session.userIsthere){
+  
+         NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+  
+
+        }else{
+  
+           NofWhilist = 0
+  
+        }
+
+        res.render("user/userOrder",{isAlive:req.session.userIsthere,orderDetails,count,limit,page,NofWhilist})
 
     }catch(err){
         console.log(`Error form allOrders ${err} `)
@@ -251,7 +291,21 @@ const userOTPpage = async (req,res)=>{
 
     try{
         req.session.isWrongOtp;
-        res.render("user/userOTP",{isAlive:req.session.userIsthere,isWrongOtp:req.session.isWrongOtp})
+
+        
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        res.render("user/userOTP",{isAlive:req.session.userIsthere,isWrongOtp:req.session.isWrongOtp,NofWhilist})
         req.session.isWrongOtp = false
     }catch(err){
 
@@ -304,8 +358,22 @@ const editProfile = async(req, res)=>{
     try{
         const id = req.params.id
         const profileDetails = await userCollection.findOne({_id:id})
+
         
-        res.render("user/editProfile",{isAlive:req.session.userIsthere,profileDetails})
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        
+        res.render("user/editProfile",{isAlive:req.session.userIsthere,profileDetails,NofWhilist})
     }catch(err){
 
         console.log(`Error from editProfile function ${err}`)
@@ -352,7 +420,20 @@ const changePassword = async (req,res)=>{
     try{
         const {userId} = req.session.userIsthere
   
-        res.render("user/changePassUser",{userId})
+        
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        res.render("user/changePassUser",{userId,NofWhilist})
 
     }catch(err){
         console.log(`Error from changePassword ${err}`)
@@ -384,7 +465,21 @@ const editAddress = async (req,res)=>{
     try{
         const id= req.params.id
         const address = await AddressModel.findOne({_id:id})
-        res.render("user/editAddress",{isAlive:req.session.userIsthere,address})
+
+        
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        res.render("user/editAddress",{isAlive:req.session.userIsthere,address,NofWhilist})
 
     }catch(err){
         console.log(`Error from editAddress ${err}`)
@@ -420,7 +515,20 @@ const myAddress = async (req,res)=>{
 
         const userAddress = await  AddressModel.find({user_id:userId})
 
-        res.render("user/myAddress",{isAlive:req.session.userIsthere,userAddress})
+        
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        res.render("user/myAddress",{isAlive:req.session.userIsthere,userAddress,NofWhilist})
 
 
     }catch(err){
@@ -463,8 +571,20 @@ const addAddressData = async (req,res)=>{
 const addAddress = async (req,res)=>{
 
     try{
+        
+      let NofWhilist 
 
-        res.render("user/addAddress",{isAlive:req.session.userIsthere})
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        res.render("user/addAddress",{isAlive:req.session.userIsthere,NofWhilist})
 
     }catch(err){
 
@@ -483,8 +603,20 @@ const profile = async (req,res)=>{
         console.log(req.session.userIsthere)
         const profileDetails = await userCollection.findOne({_id:req.session?.userIsthere?.userId})
         console.log(profileDetails)
+        
+      let NofWhilist 
 
-        res.render("user/profile",{isAlive:req.session.userIsthere,profileDetails})
+      if(req.session.userIsthere){
+
+       NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+        res.render("user/profile",{isAlive:req.session.userIsthere,profileDetails,NofWhilist})
     }catch(err){
 
 

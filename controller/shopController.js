@@ -8,6 +8,7 @@ const razorPay = require("razorpay")
 const walletModel = require("../models/WalletModel")
 const coupen = require("../models/couponModel")
 const productOffer = require("../models/productOfferModel")
+const whishlistCollection = require("../models/whislistModel")
 
 const {KeyId,KeySecret} = process.env
 
@@ -94,8 +95,19 @@ async function afterOrderProductdecreas(products){
 const orderReceivedPage = async(req,res)=>{
     try{
         const orderId = await orderModel.findOne({orderNumber:req.session.orderNumber})
+        let NofWhilist 
 
-        res.render("shop/orderReceived",{isAlive:req.session.userIsthere,userOrderNo:req.session.orderNumber,orderId:orderId._id})
+        if(req.session.userIsthere){
+
+         NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+         
+        }else{
+
+           NofWhilist = 0
+
+        }
+        res.render("shop/orderReceived",{isAlive:req.session.userIsthere,userOrderNo:req.session.orderNumber,orderId:orderId._id,NofWhilist})
     }catch(err){
         console.log(`Error from orderReceiedPage ${err}`)
     }
@@ -263,7 +275,20 @@ const checkout = async(req,res)=>{
         checkMinumamAmout[val.couponCode] =  val.minimumPurchase
     })
 
-        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance,coupenData,userId,checkMinumamAmout})
+    let NofWhilist 
+
+        if(req.session.userIsthere){
+
+         NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+         
+        }else{
+
+           NofWhilist = 0
+
+        }
+
+        res.render("shop/checkoutPage",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userAddressDetails,userWalletBalance,coupenData,userId,checkMinumamAmout,NofWhilist})
         req.session.coupen = null
     }catch(err){
         console.log(`Error from checkout Page ${err}`)
@@ -423,8 +448,21 @@ const userCartPage = async (req,res)=>{
 
         let userCartData = await grandTotal(req);
 
+        let NofWhilist 
+
+        if(req.session.userIsthere){
+
+         NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+         
+        }else{
+
+           NofWhilist = 0
+
+        }
+
         console.log(userCartData)
-        res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData})
+        res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData,NofWhilist})
 
     }catch(err){
         console.log(` Error from userCartpage :\n${err}`)
@@ -510,15 +548,37 @@ const singleProduct = async (req,res)=>{
              req.session.newPrice = priceNew
         }
         const categoriesDetail = await categories.find({_id:id})
-        let productQuantity = await cartCollection.findOne({productId:id,userId:req.session?.userIsthere.userId})
 
-        productQuantity = productQuantity?.productQuantity || 0
+        let productQuantity;
+        console.log(req.session.userIsthere)
+        if(req.session?.userIsthere){
+
+            console.log(`req reache if condion`)
+             productQuantity = await cartCollection.findOne({productId:id,userId:req.session?.userIsthere.userId})
+    
+            productQuantity = productQuantity?.productQuantity || 0
+
+        }else {
+            console.log(`req reache if condion`)
+             productQuantity  = 0 
+        }
 
       
+        let NofWhilist 
 
+        if(req.session.userIsthere){
+
+         NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+         
+        }else{
+
+           NofWhilist = 0
+
+        }
 
         req.session?.userIsthere;
-        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session?.userIsthere,productQuantity,priceNew})
+        res.render("shop/single_product-Page",{productDetails,categoriesDetail,isAlive:req.session?.userIsthere,productQuantity,priceNew,NofWhilist})
     }catch(err){
         console.log(`Error from singleProduct ${err}`)
     }
@@ -527,9 +587,24 @@ const singleProduct = async (req,res)=>{
 const landingPage = async (req,res)=>{
 
     try{
+        console.log(`req reached landingPage`)
         const allCatagory =  await categories.find({})
         req.session.userIsthere;
-        res.render("shop/index",{isAlive:req.session.userIsthere,allCatagory})
+        let NofWhilist 
+
+        if(req.session.userIsthere){
+            console.log(req.session.userIsthere)
+
+         NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0 ?? 0
+            console.log(JSON.stringify(NofWhilist))
+         
+
+        }else{
+
+           NofWhilist = 0
+
+        }
+        res.render("shop/index",{isAlive:req.session.userIsthere,allCatagory,NofWhilist,NofWhilist})
     }catch(err){
         console.log(`Error from landingPage ${err}`)
     }
@@ -850,10 +925,21 @@ const categoriesProduct = async (req,res)=>{
 
                 productDetail = await sortCategory(req,productDetail,gte,lte,skip,limit)
             }
-          
+            let NofWhilist 
+
+            if(req.session.userIsthere){
+    
+             NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+    
+             
+            }else{
+    
+               NofWhilist = 0
+    
+            }
             req.session.sortPrice
            
-            res.render("shop/categories",{productDetail,isAlive:req.session.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:req.session.categorie,sort:req.session.sortPrice,page})
+            res.render("shop/categories",{productDetail,isAlive:req.session.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:req.session.categorie,sort:req.session.sortPrice,page,NofWhilist})
              
         }else{
             
@@ -891,10 +977,22 @@ const categoriesProduct = async (req,res)=>{
 
                         productDetail = await sort(req,productDetail,gte,lte,skip,limit)           //* sorting the product
                     }
+                    let NofWhilist 
+
+                    if(req.session.userIsthere){
+
+                    NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+                    
+                    }else{
+
+                    NofWhilist = 0
+
+                    }
 
                    
                     req.session.sortPrice       //* for show to user, if user choose or not the sort 
-                    res.render("shop/categories",{productDetail,isAlive:req.session?.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:"all",sort:req.session.sortPrice,page:req.query.page})
+                    res.render("shop/categories",{productDetail,isAlive:req.session?.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:"all",sort:req.session.sortPrice,page:req.query.page,NofWhilist})
 
                     console.log(`rendered`)
         }
@@ -925,8 +1023,20 @@ const logOut = async(req,res)=>{
 const NoContentPage =  async(req,res)=>{
     try{
 
+        let NofWhilist 
 
-        res.render("shop/404Page",{isAlive:req.session?.userIsthere})
+        if(req.session.userIsthere){
+
+         NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+         
+        }else{
+
+           NofWhilist = 0
+
+        }
+
+        res.render("shop/404Page",{isAlive:req.session?.userIsthere,NofWhilist})
     }catch(err){
         console.log(`Error from NoContentPage`)
     }

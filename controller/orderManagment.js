@@ -69,7 +69,7 @@ const orderStatus = async (req,res)=>{
 
 
 
-        res.render("admin/orderStatus",{orderData})
+        res.render("Admin/orderStatus",{orderData})
         
     }catch (err){
         console.log(`Error from orderStatus ${err}`)
@@ -94,7 +94,7 @@ const orderManagement = async (req,res)=>{
          count = await orderCollection.find({}).countDocuments()
         console.log(OrderDetails)
        
-        res.render("admin/orderManagment",{OrderDetails,count,limit})
+        res.render("Admin/orderManagment",{OrderDetails,count,limit})
 
     }catch(err){
 

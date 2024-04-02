@@ -5,8 +5,8 @@ const wallet = require('../models/WalletModel')
 
 const nodemailer = require("nodemailer");
 const productCollection = require("../models/productModel")
-
-
+const whishlistCollection = require("../models/whislistModel")
+const cartCollection = require("../models/cartModel")
 
 
 
@@ -42,12 +42,38 @@ const admin = async(req,res)=>{
     if(req.session.isAdmin)
     {
       const productData = await productCollection.find({isListed:true})
+
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+       
+      }else{
+
+         NofWhilist = 0
+
+      }
       
-      res.render("Admin/adminIndex",{productData})
+      res.render("Admin/adminIndex",{productData,NofWhilist})
     }else{
       
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+       
+      }else{
+
+         NofWhilist = 0
+
+      }
+
       req.session.isnotCorrect;
-      res.render("auth/adminLogin",{isnotCorrect:req.session.isnotCorrect})
+      res.render("auth/adminLogin",{isnotCorrect:req.session.isnotCorrect,NofWhilist})
       req.session.isnotCorrect = false;
       req.session.save()
 
@@ -86,7 +112,19 @@ const confirmPass = async(req,res)=>{
     req.session.forGetEmail  = null         // forget pass of email 
 
     req.session.isSuccessOtp = null
-    res.render("auth/changePassword")
+    let NofWhilist 
+
+    if(req.session.userIsthere){
+
+     NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+     
+    }else{
+
+       NofWhilist = 0
+
+    }
+    res.render("auth/changePassword",{NofWhilist})
 
   }
 
@@ -138,7 +176,20 @@ const forgetOtp = async(req,res)=>{
       req.session.isWrongOtp;
       isWrongOtp = req.session.isWrongOtp                
       req.session.save()
-      res.render("auth/forgotPasswordOtp",{isWrongOtp})
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+       
+      }else{
+
+         NofWhilist = 0
+
+      }
+
+      res.render("auth/forgotPasswordOtp",{isWrongOtp,NofWhilist})
     }
 
   }catch(err){
@@ -241,9 +292,22 @@ const userLogin = async (req, res) => {
 //login render
 const loginPage = async (req, res) => {
   try {
+    let NofWhilist 
+
+    if(req.session.userIsthere){
+
+     NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+     
+    }else{
+
+       NofWhilist = 0
+
+    }
+
     req.session.isUserBlock;
     req.session.isLoginFail;// user email or password error
-    res.render("auth/login",{isLoginFail:req.session.isLoginFail,isUserBlock:req.session.isUserBlock});
+    res.render("auth/login",{isLoginFail:req.session.isLoginFail,isUserBlock:req.session.isUserBlock,NofWhilist});
     req.session.isUserBlock = false
     req.session.isLoginFail =false;
     req.session.save()
@@ -430,7 +494,7 @@ const emailOtp = async (email) => {
     const otp = Math.floor(100000 + Math.random() * 900000);
 
     const mailOptions = {
-      from: "skgullfy0718@gmail.com",
+      from: "suresh007inr@gmail.com",
       to: emailID,
       subject: "OTP Verification",
       text: `Your OTP IS:${otp}`,
@@ -457,7 +521,19 @@ const otpPage = async (req, res) => {
     
     if(req.session.otpPageGet){
       req.session.isWrongOtp;
-      res.render("auth/OTP",{isWrongOtp:req.session.isWrongOtp})
+      let NofWhilist 
+
+      if(req.session.userIsthere){
+
+       NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+       
+      }else{
+
+         NofWhilist = 0
+
+      }
+      res.render("auth/OTP",{isWrongOtp:req.session.isWrongOtp,NofWhilist})
       req.session.otpPageGet = null // dont access url path
       req.session.save()
     }
@@ -516,7 +592,20 @@ const registerPage = async (req, res) => {
 
     req.session.emailExcisting;
     req.session.save()
-    res.render("auth/register",{emailExcisting:req.session.emailExcisting});
+    let NofWhilist 
+
+    if(req.session.userIsthere){
+
+     NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+     
+    }else{
+
+       NofWhilist = 0
+
+    }
+
+    res.render("auth/register",{emailExcisting:req.session.emailExcisting,NofWhilist});
     req.session.emailExcisting = false;
     req.session.save()
   } catch (err) {
@@ -530,7 +619,20 @@ const forgetPage = async (req, res) => {
   try {
     req.session.invalidEmail;
     req.session.save()
-    res.render("auth/Forgot password",{invalidEmail:req.session.invalidEmail});
+    let NofWhilist 
+
+    if(req.session.userIsthere){
+
+     NofWhilist = await  cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0
+
+     
+    }else{
+
+       NofWhilist = 0
+
+    }
+
+    res.render("auth/Forgot password",{invalidEmail:req.session.invalidEmail,NofWhilist});
     req.session.invalidEmail = false
   } catch (err) {
     console.log(`err from forgetPage\n ${err}`);
