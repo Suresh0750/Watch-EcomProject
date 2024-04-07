@@ -31,4 +31,9 @@ router.post("/adminData",authController.adminVerfy)
 
 
 
+// //* google authendication
+
+router.get("/googleLogin",authController.googleLogin)
+router.get("/googleLoginFail",authController.googleLoginFail)
+
 module.exports = router

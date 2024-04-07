@@ -170,7 +170,94 @@ const returnOrder = async (req,res)=>{
     }
 }
 
+//* singleOrderCancel
 
+const singleOrderCancel = async(req,res)=>{
+    try{
+
+        console.log(`req reached singleOrderCancel`)
+
+        console.log(req.body)
+
+        const order = await orderData.findById({_id:req.body.orderId})
+
+        await orderData.updateOne({"cartData._id":req.body.singleOrderId},{$set:{"cartData.$.singleOrderstatus":"Cancelled"}})   //* single order cancel 
+
+
+
+
+        // * if every single product order cancell we want to update main order cancell
+
+        const orderStatusUpdate = await orderData.findById({_id:req.body.orderId})
+
+        const cartLength = (orderStatusUpdate.cartData).length
+
+        let count = 0 
+        orderStatusUpdate.cartData.forEach((val)=>{
+
+            if(val.singleOrderstatus == "Cancelled"){
+
+                count++
+
+            }
+
+        })
+
+        if(count == cartLength){
+
+
+            await orderData.updateOne({_id:req.body.orderId},{$set:{orderStatus:"Cancelled"}})
+
+        }
+
+
+
+        let singleOrderId = req.body.singleOrderId
+
+        const userId = req.session?.userIsthere?.userId
+
+       // * update single order amount to the wallet 
+        let paymentType = order.paymentType
+       if( paymentType !== "Cash on Delivery"){
+
+           order.cartData.forEach(async (val)=>{
+               
+               if(val._id == singleOrderId){
+                   
+               let amount = val.totalCastPerproduct
+   
+               let storeWalletTransaction = {
+                   transactionAmount :amount,
+                   transactionType : paymentType,
+                   message : "Singleorder-Cancelled"
+               }
+               
+                await walletModel.updateOne(
+                           { userId:userId },
+                           {
+                           $push: {
+                               walletTransaction: storeWalletTransaction
+                           },
+                           $inc: { walletBalance: amount } // Assuming 'balance' is the numeric field you want to increment
+                           }
+                       )
+                 
+   
+               }
+           })
+
+       }
+
+        console.log(JSON.stringify(order))
+        
+        res.status(200).send({success:true})
+
+    }catch (err){
+
+        res.status(500).send({success:false})
+        console.log(`Error from singleOrderCancel router ${err}`)
+    }
+}
 
 // user cancel the order
 
@@ -178,12 +265,18 @@ const cancelorder = async (req,res)=>{
 
     try{
 
-        console.log(req.method)
-        console.log(req.body)
+
+        let orderProduct = await orderData.findById({_id:req.body.orderId})
+
+        if(orderProduct.paymentType == "Razorpay" || orderProduct.paymentType == "Wallet"){
+
+           await walletModel.updateOne({userId:orderProduct.userId},{$inc:{walletBalance:orderProduct.grandTotalCost}})
+        }
 
         await orderData.findByIdAndUpdate({_id:req.body.orderId},{orderStatus:"Cancelled"})
 
         res.status(200).send({success:true})
+
     }catch (err){
         console.log(`Error from cancelorder ${err}`)
     }
@@ -628,6 +721,7 @@ const profile = async (req,res)=>{
 
 
 module.exports = {
+    singleOrderCancel,          //* singleOrderCancel cancel
     downloadInvoice,
     wallet,                     //wallet
     returnOrder,                // returnOrder 

@@ -52,7 +52,15 @@ async function afterOrderProductdecreas(products){
          
     
             const userCartdelete = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
-      
+
+              //* give one field for cancel the order
+
+              userCartdelete.forEach((val)=>{
+                           
+                val.singleOrderstatus = "Pending"
+                
+            })
+
             const userOrder = req.session.orderDetail
     
           
@@ -150,6 +158,17 @@ const orderReceived = async (req,res)=>{
 
          
             const userCartdelete = await JSON.parse(JSON.stringify(await cartCollection.find({userId:userId}).populate("productId")))
+
+            //* give one field for cancel the order
+
+            userCartdelete.forEach((val)=>{
+                           
+                val.singleOrderstatus = "Pending"
+                
+            })
+                        console.log(`88888888888888`)
+            console.log(JSON.stringify(userCartdelete))
+            console.log(`88888888888888`)
    
             const orderUser = {
                 userId: userId,
@@ -167,7 +186,9 @@ const orderReceived = async (req,res)=>{
             req.session.orderNumber = orderUser.orderNumber          //* user order No
                             
     
-            await orderModel(orderUser).save()
+         const orderOne =   await orderModel(orderUser).save()
+
+         console.log(JSON.stringify(orderOne))
     
             await  userCartdelete.map(async(data)=>{
                     await cartCollection.findByIdAndDelete({_id:data._id})
@@ -793,36 +814,7 @@ const categoriesFilter = async (req,res)=>{
                 i++
 
             }
-
-
             
-        //   const producMax =   await product. aggregate([
-        //                                             {$match:{parentCategory:req.session.categorie}},
-        //                                             { $group: { _id: null, maxField: { $max: "$productPrice" } } }
-        //                                             ,
-        //                                             {$project:{_id:0,maxField:1}}
-                                                    
-        //                                         ])
-        //     const producMin =   await product. aggregate([
-        //                                             {$match:{parentCategory:req.session.categorie}},
-        //                                             { $group: { _id: null, minField: { $min: "$productPrice" } } }
-        //                                             ,
-        //                                             {$project:{_id:0,minField:1}}
-                                                    
-        //                                         ])
-
-
-            // console.log(`=== category sort price====`)
-            // console.log(req.session.categorie)
-            // console.log(producMax)
-            // console.log(producMin)
-
-            // req.session.gte = req.session?.gte || producMin[0]?.minField 
-            // req.session.lte = req.session?.lte || producMax[0]?.maxField
-
-            // console.log(req.session.gte)
-            // console.log(req.session.lte)
-
             req.session.save()
 
            

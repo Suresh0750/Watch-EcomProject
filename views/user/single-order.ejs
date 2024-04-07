@@ -312,7 +312,7 @@
                         <div class="site-cart" style="cursor: pointer; " onclick="viewCart()">
                             <a href="#;" class="site-header__cart" title="Cart">
                                 <i class="icon anm anm-bag-l"></i>
-                                <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">2</span>
+                                <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count"><%=NofWhilist%></span>
                             </a>
                             <!--Minicart Popup-->
                             <div id="header-cart" class="block block-cart">
@@ -599,6 +599,7 @@
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Sub Total</th>
+                            <th>cancel order</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -624,7 +625,17 @@
                                 ₹ 
                                 <%= item.totalCastPerproduct%>
                               </td>
+                              <td>
+                                <%if(item.singleOrderstatus == "Cancelled"){%>
 
+                                <span>cancelled</span>
+
+                                <%}else{%>
+
+                                  <button type="button" class="close" aria-label="Close" onclick="cancelOrder('<%=order._id%>','<%=item._id%>')">
+                                  <span aria-hidden="true">&times;</span>
+                                </button></td>
+                                <%}%>
                             </tr>
                             <%})%>
                         </tbody>
@@ -924,6 +935,75 @@
     </div>
   </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+  async function cancelOrder(orderId,singleOrderId){
+
+    try{
+
+      const id= {orderId,singleOrderId}
+
+
+      Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {          
+          if (result.isConfirmed) {
+
+
+            const id= {orderId,singleOrderId}
+
+            const data = await fetch('/user/singleOrderCancel',{
+              method:'PATCH',
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify(id)
+            })
+      
+            const res = await data.json()
+      
+            if(res.success){
+              
+              await    Swal.fire({
+                    title: "cancel!",
+                    text: "Your file has been cancelled.",
+                    icon: "success"
+                  });
+
+
+                  window.location.reload()
+      
+            }else{
+      
+              await   Swal.fire({
+                                icon: 'error',
+                                title: 'server error',
+                                showConfirmButton: false,
+                                timer: 1500
+                              })
+      
+            }
+           
+          }
+        });
+
+     
+
+    }catch (err){
+
+      console.log(`Error from ejs file single-order id \n ${err}`)
+
+    }
+  }
+</script>
 
 
 <script>

@@ -496,7 +496,7 @@ const grandTotal = document.getElementById("grandTotal")
        }else if(paymentMethod==="Cash on Delivery"){
 
 
-       if(Number(value.grandTotal[0])<=1000){
+       if(Number(value.grandTotal[0])>=5000){
     
              const data = await fetch(`/orderReceived`,{
                  method:"post",
@@ -518,7 +518,7 @@ const grandTotal = document.getElementById("grandTotal")
 
             await    Swal.fire({
                         icon: 'error',
-                        title: 'COD Should be greater than or equel to 1000',
+                        title: 'COD Should be greater than or equel to 5000',
                         showConfirmButton: false,
                         timer: 1500
                     });

@@ -168,15 +168,25 @@ const addWhishlist = async (req,res)=>{
 
     try{
 
-      const userWhishlist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId}).populate('whishlist.productId')
+      console.log(`req endered wishlist page`)
+
+
+      let checkWishlist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId})
+
+      
+ 
+        const userWhishlist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId}).populate('whishlist?.productId')
+      
+
+   
 
       let NofWhilist 
 
       if(req.session.userIsthere){
-
+     
        NofWhilist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId})
 
-       NofWhilist = (NofWhilist.whishlist).length
+       NofWhilist = NofWhilist ? (NofWhilist.whishlist).length : 0;
       }else{
 
          NofWhilist = 0

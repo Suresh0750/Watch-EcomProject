@@ -7,7 +7,73 @@ const nodemailer = require("nodemailer");
 const productCollection = require("../models/productModel")
 const whishlistCollection = require("../models/whislistModel")
 const cartCollection = require("../models/cartModel")
+const passport = require("passport")
 
+
+
+const googleLogin = async(req,res)=>{
+  try{
+
+    console.log(`login succes`)
+    console.log(`***************`)
+    console.log(`***************`)
+    console.log(`***************`)
+    console.log(`***************`)
+    console.log(`***************`)
+    console.log(`***************`)
+    console.log(`***************`)
+    console.log(`***************`)
+    console.log(`***************\n\n\n\n\n\n\n\n\n\n\n\n`)
+
+    const user = req.user.emails
+
+    const userDetails = await userdata.findOne({userEmail:user[0].value})
+
+    if(userDetails.isBlocked == true){
+      req.session.isUserBlock = true
+      req.session.save()
+      res.status(500).send({success:false,isUserBlock:req.session.isUserBlock,isLoginFail:false})
+    }
+
+    if(userDetails && user[0].verified ){
+
+      req.session.userIsthere = {
+        isAlive:true,
+        userName:userDetails.firstName,
+        userId:userDetails._id
+      }
+
+      req.session.save()
+      res.status(200).send({success:true})
+    }else{
+
+      req.session.isLoginFail = true,
+      req.session.save()
+      res.status(500).send({success:false,isLoginFail:true})
+      
+    }
+    console.log(user)
+    console.log(user[0].value)
+    console.log(`***************\n\n\n\n\n\n\n\n\n\n\n\n`)
+    
+
+  }catch(err){
+    console.log(`Error from goolelogin page ${err}`)
+
+  }
+}
+
+const googleLoginFail = async(req,res)=>{
+  try{
+
+    console.log(`login failler`)
+    console.log(req)
+
+  }catch(err){
+    console.log(`Error from goolelogin page ${err}`)
+
+  }
+}
 
 
 // admin verify
@@ -384,6 +450,8 @@ const otpvalue = async (req,res)=>{
 
   try{
 
+    console.log(`req entered otpvalue`)
+
     const otp = Number(req.params.id)
     const genOtp = Number(req.session.otp) 
   
@@ -394,68 +462,72 @@ const otpvalue = async (req,res)=>{
     {
       req.session.otp = null
 
+      console.log(`step1`)
+
       const {firstName,lastName,userMobile,userEmail,userPassword} = req.session.userData
 
  
 
-
+      console.log(`step2`)
      const referralCode  =  Math.random().toString(36).substring(2,7);  // generate random number
-
-     const userExist = await userdata.findOne({userEmail})
-
-
-
-    const userDetail = await userdata.findOne({userEmail:userEmail})
-
-
-
-            //* referalcode add 500 rupees 
-
-            if(req.session?.referralCode){
-    
-              const userReferal = req.session?.referralCode
-              const userCReferralCode = await userdata.findOne({referralCode:userReferal})
-                            
-                const userWallet = await wallet.findOne({userId:userCReferralCode._id})
-
-                
-                if(userWallet){
-
-              
-                  const userIncwallet = await wallet.updateOne({userId:userCReferralCode._id},{$inc:{walletBalance:500}})
-
-
-                }else{
-
-                  const walletUpdateFiels = {
-                    userId:userCReferralCode?._id,
-                    walletBalance:500
-                  }
-
-                  await wallet(walletUpdateFiels).save()
-                }
-
-        
-
-
-
-            req.session.referralCode = null
-            
-          }
-
-          await userdata({firstName,lastName,userMobile,userEmail,userPassword,referralCode}).save()
+     console.log(`step3`)
      
-         req.session.userData = null
-        
-         req.session.userIsthere ={
-           isAlive:true,
-           userName:firstName,
-           userId :userDetail?._id
-         }
+     console.log(`step4`)
 
-         req.session.save()
-
-      return   res.status(200).send({ success: true });
+ 
+      console.log(`---------`)
+       await userdata.create({firstName,lastName,userMobile,userEmail,userPassword,referralCode})
+  
+              //* referalcode add 500 rupees 
+              console.log(`step5`)
+              if(req.session?.referralCode){
+      
+                const userReferal = req.session?.referralCode
+                const userCReferralCode = await userdata.findOne({referralCode:userReferal})
+                              
+                  const userWallet = await wallet.findOne({userId:userCReferralCode._id})
+  
+                  
+                  if(userWallet){
+  
+                
+                    const userIncwallet = await wallet.updateOne({userId:userCReferralCode._id},{$inc:{walletBalance:500}})
+  
+  
+                  }else{
+  
+                    const walletUpdateFiels = {
+                      userId:userCReferralCode?._id,
+                      walletBalance:500
+                    }
+  
+                    await wallet(walletUpdateFiels).save()
+                  }
+  
+          
+  
+  
+  
+              req.session.referralCode = null
+              
+            }
+            console.log(`step6`)
+            const userDetail = await userdata.findOne({userEmail:userEmail})
+            console.log(`step7`)
+           req.session.userData = null
+           console.log(`step8`)
+           req.session.userIsthere ={
+             isAlive:true,
+             userName:firstName,
+             userId :userDetail?._id
+           }
+  
+           req.session.save()
+           console.log(`step9`)
+           await wallet({userId:userDetail?._id}).save()
+           console.log(`step10`)
+        return   res.status(200).send({ success: true });
+     
       
     }else{
   
@@ -534,6 +606,7 @@ const otpPage = async (req, res) => {
 
       }
       res.render("auth/OTP",{isWrongOtp:req.session.isWrongOtp,NofWhilist})
+      req.session.isWrongOtp = false
       req.session.otpPageGet = null // dont access url path
       req.session.save()
     }
@@ -640,6 +713,8 @@ const forgetPage = async (req, res) => {
 };
 
 module.exports = {
+  googleLoginFail,
+  googleLogin ,
   adminVerfy,  // admin verify
   admin, // render admin login Page
   updatePass, // update the forgot Password

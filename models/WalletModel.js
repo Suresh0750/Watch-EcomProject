@@ -7,14 +7,16 @@ const walletSchema= new mongoose.Schema({
         {
             transactionDate: { type: Date, default : new Date()  },
             transactionAmount: { type: Number   },
-            transactionType: { type: String }
+            transactionType: { type: String },
+            message:{type:String}
         }
     ],
     NewTransaction:[
         {
             transactionDate: { type: Date, default : new Date()  },
             transactionAmount: { type: Number  },
-            transactionType: { type: String ,enum : ['Wallet']}
+            transactionType: { type: String ,enum : ['Wallet']},
+            message:{type:String}
         }
     ]
 })

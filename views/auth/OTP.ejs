@@ -71,9 +71,9 @@
                         <!--Desktop Menu-->
                         <nav class="grid__item" id="AccessibleNav"><!-- for mobile -->
                             <ul id="siteNav" class="site-nav medium center hidearrow">
-                                <li class="lvl1 parent megamenu"><a href="index.html">Home <i class="anm anm-angle-down-l"></i></a>
+                                <li class="lvl1 parent megamenu"><a href="">Home <i class="anm anm-angle-down-l"></i></a>
                                 </li>
-                                <li class="lvl1 parent megamenu"><a href="categories.html">Product <i class="anm anm-angle-down-l"></i></a></li>
+                                <li class="lvl1 parent megamenu"><a href="/categories">Product <i class="anm anm-angle-down-l"></i></a></li>
                                 <li class="lvl1 parent megamenu"><a href="./faqs.html">Faq <i class="anm anm-angle-down-l"></i></a>
                                 </li>
                                 <li class="lvl1 parent dropdown"><a href="./about-us.html">About <i class="anm anm-angle-down-l"></i></a>                                               </li>
@@ -95,7 +95,7 @@
                         <div class="site-cart">
                             <a href="#;" class="site-header__cart" title="Cart">
                                 <i class="icon anm anm-bag-l"></i>
-                                <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">2</span>
+                                <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">0</span>
                             </a>
                             <!--Minicart Popup-->
                             <div id="header-cart" class="block block-cart">
@@ -401,59 +401,69 @@
                 
                 const OtpValue = document.getElementById("OtpValue")
                 
-                console.log(OtpValue)
+                let c = 0
                 
                 OtpValue.addEventListener("keyup",async (event)=>{
                     
+                    event.preventDefault()
                     const btn = document.getElementById("btnOtp")
                     
+                   
+
+                    if(c === 0){
+                        
                     if(OtpValue.value.length === 6 && btn.value == "Verify OTP"){
                         
-                        
-                        
+
+                            c++
+                            
                         btn.addEventListener("click", async (e)=>{
 
                             e.preventDefault()
                             
                             OtpNum = OtpValue.value
-                            console.log(`${OtpNum}`)
-                            
-                            const data = await fetch(`/otpValue${OtpNum}`,{
-                                                method:"POST",
-                                                headers:{
-                                                    "Content-Type":"application/json"
-                                                },
-                                                body:JSON.stringify({OtpNum})
-                                            })
-                            
-                            console.log(`fectch response ${data}`)
-                            
-                            const json = await data.json();
-                            
-                            if (json.success) {
-                            await   Swal.fire({
-                                    icon: 'success',
-                                    title: 'OTP success',
-                                    showConfirmButton: false,
-                                    timer:5000
-                                    })
-
-                                    window.location.href = "/"
-                                    
-                            }else{
-                             await   Swal.fire({
-                                    icon: 'error',
-                                    title: 'Passward wrong',
-                                    showConfirmButton: false,
-                                    timer:4000
-                                    })
-                                // isWrongOtp= true
-                                
-                            }
-                            
-                            
-                        })
                         
+
+                                const data = await fetch(`/otpValue${OtpNum}`,{
+                                                    method:"POST",
+                                                    headers:{
+                                                        "Content-Type":"application/json"
+                                                    },
+                                                    body:JSON.stringify({OtpNum})
+                                                })
+                                
+                                
+                               
+                                
+                                const json = await data.json();
+                                
+                                if (json.success) {
+
+                                await   Swal.fire({
+                                        icon: 'success',
+                                        title: 'OTP success',
+                                        showConfirmButton: false,
+                                        timer:5000
+                                        })
+    
+                                        window.location.href = "/"
+                                        
+                                }else{
+                                 await   Swal.fire({
+                                        icon: 'error',
+                                        title: 'Passward wrong',
+                                        showConfirmButton: false,
+                                        timer:4000
+                                        })
+                                    // isWrongOtp= true
+                                    
+                                }
+
+
+                                c=0                            
+                        })
+                    
+                        }
                     }
                     
                 })
