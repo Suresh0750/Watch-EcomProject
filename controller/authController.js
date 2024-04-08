@@ -14,47 +14,47 @@ const passport = require("passport")
 const googleLogin = async(req,res)=>{
   try{
 
-    console.log(`login succes`)
-    console.log(`***************`)
-    console.log(`***************`)
-    console.log(`***************`)
-    console.log(`***************`)
-    console.log(`***************`)
-    console.log(`***************`)
-    console.log(`***************`)
-    console.log(`***************`)
-    console.log(`***************\n\n\n\n\n\n\n\n\n\n\n\n`)
-
     const user = req.user.emails
 
     const userDetails = await userdata.findOne({userEmail:user[0].value})
 
-    if(userDetails.isBlocked == true){
-      req.session.isUserBlock = true
-      req.session.save()
-      res.status(500).send({success:false,isUserBlock:req.session.isUserBlock,isLoginFail:false})
-    }
+    if(userDetails){
 
-    if(userDetails && user[0].verified ){
-
-      req.session.userIsthere = {
-        isAlive:true,
-        userName:userDetails.firstName,
-        userId:userDetails._id
+      if(userDetails?.isBlocked == true){
+        req.session.isUserBlock = true
+        req.session.isLoginFail = false
+        req.session.save()
+        res.redirect("/login")
       }
-
-      req.session.save()
-      res.status(200).send({success:true})
+  
+      if(userDetails && user[0].verified ){
+  
+        req.session.userIsthere = {
+          isAlive:true,
+          userName:userDetails.firstName,
+          userId:userDetails._id
+        }
+  
+        req.session.save()
+        res.redirect("/")
+    
+      }else{
+  
+        req.session.isLoginFail = true,
+        req.session.save()
+        res.redirect("/login")
+  
+      }
     }else{
 
+      
       req.session.isLoginFail = true,
       req.session.save()
-      res.status(500).send({success:false,isLoginFail:true})
+
+      res.redirect("/login")
       
     }
-    console.log(user)
-    console.log(user[0].value)
-    console.log(`***************\n\n\n\n\n\n\n\n\n\n\n\n`)
+
     
 
   }catch(err){
@@ -65,9 +65,11 @@ const googleLogin = async(req,res)=>{
 
 const googleLoginFail = async(req,res)=>{
   try{
+      
+    req.session.isLoginFail = true,
+    req.session.save()
 
-    console.log(`login failler`)
-    console.log(req)
+    res.redirect("/login")
 
   }catch(err){
     console.log(`Error from goolelogin page ${err}`)

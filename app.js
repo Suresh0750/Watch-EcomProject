@@ -39,7 +39,7 @@ app.use(passport.session())
 passport.use(new GoogleStrategy({
     clientID: process.env.clientID,
     clientSecret: process.env.clientSecret,
-    callbackURL:'http://localhost:3000/google/callback',
+    callbackURL:process.env.callbackURL,
     passReqToCallback:true
 },(req,accessToken,refreshToken,profile,done)=>{
     try{
