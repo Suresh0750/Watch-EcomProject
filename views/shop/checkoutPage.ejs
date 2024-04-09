@@ -480,6 +480,13 @@ const grandTotal = document.getElementById("grandTotal")
 
        if(paymentMethod === "Razorpay"){
 
+        let c = 0       //* for handle the reqest its coming twice to the backend
+
+
+        if(c == 0){
+
+            c++
+
             const genOrder = await fetch('/genOrder',{
                 method:"POST",
                 headers:{
@@ -487,11 +494,15 @@ const grandTotal = document.getElementById("grandTotal")
                 },
                 body:JSON.stringify(value)
             })
-
+    
             const order = await genOrder.json()
             
+            c = 0
           
             await openRazorpay(value.grandTotal,order.id)
+            
+        }
+
 
        }else if(paymentMethod==="Cash on Delivery"){
 

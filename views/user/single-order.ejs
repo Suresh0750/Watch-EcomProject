@@ -697,22 +697,19 @@
                       <h4 class="panel-title">Payment Method</h4>
                     </div>
                     <div class="panel-body">
-                      <!-- < if( order.paymentType=='cod' ){ > -->
-                      <%if( true ){%>
+                      <%if( order.paymentType=='Cash on Delivery' ){%>
                         <address>
                           <span>Cash on delivery</span>
                         </address>
-                        <!-- < } else if(order.paymentType=='Razopay' ) { > -->
-                        <%} else if(false ) {%>
+                        <%} else if(order.paymentType=='Razorpay' ) {%>
                           <address>
-                            <span>Razopay</span>
+                            <span>Razorpay</span>
                           </address>
-                          <!-- < }else{ > -->
-                          <%}else if(false){%>
+                        <%}else if(Wallet){%>
                             <address>
                               <span>Wallet</span>
                             </address>
-                            <% } %>
+                        <%}%>
                     </div>
                   </div>
                 </div>
@@ -729,14 +726,12 @@
                   </div>
                 </div>
                 <div class="col-12">
-                  <!-- < if( order.orderStatus=="Delivered" ){ %> -->
-                  <%if(false){ %>
-
+                  <%if( order.orderStatus=="Delivered" ){%>
                     <div class="btn-group" role="group" aria-label="...">
-                      <button type="button" class="btn btn-default">Print</button>
-                      <a href="/invoice/<%= order._id%>" class="btn btn-default">Download Invoice</a>
+                      <!-- <button type="button" class="btn btn-default">Print</button> -->
+                      <a href="/user/downloadInvoice<%=order._id%>" class="btn btn-default">Download Invoice</a>
                     </div>
-                  <% } %>
+                  <%}%>
                     <div class="">
                       <a class='btn btn-primary' href='/user/orders'>Back to order details</a>
                     </div>

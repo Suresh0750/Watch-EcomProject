@@ -62,9 +62,8 @@ async function afterOrderProductdecreas(products){
             })
 
             const userOrder = req.session.orderDetail
-    
-          
 
+        
             const orderUser = {}
 
             orderUser.userId= userId,
