@@ -92,9 +92,6 @@ async function returnProductIncproductStock(productReturn){
                                     await productCollection.findByIdAndUpdate({_id:data.productId._id},{$inc:{productStock:data.productQuantity,productSold:-data.productQuantity}})
                            
                                 })
-
-
-
 }
 
 //returnOrder
@@ -109,8 +106,7 @@ const returnOrder = async (req,res)=>{
         const price = req.body.price
         const orderRetrun =  await orderData.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
 
-        console.log(`----------After returning the product we want increase quenty----------------`)
-        console.log(orderRetrun)
+        
 
 
         returnProductIncproductStock(orderRetrun)              // return product 
@@ -120,16 +116,29 @@ const returnOrder = async (req,res)=>{
         console.log(userId)
         const userWallet = await walletModel.findOne({userId:userId})
 
-        console.log("userWallet\n",userWallet)
+       
 
         if(userWallet){
-            console.log(`==========`)
-            const transactionAmount = orderRetrun.grandTotalCost
+            
+
+            let amount = 0
+            orderRetrun.cartData.forEach(async(val)=>{
+
+                if(val.singleOrderstatus !="Cancelled" && val.singleOrderstatus != "Return"){
+
+                    amount+=val.totalCastPerproduct
+                }
+
+                await orderData.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Return"}})   //* single order update "Redurn" for showing the user 
+
+            })
+            
             const transactionType = orderRetrun.paymentType
 
             const returnAmount ={
-                transactionAmount:transactionAmount,
-                transactionType,transactionType
+                transactionAmount:amount,
+                transactionType :transactionType,
+                message:"order-Retrun"
             }
 
            const pushOrder = await walletModel.findByIdAndUpdate({_id:userWallet._id},{$push:{walletTransaction:returnAmount}})
@@ -142,7 +151,13 @@ const returnOrder = async (req,res)=>{
                 balance+=val.transactionAmount
                
             })
+            let decBalance = 0
+            walletBalance.NewTransaction.forEach((val)=>{
 
+                decBalance+=Number(val.transactionAmount) 
+
+            }) 
+            balance-=decBalance
             await walletModel.findByIdAndUpdate({_id:userWallet._id},{walletBalance:balance})
             res.status(200).send({success:true})
 
@@ -259,18 +274,98 @@ const singleOrderCancel = async(req,res)=>{
     }
 }
 
+
+const singleOrderReturn = async(req,res)=>{
+
+    try{
+        console.log(`req reached cancelorder`)
+
+        const singleOrderId = req.body.singleOrderId 
+        console.log(singleOrderId)
+
+        const orderDetails = await orderData.findById({_id:req.body.orderId})
+
+        let amount;
+        orderDetails.cartData.forEach(async(val)=>{
+
+            if(val._id == singleOrderId ){
+                        
+                amount = val.totalCastPerproduct
+                await orderData.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Return"}})   //* single order cancel 
+                
+            }
+
+        })
+
+        let storeWalletTransaction = {
+            transactionAmount :amount,
+            transactionType : orderDetails.paymentType,
+            message : "singleOrder-Retrun"
+        }
+        
+         await walletModel.updateOne(
+                    { userId:orderDetails.userId },
+                    {
+                    $push: {
+                        walletTransaction: storeWalletTransaction
+                    },
+                    $inc: { walletBalance: amount } // Assuming 'balance' is the numeric field you want to increment
+                    }
+                )
+        
+        res.status(200).send({success:true})
+
+    }catch(err){
+
+        res.status(500).send({success:false})
+        console.log(`Error from singleOrderReturn`)
+
+    }
+}
+
 // user cancel the order
 
 const cancelorder = async (req,res)=>{
 
     try{
 
+        console.log(`req reached cancelorder`)
 
         let orderProduct = await orderData.findById({_id:req.body.orderId})
 
+        console.log(JSON.stringify(orderProduct))
+
         if(orderProduct.paymentType == "Razorpay" || orderProduct.paymentType == "Wallet"){
 
-           await walletModel.updateOne({userId:orderProduct.userId},{$inc:{walletBalance:orderProduct.grandTotalCost}})
+            let amount = 0
+            orderProduct.cartData.forEach(async (val)=>{
+                    
+                    if(val.singleOrderstatus == "Pending"){
+                        
+                        amount+=val.totalCastPerproduct
+
+                        await orderData.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Cancelled"}})   //* single order cancel 
+                        
+                    }
+                })
+
+        //    await walletModel.updateOne({userId:orderProduct.userId},{$inc:{walletBalance:amount}})
+
+           let storeWalletTransaction = {
+            transactionAmount :amount,
+            transactionType : orderProduct.paymentType,
+            message : "order-Cancelled"
+        }
+        
+         await walletModel.updateOne(
+                    { userId:orderProduct.userId },
+                    {
+                    $push: {
+                        walletTransaction: storeWalletTransaction
+                    },
+                    $inc: { walletBalance: amount } // Assuming 'balance' is the numeric field you want to increment
+                    }
+                )
         }
 
         await orderData.findByIdAndUpdate({_id:req.body.orderId},{orderStatus:"Cancelled"})
@@ -721,6 +816,7 @@ const profile = async (req,res)=>{
 
 
 module.exports = {
+    singleOrderReturn,
     singleOrderCancel,          //* singleOrderCancel cancel
     downloadInvoice,
     wallet,                     //wallet

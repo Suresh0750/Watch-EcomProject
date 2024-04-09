@@ -124,16 +124,20 @@ const orderReceivedPage = async(req,res)=>{
 const orderReceived = async (req,res)=>{
 
     try{
-       
+       console.log(`req reached orderReceived page`)
         const userId = req.session.userIsthere.userId
         if(req.body.paymentMethod === "Wallet"){
 
                 const userWallet =   await walletModel.findOne({userId:userId})
                 
+                req.session.grandTotalUpdate = req.body.grandTotal[0]
+                req.session.save()
+
                 const wallectBalance = userWallet.walletBalance-req.body.grandTotal[0]
                 const transation = {
                     transactionAmount:req.body.grandTotal[0],
-                    transactionType:req.body.paymentMethod
+                    transactionType:req.body.paymentMethod,
+                    message:"product-purchase"
                 }
 
                 //* user order the produnct throught wallect so that information we save in datatbase

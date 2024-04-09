@@ -9,42 +9,90 @@ const orderCollection = require("../models/orderModel")
 const updateOrderStatus = async (req,res)=>{
 
     try{
-
+        console.log(`req reached updateOrderStatus`)
         const idwithStatus = req.params.id
 
         const id=idwithStatus.slice(1)
 
+        const orderDetails = await orderCollection.findOne({_id:id})
+
+     
+    if(orderDetails.orderStatus !== "Cancelled"){
+
+        
         const statusIdentify = idwithStatus[0]
 
         if(statusIdentify === "P"){
 
-            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Pending"})
+          const orderData =  await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Pending"})
+
+          orderData.cartData.forEach(async(val)=>{          //* single order
+            
+            await orderCollection.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Pending"}})
+
+          })
             
             res.redirect("/admin/orderManagment")
+
         }else if(statusIdentify === "S" ){
-            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Shipped"})
+
+
+
+            const orderData =  await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Shipped"})
+
+            orderData.cartData.forEach(async(val)=>{           //*single order
+            
+                await orderCollection.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Shipped"}})
+    
+              })
+
             
             res.redirect("/admin/orderManagment")
 
         }else if(statusIdentify === "D"){
-            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Delivered"})
+
+            const orderData =  await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Delivered"})
+
+            orderData.cartData.forEach(async(val)=>{           //*single order
+            
+                await orderCollection.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Delivered"}})
+    
+              })
+
             
             res.redirect("/admin/orderManagment")
 
         }else if(statusIdentify === "R"){
 
-            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
+            const orderData =  await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Return"})
             
+            orderData.cartData.forEach(async(val)=>{           //*single order
+            
+                await orderCollection.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Return"}})
+    
+              })
+
             res.redirect("/admin/orderManagment")
 
 
         }else if(statusIdentify === "C"){
-            await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Cancelled"})
+
+            const orderData =  await orderCollection.findByIdAndUpdate({_id:id},{orderStatus:"Cancelled"})
+
+            orderData.cartData.forEach(async(val)=>{           //*single order
+            
+                await orderCollection.updateOne({"cartData._id":val._id},{$set:{"cartData.$.singleOrderstatus":"Cancelled"}})
+    
+              })
+
             
             res.redirect("/admin/orderManagment")
 
         }
 
+    }else{
+        res.redirect("/admin/orderManagment")
+    }
         
 
     }catch (err){

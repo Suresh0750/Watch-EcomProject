@@ -26,21 +26,21 @@
                                    
                                     <div class="product-thumb">
                                         <div id="gallery" class="product-dec-slider-2 product-tab-left">
-                                            <a data-image="../images/categoriedImages/<%=product.productImage1%>" data-zoom-image="../images/categoriedImages/<%=product.productImage1%>" class="slick-slide slick-cloned" data-slick-index="-4" aria-hidden="true" tabindex="-1">
-                                                <img class="blur-up lazyload" src="../images/categoriedImages/<%=product.productImage1%>"  alt="" />
+                                            <a data-image="../images/categoriedImages/<%=product.productImage1%>"  data-zoom-image="../images/categoriedImages/<%=product.productImage1%>" class="slick-slide slick-cloned" data-slick-index="-4" aria-hidden="true" tabindex="-1">
+                                                <img class="blur-up lazyload" src="../images/categoriedImages/<%=product.productImage1%>"  loading="lazy" alt="" />
                                             </a>
-                                            <a data-image="../images/categoriedImages/<%=product.productImage2%>" data-zoom-image="../images/categoriedImages/<%=product.productImage2%>" class="slick-slide slick-cloned" data-slick-index="-3" aria-hidden="true" tabindex="-1">
-                                                <img class="blur-up lazyload" src="../images/categoriedImages/<%=product.productImage2%>"  alt="" />
+                                            <a data-image="../images/categoriedImages/<%=product.productImage2%>"  data-zoom-image="../images/categoriedImages/<%=product.productImage2%>" class="slick-slide slick-cloned" data-slick-index="-3" aria-hidden="true" tabindex="-1">
+                                                <img class="blur-up lazyload" src="../images/categoriedImages/<%=product.productImage2%>"  loading="lazy" alt="" />
                                             </a>
-                                            <a data-image="../images/categoriedImages/<%=product.productImage3%>" data-zoom-image="../images/categoriedImages/<%=product.productImage3%>" class="slick-slide slick-cloned" data-slick-index="-2" aria-hidden="true" tabindex="-1">
-                                                <img class="blur-up lazyload" src="../images/categoriedImages/<%=product.productImage3%>"  alt="" />
+                                            <a data-image="../images/categoriedImages/<%=product.productImage3%>"  data-zoom-image="../images/categoriedImages/<%=product.productImage3%>" class="slick-slide slick-cloned" data-slick-index="-2" aria-hidden="true" tabindex="-1">
+                                                <img class="blur-up lazyload" src="../images/categoriedImages/<%=product.productImage3%>"  loading="lazy" alt="" />
                                             </a>
                                             
                                         </div>
                                     </div>
                                     <div class="zoompro-wrap product-zoom-right pl-20">
                                         <div class="zoompro-span">
-                                            <img class="zoompro blur-up lazyload" data-zoom-image="../images/categoriedImages/<%=product.productImage1%>" alt="" id="singleImage ../images/categoriedImages/<%=product.productImage1%>" src="../images/categoriedImages/<%=product.productImage1%>"  />
+                                            <img class="zoompro blur-up lazyload"  data-zoom-image="../images/categoriedImages/<%=product.productImage1%>" loading="lazy" alt="" id="singleImage ../images/categoriedImages/<%=product.productImage1%>" src="../images/categoriedImages/<%=product.productImage1%>"  />
                                         </div>
                                         <div class="product-labels"><span class="lbl on-sale">Sale</span><span class="lbl pr-label1">new</span></div>
                                         <div class="product-buttons">
@@ -91,7 +91,7 @@
                                     <%}%>
 
 
-                                    <%if(productDetails[0].productStock != 0){%>
+                                    <%if(productDetails[0].productStock > 0){%>
                                     <div id="quantity_message">Hurry! Only  <span class="items" id="productStock"><%=productDetails[0].productStock%></span>  left in stock.</div>
 
                                     <p>Quantity</p>
@@ -134,19 +134,19 @@
                     <div class="prFeatures">
                         <div class="row">
                             <div class="col-12 col-sm-6 col-md-3 col-lg-3 feature">
-                                <img src="assets/images/credit-card.png" alt="Safe Payment" title="Safe Payment" />
+                                <img src="assets/images/credit-card.png" alt="Safe Payment" loading="lazy" title="Safe Payment" />
                                 <div class="details"><h3>Safe Payment</h3>Pay with the world's most payment methods.</div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-3 col-lg-3 feature">
-                                <img src="assets/images/shield.png" alt="Confidence" title="Confidence" />
+                                <img src="assets/images/shield.png" alt="Confidence" loading="lazy" title="Confidence" />
                                 <div class="details"><h3>Confidence</h3>Protection covers your purchase and personal data.</div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-3 col-lg-3 feature">
-                                <img src="assets/images/worldwide.png" alt="Worldwide Delivery" title="Worldwide Delivery" />
+                                <img src="assets/images/worldwide.png" alt="Worldwide Delivery" loading="lazy" title="Worldwide Delivery" />
                                 <div class="details"><h3>Worldwide Delivery</h3>FREE &amp; fast shipping to over 200+ countries &amp; regions.</div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-3 col-lg-3 feature">
-                                <img src="assets/images/phone-call.png" alt="Hotline" title="Hotline" />
+                                <img src="assets/images/phone-call.png" alt="Hotline" loading="lazy" title="Hotline" />
                                 <div class="details"><h3>Hotline</h3>Talk to help line for your question on 4141 456 789, 4125 666 888</div>
                             </div>
                         </div>
@@ -370,7 +370,7 @@
             </tr>
           </tbody>
         </table>
-        <div style="padding-left: 30px;"><img src="assets/images/size.jpg" alt=""></div>
+        <div style="padding-left: 30px;"><img src="assets/images/size.jpg" loading="lazy" alt=""></div>
       </div>
 	</div>
     <div class="hide">

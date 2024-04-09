@@ -626,11 +626,18 @@
                                 <%= item.totalCastPerproduct%>
                               </td>
                               <td>
-                                <%if(item.singleOrderstatus == "Cancelled"){%>
+                                <%if(item.singleOrderstatus == "Cancelled" || item.singleOrderstatus == "Return" ){%>
 
                                 <span>cancelled</span>
 
-                                <%}else{%>
+                                <%}else if(item.singleOrderstatus == "Delivered"){%>
+
+                                  <a class="btn  btn btn-primary " onclick="singleOrderReturn('<%=order._id%>','<%=item._id%>')" style="color:white">
+
+                                    Return
+                                  </a>
+
+                              <%}else{%>
 
                                   <button type="button" class="close" aria-label="Close" onclick="cancelOrder('<%=order._id%>','<%=item._id%>')">
                                   <span aria-hidden="true">&times;</span>
@@ -937,6 +944,75 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+<script>
+
+  async function singleOrderReturn(orderId,singleOrderId){
+
+    try{
+
+      const id= {orderId,singleOrderId}
+
+
+      Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, return it!"
+        }).then(async (result) => {          
+          if (result.isConfirmed) {
+
+
+            const id= {orderId,singleOrderId}
+
+            const data = await fetch('/user/singleOrderReturn',{
+              method:'PATCH',
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify(id)
+            })
+      
+            const res = await data.json()
+      
+            if(res.success){
+              
+              await    Swal.fire({
+                    title: "Return!",
+                    text: "Your product has been return.",
+                    icon: "success"
+                  });
+
+
+                  window.location.reload()
+      
+            }else{
+      
+              await   Swal.fire({
+                                icon: 'error',
+                                title: 'server error',
+                                showConfirmButton: false,
+                                timer: 1500
+                              })
+      
+            }
+           
+          }
+        });
+
+     
+
+    }catch (err){
+
+      console.log(`Error from ejs file single-order id \n ${err}`)
+
+    }
+  }
+</script>
+
 <script>
 
   async function cancelOrder(orderId,singleOrderId){
@@ -953,7 +1029,7 @@
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!"
+          confirmButtonText: "Yes, cancel it!"
         }).then(async (result) => {          
           if (result.isConfirmed) {
 

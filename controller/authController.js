@@ -21,10 +21,12 @@ const googleLogin = async(req,res)=>{
     if(userDetails){
 
       if(userDetails?.isBlocked == true){
+        
         req.session.isUserBlock = true
         req.session.isLoginFail = false
         req.session.save()
         res.redirect("/login")
+
       }
   
       if(userDetails && user[0].verified ){
@@ -492,15 +494,33 @@ const otpvalue = async (req,res)=>{
                   
                   if(userWallet){
   
-                
-                    const userIncwallet = await wallet.updateOne({userId:userCReferralCode._id},{$inc:{walletBalance:500}})
-  
+                    let storeWalletTransaction = {
+                      transactionAmount :500,
+                      transactionType : "referral-code",
+                      message : "referral bonus"
+                  }
+                  
+                   await wallet.updateOne(
+                              { userId:userWallet.userId },
+                              {
+                              $push: {
+                                  walletTransaction: storeWalletTransaction
+                              },
+                              $inc: { walletBalance: 500 } // Assuming 'balance' is the numeric field you want to increment
+                              }
+                          )
   
                   }else{
   
                     const walletUpdateFiels = {
                       userId:userCReferralCode?._id,
-                      walletBalance:500
+                      walletBalance:500,
+                      walletTransaction: {
+                        transactionAmount:500,
+                        transactionType:"referral-code",
+                        message:"referral bonus"
+                      }
+
                     }
   
                     await wallet(walletUpdateFiels).save()

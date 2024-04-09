@@ -43,7 +43,7 @@ passport.use(new GoogleStrategy({
     passReqToCallback:true
 },(req,accessToken,refreshToken,profile,done)=>{
     try{
-        console.log(`step 1`,profile)
+      
         return done(null,profile)
 
     }catch(err){
@@ -55,7 +55,7 @@ passport.use(new GoogleStrategy({
 //* serialize and deserialize user
 passport.serializeUser((user,done)=>{
     try{
-        console.log(`step 2`,user)
+        
         done(null,user)
 
     }catch(err){
@@ -68,7 +68,6 @@ passport.serializeUser((user,done)=>{
 passport.deserializeUser((user,done)=>{
     try{
 
-        console.log(`step 3`,user)
         done(null,user)
 
     }catch(err){

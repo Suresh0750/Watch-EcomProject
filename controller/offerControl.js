@@ -192,7 +192,9 @@ const editOffer = async (req,res)=>{
   
         if (!existingOffer || existingOffer._id == req.params.id) {
         
+          console.log(`step 1`)
           let { discountPercentage, startDate, expiryDate } = req.body;
+          console.log(`step 2`)
           let updateFields = {
            productName,
            productOfferPercentage:Number( discountPercentage),
@@ -200,10 +202,12 @@ const editOffer = async (req,res)=>{
             endDate:new Date(expiryDate),
           };
    
+          console.log(`step 3`)
           const hhh=await productOfferCollection.findByIdAndUpdate(
             req.params.id,
             updateFields
           );
+          console.log(`step 4`)
           await applyProductOffers("editOffer");
           res.json({ success: true });
         } else {

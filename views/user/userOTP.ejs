@@ -86,7 +86,7 @@
                         <div class="col-6 col-sm-6 col-md-6 col-lg-2 d-block d-lg-none mobile-logo">
                             <div class="logo">
                                 <a href="index.html">
-                                    <img src="assets/images/logo.svg" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" />
+                                    <img src="assets/images/logo.svg" loading="lazy" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" />
                                 </a>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                                     <ul class="mini-products-list">
                                         <li class="item">
                                             <a class="product-image" href="#">
-                                                <img src="assets/images/product-images/cape-dress-1.jpg" alt="3/4 Sleeve Kimono Dress" title="" />
+                                                <img src="assets/images/product-images/cape-dress-1.jpg" loading="lazy" alt="3/4 Sleeve Kimono Dress" title="" />
                                             </a>
                                             <div class="product-details">
                                                 <a href="#" class="remove"><i class="anm anm-times-l" aria-hidden="true"></i></a>
@@ -126,7 +126,7 @@
                                         </li>
                                         <li class="item">
                                             <a class="product-image" href="#">
-                                                <img src="assets/images/product-images/cape-dress-2.jpg" alt="Elastic Waist Dress - Black / Small" title="" />
+                                                <img src="assets/images/product-images/cape-dress-2.jpg" loading="lazy" alt="Elastic Waist Dress - Black / Small" title="" />
                                             </a>
                                             <div class="product-details">
                                                 <a href="#" class="remove"><i class="anm anm-times-l" aria-hidden="true"></i></a>
@@ -214,7 +214,8 @@
                                         <div class="form-group" style=" display: flex;
                                         align-items: center;
                                         justify-content: center;">
-                                            <input type="tel" name="customerOTP" placeholder="553345" id="OtpValue" class="" autocorrect="off" autocapitalize="off" autofocus="" minlength="6" maxlength="6" style="width: 20em;">
+
+                                            <input type="tel" name="customerOTP" placeholder="Enter otp" id="OtpValue" class="" autocorrect="off" autocapitalize="off" autofocus="" minlength="6" maxlength="6" style="width: 20em;">
                                         </div>
                                         <!-- <input id="appt-time" type="time" name="appt-time" min="12:00" max="18:00" style="    margin-left: 19em;
                                         width: 8em;
@@ -426,12 +427,18 @@
                         
                         if(OtpValue.value.length === 6 && btn.value == "Verify OTP"){
                             
-                            
+                            let c=0
+
+                           
                             
                             btn.addEventListener("click", async (e)=>{
     
                                 e.preventDefault()
+
+                                if(c==0){
                                 
+                                c++         // req comes twice for that 
+
                                 OtpNum = OtpValue.value
                                 console.log(`${OtpNum}`)
                                 
@@ -468,7 +475,9 @@
                                     
                                 }
                                 
-                                
+                               c = 0
+                            }
+
                             })
                             
                         }

@@ -67,7 +67,7 @@
         <div class="mb-3 d-flex gap-3">
           <div>
             <label for="image" class="form-label">Category Image</label>
-            <img src="../images/categoriedImages/<%=edit.image%>" data-src="../images/categoriedImages/<%=edit.image%>" alt="" id="imag1"
+            <img src="../images/categoriedImages/<%=edit.image%>" data-src="../images/categoriedImages/<%=edit.image%>" alt="" id="imag1" loading="lazy"
             style="width: 100px; height: 100px">
         <div class="input-group mb-3">
             <input name="image" id="image" type="file" class="form-control"
@@ -88,6 +88,7 @@
             src=""
             alt=""
             class="rounded img-fluid mb-3"
+            loading="lazy"
           />
         </div>
         <div
@@ -95,7 +96,7 @@
           class="my-3 row align-items-center"
           style="height: 350px; display: none"
         >
-          <img src="" class="img-fluid" id="croppedImg" alt="" />
+          <img src="" class="img-fluid" id="croppedImg" alt="" loading="lazy"/>
         </div>
         <div class="text-center">
           <button

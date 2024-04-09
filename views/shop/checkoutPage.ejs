@@ -530,7 +530,7 @@ const grandTotal = document.getElementById("grandTotal")
        }else if(paymentMethod==="Wallet"){
 
         let check = userWalletBalance-value.grandTotal
-
+alert(check)
             if(check>=0){
 
                 const data = await fetch(`/orderReceived`,{
