@@ -273,7 +273,6 @@ const checkout = async(req,res)=>{
         const userWalletBalance = wallet?.walletBalance ?? 0
 
 
-        
         if(req.session.coupen){
             req.session.grandTotal =  req.session?.coupen
             req.session.save()
@@ -343,11 +342,11 @@ const deletCart = async(req,res)=>{
 const grandTotal = async (req)=>{
 
     try{
-        c
+        
         const userId = req.session.userIsthere.userId
 
         let userCartData = await cartCollection.find({userId : userId}).populate("productId")
-      
+      console.log(userCartData)
         if(userCartData.length==0)
         {
             req.session.grandTotal = 0
@@ -355,7 +354,6 @@ const grandTotal = async (req)=>{
         }
         let grandTotal =0
 
- 
         
 
         for(var s of userCartData)
@@ -366,13 +364,14 @@ const grandTotal = async (req)=>{
 
             
             if(!productPriceOffer?.productOfferPercentage || productPriceOffer?.productOfferPercentage<=0){
-                
+                console.log(`enter into if`)
+                console.log(s.productId)
                 grandTotal += s.productId.productPrice * s.productQuantity
                 await cartCollection.updateOne({_id:s._id},{$set:{totalCastPerproduct: s.productId.productPrice * s.productQuantity}})
 
             }else{
 
-                
+               
 
                 //* for product offer calculate produc offerPercentage
                 let price =Number(s.productId.productPrice)-(Number(s.productId.productOfferPercentage)/100)*Number(s.productId.productPrice)
@@ -382,11 +381,11 @@ const grandTotal = async (req)=>{
 
             }
         }
-       
+             
         userCartData = await cartCollection.find({userId:userId}).populate("productId")
-       
+        console.log(userCartData)
         req.session.grandTotal =  grandTotal
-       
+        console.log(`stpe 3`)
         req.session.save()
         return userCartData
 
@@ -457,7 +456,7 @@ const incQty = async(req,res)=>{
 const userCartPage = async (req,res)=>{
 
     try{
-        
+    
 
         let userCartData = await grandTotal(req);
 
@@ -474,7 +473,6 @@ const userCartPage = async (req,res)=>{
 
         }
 
-        
         res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData,NofWhilist})
 
     }catch(err){
