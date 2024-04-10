@@ -6,6 +6,14 @@
   /* white-space: nowrap; */
   text-wrap: wrap;
 }
+/* @media (max-width: 995px)  */
+@media (max-width : 760px){
+
+    #moneyInCart{
+        display: table-cell !important;
+        min-width: 0 !important;
+   } 
+}
 </style>
     <!--Body Content-->
     <div id="page-content", style="margin-top: 6em ">
@@ -20,60 +28,86 @@
         <div class="container">
         	<div class="row">
                 <div class="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
-                	<!-- <form action="#" method="post" class="cart style2"> -->
-                		<table>
-                            <thead class="cart__row cart__header">
+                	<div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-dark">
                                 <tr>
                                     <th colspan="2" class="text-center">Product</th>
                                     <th class="text-center">Price</th>
-                                    <th class="text-center"></th>
+                                    <th class="text-center">Quantity</th>
                                     <th class="text-right">Total</th>
-                                    <th class="action">&nbsp;</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
-                    		<tbody>
-                                <% userCartData.forEach((cart)=>{%>
-                                <tr class="cart__row border-bottom line1 cart-flex border-top">
-                                    <td class="cart__image-wrapper cart-flex-item">
-                                        <a href="#"><img class="cart__image" src="../images/categoriedImages/<%=cart.productId.productImage1%>" loading="lazy" alt="Elastic Waist Dress - Navy / Small"></a>
-                                    </td>
-                                    <td class="cart__meta small--text-left cart-flex-item">
-                                        <div class="list-view-item__title">
-                                            <a href="#"><%=cart.productId.productName%></a>
-                                        </div>
-                                    </td>
-                                    <input type="hidden" id="productId" value="<%=cart.productId._id%>">
-                                    <td class="cart__price-wrapper cart-flex-item">
-                                        <span id="price<%=cart._id%>"><%=Number(cart.totalCastPerproduct)/cart.productQuantity%></span>
-                                    </td>
-                                    <td class="cart__update-wrapper cart-flex-item text-right">
-                                        <div class="cart__qty text-center">
-                                            <div class="qtyField">
-                                                <button onclick="decreMent('<%=cart._id%>','<%=cart.productId.productStock%>')">
-                                                    <i class="icon icon-minus"></i>
-                                                </button>
-                                                <span id="<%=cart._id%>" ><%=cart.productQuantity%></span>
-                                                <button onclick="incrMent('<%=cart._id%>','<%=cart.productId.productStock%>')">
-                                                    <i class="icon icon-plus"></i>
-                                                </button>
-                                                <!-- <input class="cart__qty-input qty" type="text" name="updates[]" id="qty" value="1" pattern="[0-9]*"> -->
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-right small--hide cart-price">
-                                        <div><span class="money" id="total<%=cart._id%>"><%=cart.totalCastPerproduct%></span></div>
-                                    </td>
-                                    <td class="text-center small--hide" style="cursor: pointer;" onclick="deletData('<%=cart._id%>')"><i class="icon icon anm anm-times-l"></i></td>
-                                </tr>
-                                <%})%>
-                               
-                            </tbody>
-                    		<tfoot>
+                            <tbody>
+                                <% userCartData.forEach((cart) => { %>
                                 <tr>
-
+                                    <td data-label="Product" class="text-center">
+                                        <a href="#"><img class="cart__image" src="../images/categoriedImages/<%=cart.productId.productImage1%>" loading="lazy" alt="Product Image"></a>
+                                        <div class="product-name"><%=cart.productId.productName%></div>
+                                    </td>
+                                    <td data-label="Price" class="text-center"><span class="price" id="price<%=cart._id%>"><%=Number(cart.totalCastPerproduct) / cart.productQuantity%></span></td>
+                                    <td data-label="Quantity" class="text-center">
+                                        <div class="qtyField">
+                                            <button onclick="decreMent('<%=cart._id%>','<%=cart.productId.productStock%>')">
+                                                <i class="icon icon-minus"></i>
+                                            </button>
+                                            <span id="<%=cart._id%>" ><%=cart.productQuantity%></span>
+                                            <button onclick="incrMent('<%=cart._id%>','<%=cart.productId.productStock%>')">
+                                                <i class="icon icon-plus"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td data-label="Total" class="text-right"><span class="total" id="total<%=cart._id%>"><%=cart.totalCastPerproduct%></span></td>
+                                    <td data-label="Action" class="text-center"><button onclick="deletData('<%=cart._id%>')" class="btn btn-danger"><i class="icon icon anm anm-times-l"></i></button></td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6"></td> <!-- Add additional footer content if needed -->
                                 </tr>
                             </tfoot>
-                    </table>
+                        </table>
+                    </div>
+                    
+                    <style>
+                        /* Add CSS for responsiveness */
+                        .table-responsive {
+                            overflow-x: auto;
+                        }
+                    
+                        /* Optional: Customize table styles */
+                        .table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                    
+                        .table th,
+                        .table td {
+                            padding: 8px;
+                            vertical-align: middle;
+                            text-align: left;
+                        }
+                    
+                        .table th {
+                            background-color: #333;
+                            color: #fff;
+                        }
+                    
+                        .table td {
+                            border-bottom: 1px solid #ddd;
+                        }
+                    
+                        .product-name {
+                            margin-top: 10px;
+                        }
+                    
+                        .btn {
+                            padding: 5px 10px;
+                            font-size: 14px;
+                        }
+                    </style>
                     
                  
                     

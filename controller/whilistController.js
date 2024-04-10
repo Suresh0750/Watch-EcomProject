@@ -175,7 +175,7 @@ const addWhishlist = async (req,res)=>{
 
       
  
-        const userWhishlist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId}).populate('whishlist?.productId')
+        const userWhishlist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId}).populate('whishlist.productId')
       
 
    
