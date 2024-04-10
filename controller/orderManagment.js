@@ -9,7 +9,7 @@ const orderCollection = require("../models/orderModel")
 const updateOrderStatus = async (req,res)=>{
 
     try{
-        console.log(`req reached updateOrderStatus`)
+       
         const idwithStatus = req.params.id
 
         const id=idwithStatus.slice(1)
@@ -108,8 +108,6 @@ const orderStatus = async (req,res)=>{
     try{
 
 
-        console.log(`req reached orderStatus`)
-
         const id = req.params.id
 
         const orderData = await orderCollection.findById({_id:id}).populate("addressChosen")
@@ -130,7 +128,6 @@ const orderManagement = async (req,res)=>{
 
     try{
 
-        console.log(`req reached orderManagement `)
         let count;
         let skip;
         let limit =5;
@@ -140,7 +137,6 @@ const orderManagement = async (req,res)=>{
          OrderDetails = await orderCollection.find({}).skip(skip).limit(limit)
 
          count = await orderCollection.find({}).countDocuments()
-        console.log(OrderDetails)
        
         res.render("Admin/orderManagment",{OrderDetails,count,limit})
 

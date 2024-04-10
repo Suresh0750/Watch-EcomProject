@@ -312,7 +312,7 @@ const isEmailThere = async (req,res)=>{
 const userLogin = async (req, res) => {
   
   try{
-   console.log(`req reached userLogin`)
+   
     const {userEmail, userPassword} = req.body
 
     const userDetail = await userdata.findOne({userEmail:userEmail})
@@ -454,7 +454,7 @@ const otpvalue = async (req,res)=>{
 
   try{
 
-    console.log(`req entered otpvalue`)
+   
 
     const otp = Number(req.params.id)
     const genOtp = Number(req.session.otp) 
@@ -466,24 +466,17 @@ const otpvalue = async (req,res)=>{
     {
       req.session.otp = null
 
-      console.log(`step1`)
+      
 
       const {firstName,lastName,userMobile,userEmail,userPassword} = req.session.userData
 
  
-
-      console.log(`step2`)
      const referralCode  =  Math.random().toString(36).substring(2,7);  // generate random number
-     console.log(`step3`)
-     
-     console.log(`step4`)
-
- 
-      console.log(`---------`)
+    
        await userdata.create({firstName,lastName,userMobile,userEmail,userPassword,referralCode})
   
               //* referalcode add 500 rupees 
-              console.log(`step5`)
+              
               if(req.session?.referralCode){
       
                 const userReferal = req.session?.referralCode
@@ -533,11 +526,11 @@ const otpvalue = async (req,res)=>{
               req.session.referralCode = null
               
             }
-            console.log(`step6`)
+         
             const userDetail = await userdata.findOne({userEmail:userEmail})
-            console.log(`step7`)
+       
            req.session.userData = null
-           console.log(`step8`)
+           
            req.session.userIsthere ={
              isAlive:true,
              userName:firstName,
@@ -545,9 +538,9 @@ const otpvalue = async (req,res)=>{
            }
   
            req.session.save()
-           console.log(`step9`)
+          
            await wallet({userId:userDetail?._id}).save()
-           console.log(`step10`)
+           
         return   res.status(200).send({ success: true });
      
       

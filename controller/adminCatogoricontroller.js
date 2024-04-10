@@ -62,7 +62,7 @@ const unListCategories = async (req, res) => {
 
 const updateCatagory = async (req, res) => {
     try {
-        console.log(` req entry updateCatogory`)
+        
         const id = req.params.id
 
         const categoryName = req.body.categoryName
@@ -123,8 +123,7 @@ const addCotegories = async (req, res) => {
 
         const isCheckExist = await categories.findOne({categoryName:req.body.categoryName})
 
-       console.log(`-----isCheckExist--------`)
-       console.log(isCheckExist)
+      
         if(isCheckExist){
             req.session.isCatagoriesExist = true
            
@@ -178,10 +177,9 @@ const categoriesPage = async (req, res) => {
         page = Number(req.query.page) || 1
         skip = (page - 1) * limit
         count = await categories.find({}).estimatedDocumentCount()
-        // const category = await categories.findone({})
-        // console.log(categories)
+      
         catagoriDetail = await categories.find({}).skip(skip).limit(limit)
-        console.log(catagoriDetail)
+        
         res.render("Admin/adminCatagoires", { catagoriDetail, count, limit })
 
     } catch (err) {

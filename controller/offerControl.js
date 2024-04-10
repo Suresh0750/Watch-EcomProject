@@ -48,7 +48,6 @@ const editCategoryOffer = async (req, res) => {
 
 const  addCategoryOffer = async (req, res) => {
               try {
-                console.log(`req reached addCategoryOffer`)
               
                 const { category, offerPercentage, startDate, endDate } = req.body;
            
@@ -79,11 +78,11 @@ const  addCategoryOffer = async (req, res) => {
 
 const getCategoryOffer = async (req, res) => {
               try {
-                console.log(`req reached getCategoryOffer`)
+              
                 const categories = await categoryModel.find();
-                console.log(categories)
+             
                 const offers = await categoryOfferModel.find().populate("category");
-                console.log(offers)
+         
                 applyCategoryOffer();
                 res.render("Admin/categoryOfferList", { categories, offers });
               } catch (error) {
@@ -98,7 +97,7 @@ const getCategoryOffer = async (req, res) => {
 const productOfferManagement = async (req,res)=>{
    
         try {
-          console.log(`req reached productOfferManagement `)
+          
           // updating the currentStatus field by checking with the current date
           let productOfferData = await productOfferCollection.find();
           productOfferData.forEach(async (v) => {
@@ -113,7 +112,7 @@ const productOfferManagement = async (req,res)=>{
             );
           });
     
-          console.log(productOfferData)
+          
           //sending the formatted date to the page
           productOfferData = productOfferData.map((v) => {
             v.startDateFormatted = formatDate(v.startDate, "YYYY-MM-DD");
@@ -124,7 +123,7 @@ const productOfferManagement = async (req,res)=>{
           let productData = await productCollection.find();
           let categoryData = await categoryModel.find();
 
-          console.log(productData)
+      
     
           res.render("Admin/productOfferList", {
             productData,
@@ -140,23 +139,22 @@ const productOfferManagement = async (req,res)=>{
 
 const   addOffer = async (req, res) => {
                  try {
-                  console.log(` req reached addOffer`)
+                 
                     //check if the product already has an offer applied
                     let { productName } = req.body;
-                    console.log(req.body)
+
                     let existingOffer = await productOfferCollection.findOne({ productName });
 
-
-console.log(`step 1`)                 
+                 
                     if (!existingOffer) {
                         //if offer for that particular product doesn't exist:
             
                         let product = req.body?.productName
                         let productData = await productCollection.findOne({productName:product});
 
-                        console.log(productData)
+                       
                         let { productOfferPercentage, startDate, endDate } = req.body;
-                        console.log(`step 2`) 
+                         
                         await productOfferCollection.insertMany([
                         {
                             productId: productData._id,
@@ -166,9 +164,9 @@ console.log(`step 1`)
                             endDate: new Date(endDate),
                         },
                         ]);
-                        console.log(`step 3`) 
+                        
                         await applyProductOffers("addOffer");
-                        console.log(`step 4`) 
+                       
                         res.json({ success: true });
                     } else {
                         res.json({ success: false });
@@ -184,7 +182,7 @@ const editOffer = async (req,res)=>{
 
     try {
 
-        console.log(`req reached editOffer`)
+        
         let { productName } = req.body;
         let existingOffer = await productOfferCollection.findOne({
           productName: { $regex: new RegExp(req.body.productName, "i") },
@@ -192,9 +190,9 @@ const editOffer = async (req,res)=>{
   
         if (!existingOffer || existingOffer._id == req.params.id) {
         
-          console.log(`step 1`)
+        
           let { discountPercentage, startDate, expiryDate } = req.body;
-          console.log(`step 2`)
+          
           let updateFields = {
            productName,
            productOfferPercentage:Number( discountPercentage),
@@ -202,16 +200,16 @@ const editOffer = async (req,res)=>{
             endDate:new Date(expiryDate),
           };
    
-          console.log(`step 3`)
+        
           const hhh=await productOfferCollection.findByIdAndUpdate(
             req.params.id,
             updateFields
           );
-          console.log(`step 4`)
+          
           await applyProductOffers("editOffer");
           res.json({ success: true });
         } else {
-          console.log(`else is working`)
+          
           res.json({ success: false });
         }
       } catch (error) {

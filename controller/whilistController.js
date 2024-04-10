@@ -14,9 +14,6 @@ const deleteDataWhishlist = async (req,res)=>{
 
     const userId = req.session?.userIsthere?.userId
 
-    // console.log(req.body)
-    // await whishlistModel.findByIdAndUpdate({"whishlist._id":req.body.id})
-
     const userWhishlist = await whishlistModel.findOne({userId})
 
     userWhishlist.whishlist.forEach(async(val)=>{
@@ -49,26 +46,22 @@ const addToCart = async (req,res)=>{
 
   try{
 
-    console.log(`req reached addToCart`)
+    
     const userId = req.session?.userIsthere?.userId
-console.log(req.body.id)
-console.log(userId)
+
     const cartDetails = await cartModel.findOne({userId:userId,productId:req.body.id})
     const productDetails = await productModel.findOne({_id:req.body.id})
-    console.log(cartDetails)
-    console.log(productDetails)
+
     if(cartDetails){
 
       if(Number(cartDetails.productQuantity)<Number(productDetails.productStock)){
 
-        console.log('step1')
 
         await cartModel.findByIdAndUpdate({_id:cartDetails._id},{$inc:{productQuantity:1}})
 
         res.status(200).send({success:true,message:'product added'})
       }else{
 
-        console.log(`step 2`)
 
         res.status(501).send({success:false,message:"cart stack exist"})
 
@@ -110,14 +103,12 @@ console.log(userId)
 const addWhishlist = async (req,res)=>{
 
   try{
-    console.log(`req reached addWhishlist`)
+   
     const productId = req.body?.id
     const userId = req.session?.userIsthere?.userId
 
     const whishlistIsthere = await whishlistModel.findOne({userId:userId})
 
-    console.log(`-------------`)
-    console.log(whishlistIsthere)
 
     if(whishlistIsthere){
 
@@ -168,8 +159,7 @@ const addWhishlist = async (req,res)=>{
 
     try{
 
-      console.log(`req endered wishlist page`)
-
+     
 
       let checkWishlist = await whishlistModel.findOne({userId:req.session?.userIsthere?.userId})
 

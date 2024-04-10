@@ -14,8 +14,7 @@ const cartCollection = require("../models/cartModel")
 
 const downloadInvoice = async (req, res) => {
     try {
-        console.log(`req reached downloadInvoice`)
-        console.log(req.params.id)
+        
       let orderDatails = await orderData
         .findOne({ _id: req.params.id })
         .populate("addressChosen");
@@ -24,13 +23,13 @@ const downloadInvoice = async (req, res) => {
         "Content-Type": "application/pdf",
         "Content-Disposition": "attachment;filename=invoice.pdf",
       });
-      console.log("verind");
+      
       generatevoice(
         (chunk) => stream.write(chunk),
         () => stream.end(),
         orderDatails
       );
-      console.log(generatevoice);
+     
     } catch (error) {
       console.error(error);
     }
@@ -42,7 +41,6 @@ const downloadInvoice = async (req, res) => {
 const wallet =  async (req,res)=>{
     try{
 
-        console.log(`req reached wllet`)
 
         const userId = req.session.userIsthere.userId
 
@@ -63,8 +61,6 @@ const wallet =  async (req,res)=>{
 
       }
 
-        console.log(userDetail)
-        console.log(userWallet)
         const walletBalance = userWallet?.walletBalance ?? 0
         res.render("user/wallet",{isAlive:req.session.userIsthere,userDetail,walletBalance,NofWhilist})
 
@@ -78,12 +74,6 @@ const wallet =  async (req,res)=>{
 
 async function returnProductIncproductStock(productReturn){
 
-
-
-    console.log(`enter that function returnProductIncproductStock`)
-    console.log(productReturn)
-
-    console.log(JSON.stringify(productReturn))
 
     //* after user want to return any product I Increase product stock and decrease productSold out 
 
@@ -100,7 +90,7 @@ const returnOrder = async (req,res)=>{
 
     try{
 
-        console.log(req.body)
+        
 
         const id = req.body.orderId
         const price = req.body.price
@@ -113,7 +103,7 @@ const returnOrder = async (req,res)=>{
 
 
         const userId = req.session.userIsthere.userId
-        console.log(userId)
+        
         const userWallet = await walletModel.findOne({userId:userId})
 
        
@@ -190,9 +180,7 @@ const returnOrder = async (req,res)=>{
 const singleOrderCancel = async(req,res)=>{
     try{
 
-        console.log(`req reached singleOrderCancel`)
-
-        console.log(req.body)
+        
 
         const order = await orderData.findById({_id:req.body.orderId})
 
@@ -263,7 +251,7 @@ const singleOrderCancel = async(req,res)=>{
 
        }
 
-        console.log(JSON.stringify(order))
+        
         
         res.status(200).send({success:true})
 
@@ -278,10 +266,9 @@ const singleOrderCancel = async(req,res)=>{
 const singleOrderReturn = async(req,res)=>{
 
     try{
-        console.log(`req reached cancelorder`)
 
         const singleOrderId = req.body.singleOrderId 
-        console.log(singleOrderId)
+     
 
         const orderDetails = await orderData.findById({_id:req.body.orderId})
 
@@ -329,11 +316,8 @@ const cancelorder = async (req,res)=>{
 
     try{
 
-        console.log(`req reached cancelorder`)
-
         let orderProduct = await orderData.findById({_id:req.body.orderId})
 
-        console.log(JSON.stringify(orderProduct))
 
         if(orderProduct.paymentType == "Razorpay" || orderProduct.paymentType == "Wallet"){
 
@@ -509,10 +493,7 @@ const userOTPpage = async (req,res)=>{
 const editAndUpdateProfile = async(req,res)=>{
     try{
 
-        console.log(`req reached editAndUpdateProfile`)
-
-        console.log(req.body)
-        console.log(req.body.userEmail)
+       
 
         const {userId,userEmail,lastName,firstName:userMobile} = req.body
 
@@ -524,9 +505,8 @@ const editAndUpdateProfile = async(req,res)=>{
        
 
            
-        let userData =     await userCollection.findByIdAndUpdate({_id:userId},{firstName:req.body.firstName,lastName:req.body.lastName,userMobile:req.body.userMobile,userEmail:userDetail.userEmail})
-    
-        console.log(userData)
+        let userData  = await userCollection.findByIdAndUpdate({_id:userId},{firstName:req.body.firstName,lastName:req.body.lastName,userMobile:req.body.userMobile,userEmail:userDetail.userEmail})
+ 
             res.status(200).send({success:true,otp:false})
        
         
@@ -786,11 +766,9 @@ const addAddress = async (req,res)=>{
 const profile = async (req,res)=>{
 
     try{
-        console.log(`req reached profile controller`)
-        console.log(req.session)
-        console.log(req.session.userIsthere)
+        
         const profileDetails = await userCollection.findOne({_id:req.session?.userIsthere?.userId})
-        console.log(profileDetails)
+      
         
       let NofWhilist 
 

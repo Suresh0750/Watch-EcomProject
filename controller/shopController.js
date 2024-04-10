@@ -22,7 +22,6 @@ let instance = new razorPay({
 
 async function afterOrderProductdecreas(products){
 
-    console.log(`---------------afterOrderProductdecreas--------------------`)
 
 
     await products.forEach(async(val)=>{
@@ -123,7 +122,7 @@ const orderReceivedPage = async(req,res)=>{
 const orderReceived = async (req,res)=>{
 
     try{
-       console.log(`req reached orderReceived page`)
+       
         const userId = req.session.userIsthere.userId
         if(req.body.paymentMethod === "Wallet"){
 
@@ -169,9 +168,7 @@ const orderReceived = async (req,res)=>{
                 val.singleOrderstatus = "Pending"
                 
             })
-                        console.log(`88888888888888`)
-            console.log(JSON.stringify(userCartdelete))
-            console.log(`88888888888888`)
+                        
    
             const orderUser = {
                 userId: userId,
@@ -191,7 +188,6 @@ const orderReceived = async (req,res)=>{
     
          const orderOne =   await orderModel(orderUser).save()
 
-         console.log(JSON.stringify(orderOne))
     
             await  userCartdelete.map(async(data)=>{
                     await cartCollection.findByIdAndDelete({_id:data._id})
@@ -212,8 +208,6 @@ const genOrder = async (req,res)=>{
 
 
     try{
-
-        console.log(`req reached genorder`)
         
 
         req.session.orderDetail = req.body
@@ -229,9 +223,7 @@ const genOrder = async (req,res)=>{
             currency: "INR",
             receipt: "receipt#1",
           }).then((order) => {
-            console.log('1')
-
-            console.log(`order\n${order.id} `)
+            
             res.json(order)
             // return res.send({ orderId: order.id });
           }).catch((err)=>{
@@ -262,7 +254,7 @@ const checkout = async(req,res)=>{
 
     try{
         
-        console.log(`checkout req reached`)
+        
 
         const userId =req.session.userIsthere.userId
 
@@ -281,7 +273,7 @@ const checkout = async(req,res)=>{
         const userWalletBalance = wallet?.walletBalance ?? 0
 
 
-        console.log(req.session.grandTotal)
+        
         if(req.session.coupen){
             req.session.grandTotal =  req.session?.coupen
             req.session.save()
@@ -351,11 +343,11 @@ const deletCart = async(req,res)=>{
 const grandTotal = async (req)=>{
 
     try{
-        console.log(`req reached grandTotal`)
+        c
         const userId = req.session.userIsthere.userId
 
         let userCartData = await cartCollection.find({userId : userId}).populate("productId")
-      console.log(userCartData)
+      
         if(userCartData.length==0)
         {
             req.session.grandTotal = 0
@@ -363,9 +355,7 @@ const grandTotal = async (req)=>{
         }
         let grandTotal =0
 
-        console.log(`stpe 1`)
-       
-        console.log(JSON.stringify(userCartData))
+ 
         
 
         for(var s of userCartData)
@@ -376,14 +366,13 @@ const grandTotal = async (req)=>{
 
             
             if(!productPriceOffer?.productOfferPercentage || productPriceOffer?.productOfferPercentage<=0){
-                console.log(`enter into if`)
-                console.log(s.productId)
+                
                 grandTotal += s.productId.productPrice * s.productQuantity
                 await cartCollection.updateOne({_id:s._id},{$set:{totalCastPerproduct: s.productId.productPrice * s.productQuantity}})
 
             }else{
 
-                console.log(`enter into else part`)
+                
 
                 //* for product offer calculate produc offerPercentage
                 let price =Number(s.productId.productPrice)-(Number(s.productId.productOfferPercentage)/100)*Number(s.productId.productPrice)
@@ -393,11 +382,11 @@ const grandTotal = async (req)=>{
 
             }
         }
-        console.log(`stpe 2`)       
+       
         userCartData = await cartCollection.find({userId:userId}).populate("productId")
-        console.log(userCartData)
+       
         req.session.grandTotal =  grandTotal
-        console.log(`stpe 3`)
+       
         req.session.save()
         return userCartData
 
@@ -468,7 +457,7 @@ const incQty = async(req,res)=>{
 const userCartPage = async (req,res)=>{
 
     try{
-        console.log(`req reached userCartPage`)
+        
 
         let userCartData = await grandTotal(req);
 
@@ -485,7 +474,7 @@ const userCartPage = async (req,res)=>{
 
         }
 
-        console.log(userCartData)
+        
         res.render("shop/Viewcart",{isAlive:req.session.userIsthere,cartTotal:req.session.grandTotal,userCartData,NofWhilist})
 
     }catch(err){
@@ -504,7 +493,6 @@ const addCart = async (req,res)=>{
 
     try{
 
-      console.log(`req reached addCart`)
         const id = req.params.id
         const userId =  req.session.userIsthere.userId
         const exitCart = await cartCollection.findOne({userId:userId, productId:id})
@@ -518,15 +506,12 @@ const addCart = async (req,res)=>{
             res.status(200).send({success:true})
         }else{
 
-           console.log(`*************`)
-           console.log(req.body)
-
-            console.log(typeof(req.body.priceNew))
+      
          
             const productDatail = await product.findOne({_id:id})
             let price = req.body?.priceNew ||  productDatail.productPrice
 
-            console.log(price)
+    
             
             const cart ={
                 userId : userId,
@@ -534,11 +519,10 @@ const addCart = async (req,res)=>{
                 productQuantity : req.body.Qty,
                 totalCastPerproduct :Math.round(Number(price))
             }
-            console.log(cart)
+       
     
             const cartDetail = await new cartCollection(cart).save()
-            console.log(`=====cartDetail=======`)
-            console.log(cartDetail)
+            
             res.status(200).send({success:true})
         }
     }catch{
@@ -555,17 +539,14 @@ const addCart = async (req,res)=>{
 const singleProduct = async (req,res)=>{
 
     try{
-        console.log(req.params.id)
+
         const id = req.params.id
         const productDetails = await product.find({_id:id})
         const productPercentage =  await productOffer.findOne({productId:id})
 
-        console.log(productPercentage)
         let priceNew;
 
-        console.log(productDetails[0].productName)
-        console.log(`======single product offer page=======`)
-        console.log(productDetails[0])
+       
         if(productPercentage){
              priceNew =Number(productDetails[0].productPrice)-(Number(productPercentage.productOfferPercentage))/100*Number(productDetails[0].productPrice)
 
@@ -574,10 +555,10 @@ const singleProduct = async (req,res)=>{
         const categoriesDetail = await categories.find({_id:id})
 
         let productQuantity;
-        console.log(req.session.userIsthere)
+      
         if(req.session?.userIsthere){
 
-            console.log(`req reache if condion`)
+           
              productQuantity = await cartCollection.findOne({productId:id,userId:req.session?.userIsthere.userId})
     
             productQuantity = productQuantity?.productQuantity || 0
@@ -611,17 +592,16 @@ const singleProduct = async (req,res)=>{
 const landingPage = async (req,res)=>{
 
     try{
-        console.log(`req reached landingPage`)
+        
         const allCatagory =  await categories.find({})
         req.session.userIsthere;
         let NofWhilist 
 
         if(req.session.userIsthere){
-            console.log(req.session.userIsthere)
+           
 
          NofWhilist = await cartCollection.find({userId:req.session?.userIsthere?.userId}).countDocuments() ?? 0 ?? 0
-            console.log(JSON.stringify(NofWhilist))
-         
+  
 
         }else{
 
@@ -642,10 +622,6 @@ const landingPage = async (req,res)=>{
 const search = async (req,res)=>{
     try{
 
-        console.log(`req reached search`)
-
-        console.log(req.body.value)
-
         req.session.search = req.body.value
 
         req.session.save()
@@ -662,7 +638,7 @@ const search = async (req,res)=>{
 
 async function sortCategory (req,products,gte,lte,skip,limit,){
 
-console.log(req.session.sortPrice)
+
 
     const categorWiseProduct =  req.session.categorie
 
@@ -785,7 +761,7 @@ const categoriesFilter = async (req,res)=>{
 
 
     try{
-        console.log(`req entered categoriesFilter`)
+ 
 
         const filter = req.query.categoriesName
 
@@ -839,9 +815,7 @@ const categoriesProduct = async (req,res)=>{
 
     try{
 
-        console.log(`req reached categoriesProduct`)
-
-        console.log(`search ${req.session.search}`)
+       
         
         let page = Number(req.query.page) || 1
         let limit = 8
@@ -880,9 +854,7 @@ const categoriesProduct = async (req,res)=>{
                                                 {$group:{_id:null,minPrice:{$min:"$productPrice"}}},
                                                 {$project:{_id:0,minPrice:1}}
                                             ])
-
-            console.log(maxField.length)   
-            console.log(minField.length)   
+  
             if(maxField.length==0 || minField.length ==0){
 
                 maxField = maxField.length==0 ? [{maxPrice:'0'}] : maxField;
@@ -891,8 +863,7 @@ const categoriesProduct = async (req,res)=>{
             }
             const lte =  Number(req.session?.lte)  || Number(maxField[0]?.maxPrice) 
             const gte =  Number(req.session?.gte) || Number(minField[0]?.minPrice) 
-            console.log(`gte`,gte)
-            console.log(`lte`,lte)
+           
             
 
             req.session.gteSelectPrice = `${gte}-${lte}`
@@ -942,25 +913,20 @@ const categoriesProduct = async (req,res)=>{
 
             if(req.session?.search){
 
-                console.log(`sucess`)
 
                 productDetail = await product.find({$or: [{ productName: { $regex:req.session?.search , $options: "i" },isListed:true,productPrice:{$gte:gte,$lte:lte} }]}).skip(skip).limit(limit)
                 count = await product.find({$or: [{ productName: { $regex:req.session?.search , $options: "i" },isListed:true,productPrice:{$gte:gte,$lte:lte} }]}).countDocuments()
 
                 req.session.search = null
-                console.log(productDetail)
-                console.log(count)
+                
 
             }else{
 
 
-                console.log(`enter else part`)
-                console.log(gte)
-                console.log(lte)
                 productDetail = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).skip(skip).limit(limit)
-                console.log(productDetail)
+             
                 count = await product.find({isListed : true,productPrice:{$gte:gte,$lte:lte}}).countDocuments()
-                console.log(productDetail)
+                
 
             }
             
@@ -989,7 +955,7 @@ const categoriesProduct = async (req,res)=>{
                     req.session.sortPrice       //* for show to user, if user choose or not the sort 
                     res.render("shop/categories",{productDetail,isAlive:req.session?.userIsthere,count,limit,categorie,selectPrice:req.session.gteSelectPrice,knowCategorie:"all",sort:req.session.sortPrice,page:req.query.page,NofWhilist})
 
-                    console.log(`rendered`)
+                 
         }
 
 

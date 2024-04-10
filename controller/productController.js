@@ -16,7 +16,7 @@ const deletIngProduct = async (req,res)=>{
   try{
 
     const id = req.params.id
-    console.log(req.params.id)
+    
     await productController.findByIdAndDelete({_id:id})
     res.status(200).send({success:true})
     // res.status(401).redirect("/admin/productPage")
@@ -76,27 +76,23 @@ const listProduct = async (req, res) => {
 const editProduct = async (req, res) => {
 
     try {
-      console.log(`editProduct entered`)
-      console.log(req.body)
+      
       let existingProduct = await productController.findOne({_id:req.params.id} );
       let  checkProduct = await productController.find({productName:req.body.productName})
-     console.log(`checkProduct : ${checkProduct}`)
-      console.log(`exitingProduct`)
+   
 
 
-        console.log(req.body.productId)
-        console.log(checkProduct._id)
         if(checkProduct._id !== undefined || checkProduct.length>1){
           if(checkProduct._id !== req.body.productId || checkProduct.length>1 ){
              req.session.productExist = true
-            console.log(`=============================`)
+           
              res.redirect(`/admin/productEdit${req.params.id}`)
              return 
           }
         }
 
       if (!existingProduct || existingProduct._id == req.params.id) {
-        console.log("edit1");
+      
   
         const updateFields = {
           $set: {
@@ -120,12 +116,12 @@ const editProduct = async (req, res) => {
         if (req.files[2]) {
           updateFields.$set.productImage3 = req.files[2].filename;
         }
-        console.log("updateFields"+updateFields)
+        
         await productController.findOneAndUpdate(
           { _id: req.params.id },
           updateFields
         );
-        console.log("edit3");
+
   
         res.redirect("/admin/productPage")
       } else {
@@ -143,10 +139,6 @@ const addProductData = async (req, res) => {
 
     try {
 
-        console.log(req.body)
-        console.log(req.files)
-        console.log(`req entry addProductPage`)
-
         const existProduct = await productController.findOne({productName:req.body.productName})
         if(!existProduct){
 
@@ -162,7 +154,7 @@ const addProductData = async (req, res) => {
       
           await productController.insertMany([productData])
           
-          console.log(`data save server`)
+         
   
           res.redirect("/admin/productPage")
         }else{
@@ -181,7 +173,7 @@ const addProductData = async (req, res) => {
 const addProduct = async (req, res) => {
     try {
       
-      console.log(`req reached addProduct router`)
+      
       const categoryDetail = await categories.find({})
 
       req.session.existAddProduct

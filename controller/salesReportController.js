@@ -59,8 +59,7 @@ const salesReportFilter = async (req, res) => {
 
 const salesReportFilterCustom = async (req, res) => {
   try {
-    console.log(`req reached salesReportFilterCustom`)
-    console.log(req.body)
+    
     let { startDate, endDate } = req.body;
 
     let j= "T23:59:59.999Z"
@@ -73,7 +72,7 @@ const salesReportFilterCustom = async (req, res) => {
       })
       .populate("userId");
 
-      console.log(salesDataFiltered)
+      
 
    let salesData = salesDataFiltered.map((v) => {
       v.orderDateFormatted = formatDate(v.orderDate);
@@ -96,7 +95,6 @@ const salesReportFilterCustom = async (req, res) => {
 const salesReportDownloadPDF = async (req, res) => {
   try {
 
-    console.log(`req reached salesReportDownloadPDF`)
     let startDate, endDate;
 
     if (req.body.startDate && req.body.endDate) {
@@ -109,8 +107,6 @@ const salesReportDownloadPDF = async (req, res) => {
     }
 
 
-    console.log(startDate)
-    console.log(endDate)
 
     const salesData = await orderCollection
       .find({
@@ -118,7 +114,7 @@ const salesReportDownloadPDF = async (req, res) => {
         orderStatus: "Delivered",
       })
       .populate("userId");
-console.log(salesData)
+
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
@@ -180,7 +176,7 @@ console.log(salesData)
 const salesReportDownload = async (req, res) => {
   try {
 
-    console.log(`req reached salesReportDownload`)
+    
     const workBook = new exceljs.Workbook();
     const sheet = workBook.addWorksheet("book");
     sheet.columns = [

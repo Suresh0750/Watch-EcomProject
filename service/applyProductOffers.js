@@ -5,8 +5,7 @@ const productOfferCollection = require("../models/productOfferModel");
 module.exports = {
   applyProductOffer: async (from) => {
     try {
-      console.log(`req reached applyProductOffer`)
-      // updating the currentStatus field of productOfferCollection by checking with the current date
+   
       let productOfferData = await productOfferCollection.find();
       productOfferData.forEach(async (v) => {
         await productOfferCollection.updateOne(

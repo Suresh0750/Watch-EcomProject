@@ -171,7 +171,7 @@
                                 <div style="display: flex;flex-direction: row; justify-content: space-between; ">
                                     <p class="text">Grand Total</p>
                                     <span id="grandTotal" >
-                                        <% console.log('grandTotal',cartTotal)%>
+                                        
                                         ₹<%=cartTotal%>  
                                     </span>
                                 </div>
@@ -427,9 +427,6 @@
                 }
 
 
-                
-                // Do something with the coupon code
-                console.log('Coupon Code:', couponCode);
             });
         }
 
@@ -445,7 +442,7 @@ const userWalletBalance = "<%=userWalletBalance%>"
 const grandTotal = document.getElementById("grandTotal")
      const grandTotalValue = grandTotal.textContent
 
-   console.log(grandTotalValue)
+  
 
     async function userOrder(){
 
@@ -455,7 +452,7 @@ const grandTotal = document.getElementById("grandTotal")
 
         if(selectAdd =="Select Address")
         {
-            console.log(true)
+            
 
             let selectAddress = document.getElementById("selectAddress")
             selectAddress.style.display = "block"
@@ -469,7 +466,7 @@ const grandTotal = document.getElementById("grandTotal")
         new FormData(paymentMethodForm).forEach((payentMethod,key)=>{
 
             value[key]= payentMethod
-            console.log(value)
+           
         })
         value.selectAdd = selectAdd  
 
@@ -622,7 +619,7 @@ async function  deletData(id){
         .then(async(willDelete) => {
             // If the user confirms deletion
             if (willDelete) {
-                console.log(id)
+                
                 const data = await fetch(`/user/daleteAdd${id}`,{
                 method:"DELETE",
                 headers:{
@@ -663,7 +660,6 @@ async function  deletData(id){
      // Function to open Razorpay
      async function openRazorpay(amount, creditId) {
         try {
-            // console.log('1');
 
            
             

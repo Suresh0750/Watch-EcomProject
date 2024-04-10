@@ -36,7 +36,6 @@ const dashboardData = async (req, res) => {
         shipping,
       };
   
-      console.log(data)
       res.json(data);
     } catch (error) {
       console.log(error);
@@ -83,7 +82,7 @@ const isBlock = async(req,res)=>{
 //userList Page show
 const pageList = async(req,res)=>{
     try{
-        console.log(req.body)
+      
             let count;
             let skip;
             let limit =5;
@@ -93,8 +92,7 @@ const pageList = async(req,res)=>{
             skip =  (page-1)*limit
              userDetails = await userdata.find({}).skip(skip).limit(limit)
              count = await userdata.find({}).estimatedDocumentCount()
-             console.log(userDetails)
-            console.log(count)
+             
             res.render("Admin/userList",{userDetails,count,limit})
         
     }catch(err){

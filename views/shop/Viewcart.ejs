@@ -42,7 +42,7 @@
                             <tbody>
                                 <% userCartData.forEach((cart) => { %>
                                 <tr>
-                                    <td data-label="Product" class="text-center">
+                                    <td data-label="Product" class="text-center" colspan="2">
                                         <a href="#"><img class="cart__image" src="../images/categoriedImages/<%=cart.productId.productImage1%>" loading="lazy" alt="Product Image"></a>
                                         <div class="product-name"><%=cart.productId.productName%></div>
                                     </td>

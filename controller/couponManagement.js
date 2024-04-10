@@ -55,12 +55,11 @@ const editCoupon = async (req, res) => {
 const addCoupon = async (req,res)=>{
 
     try {
-      console.log(`req reached addCoupon`)
+      
         let existingCoupon = await couponCollection.findOne({
           couponCode: { $regex: new RegExp(req.body.couponCode, "i") },
         });
 
-   console.log(existingCoupon)
     
         if (!existingCoupon) {
           await couponCollection.insertMany([

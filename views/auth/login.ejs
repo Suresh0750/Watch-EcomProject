@@ -280,7 +280,6 @@
                     data.userEmail = document.getElementById("CustomerEmail").value
                     data.userPassword = document.getElementById("CustomerPassword").value
 
-                    console.log(data)
                     const res = await fetch(`/userLogin`,{
                         method:"POST",
                         headers:{
