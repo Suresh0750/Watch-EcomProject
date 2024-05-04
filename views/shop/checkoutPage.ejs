@@ -350,9 +350,11 @@
 
 
 
- document.getElementById("coupenBtn").addEventListener("click",function(){
+ document.getElementById("coupenBtn").addEventListener("click",function(e){
 
+    e.preventDefault()
 
+    alert(coupenValue.value)
     const userCoupen = coupenValue.value
 
         if(userCoupen){

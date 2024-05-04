@@ -326,7 +326,8 @@ async  function incrMent(id,stack){
 
         // productId
     console.log(stack)
-        let productId = document.getElementById("productId").value
+    // alert('ssd')
+        // let productId = document.getElementById("productId").value
 
         // console.log(productId)
         
@@ -362,7 +363,7 @@ async  function incrMent(id,stack){
 
             let cartId ={
                 _id : id,
-                productId : productId
+                // productId : productId
             }
             // console.log(cartId)
             let data = await fetch("/cart/inCrease",{
@@ -406,7 +407,7 @@ async function decreMent(id,stack){
 console.log(stack)
         // productId
 
-        let productId = document.getElementById("productId").value
+        // let productId = document.getElementById("productId").value
 
         // console.log(productId)
 
@@ -441,7 +442,7 @@ console.log(stack)
 
             let cartId ={
                 _id : id,
-                productId : productId
+                // productId : productId
             }
             console.log(cartId)
             let data = await fetch("/cart/deCrease",{
